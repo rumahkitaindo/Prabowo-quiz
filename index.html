@@ -24,7 +24,6 @@
         }
 
         body {
-            /* Latar Belakang Overlay Merah Putih */
             background: linear-gradient(135deg, rgba(206, 17, 38, 0.85) 0%, rgba(206, 17, 38, 0.7) 40%, rgba(255, 255, 255, 0.9) 60%, rgba(255, 255, 255, 1) 100%);
             background-attachment: fixed;
             color: var(--text-main);
@@ -33,9 +32,9 @@
             align-items: center;
             min-height: 100vh;
             padding: 20px;
+            overflow: hidden;
         }
 
-        /* Kontainer Utama Bergaya Tablet/Putih Bersih */
         #app-container {
             width: 100%;
             max-width: 900px;
@@ -49,102 +48,39 @@
         }
 
         /* --- Layar Login --- */
-        #login-screen {
-            padding: 50px 30px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+        #login-screen { padding: 50px 30px; display: flex; flex-direction: column; gap: 20px; }
         #login-screen h1 { color: var(--red-flag); font-size: 2.5em; }
-        
-        input, select, button {
-            padding: 15px;
-            font-size: 1.1em;
-            border-radius: 10px;
-            border: 1px solid var(--btn-border);
-            outline: none;
-            width: 100%;
-            max-width: 400px;
-            margin: 0 auto;
+        input, select, .start-btn {
+            padding: 15px; font-size: 1.1em; border-radius: 10px; border: 1px solid var(--btn-border);
+            outline: none; width: 100%; max-width: 400px; margin: 0 auto;
         }
-        
-        button {
-            background: var(--red-flag);
-            color: white;
-            border: none;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        button:hover { background: #a70c1d; transform: scale(1.02); }
+        .start-btn { background: var(--red-flag); color: white; border: none; font-weight: bold; cursor: pointer; transition: all 0.2s ease; }
+        .start-btn:hover { background: #a70c1d; transform: scale(1.02); }
 
         /* --- Layar Game --- */
         #game-screen { display: none; flex-direction: column; padding-bottom: 30px; }
         
-        /* Header Sesuai Gambar (Pemain - Level - Skor) */
         #header {
-            display: flex;
-            justify-content: space-between;
-            padding: 20px 30px;
-            background: #f8f9fa;
-            border-bottom: 2px solid #e9ecef;
-            font-size: 1.1em;
-            font-weight: 500;
+            display: flex; justify-content: space-between; padding: 20px 30px; background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef; font-size: 1.1em; font-weight: 500;
         }
 
-        /* Fitur HP Bar */
         #hp-container {
-            width: 80%;
-            background-color: #e9ecef;
-            border-radius: 10px;
-            height: 22px;
-            margin: 15px auto 0 auto;
-            overflow: hidden;
-            border: 1px solid #ced4da;
-            position: relative;
+            width: 80%; background-color: #e9ecef; border-radius: 10px; height: 22px;
+            margin: 15px auto 0 auto; overflow: hidden; border: 1px solid #ced4da; position: relative;
         }
-        #hp-bar {
-            height: 100%;
-            width: 100%;
-            background-color: var(--hp-high);
-            transition: width 0.4s ease, background-color 0.4s ease;
-        }
-        #hp-text {
-            position: absolute;
-            width: 100%;
-            text-align: center;
-            top: 1px;
-            font-size: 0.85em;
-            font-weight: 700;
-            color: #333;
-        }
+        #hp-bar { height: 100%; width: 100%; background-color: var(--hp-high); transition: width 0.4s ease, background-color 0.4s ease; }
+        #hp-text { position: absolute; width: 100%; text-align: center; top: 1px; font-size: 0.85em; font-weight: 700; color: #333; }
 
-        /* Area Gambar Karakter */
-        #character-area {
-            position: relative;
-            height: 260px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 20px 0;
-        }
-
+        #character-area { position: relative; height: 260px; display: flex; justify-content: center; align-items: center; margin: 20px 0; }
+        
         #pejabat-img {
-            height: 240px;
-            width: 380px; /* Rasio melebar seperti di gambar */
-            border-radius: 12px;
-            border: 1px solid #ddd;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            object-fit: cover;
-            position: relative;
-            z-index: 10;
+            height: 240px; width: 380px; border-radius: 12px; border: 1px solid #ddd;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); object-fit: cover; position: relative; z-index: 10;
         }
-
-        /* Animasi Kesakitan */
-        .pain-effect {
-            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both !important;
-            filter: drop-shadow(0 0 20px var(--red-flag)) saturate(1.5);
-        }
+        
+        .pain-effect { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both !important; filter: drop-shadow(0 0 20px var(--red-flag)) saturate(1.5); }
+        
         @keyframes shake {
             10%, 90% { transform: translate3d(-5px, 0, 0); }
             20%, 80% { transform: translate3d(15px, 0, 0); }
@@ -152,52 +88,73 @@
             40%, 60% { transform: translate3d(20px, 0, 0); }
         }
 
-        /* Area Timer dan Pertanyaan */
         #timer-container { font-size: 1.1em; font-weight: 500; color: #555; margin-bottom: 5px;}
         #question-text { font-size: 1.4em; margin: 10px 20px 25px 20px; font-weight: 600; color: #000; }
         
-        /* Opsi Jawaban (2x2 Grid, Putih Bersih) */
-        .options-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            padding: 0 40px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 40px; max-width: 800px; margin: 0 auto; }
         
         .option-btn {
-            background: #ffffff;
-            color: #000;
-            padding: 15px 20px;
-            font-size: 1.1em;
-            border-radius: 12px;
-            border: 1px solid var(--btn-border);
-            cursor: pointer;
-            font-weight: 500;
-            text-align: left; /* Teks rata kiri */
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            transition: all 0.2s ease;
+            background: #ffffff; color: #000; padding: 15px 20px; font-size: 1.1em; border-radius: 12px;
+            border: 1px solid var(--btn-border); cursor: pointer; font-weight: 500; text-align: left;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: all 0.2s ease;
         }
         .option-btn:hover { background: var(--btn-hover); border-color: #adb5bd; }
         .option-btn:disabled { cursor: not-allowed; opacity: 0.9; }
 
         .projectile {
-            position: absolute;
-            font-size: 90px; 
-            z-index: 20;
-            pointer-events: none;
-            transition: all 0.4s cubic-bezier(0.1, 0.8, 0.2, 1);
-            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.4));
+            position: absolute; font-size: 90px; z-index: 20; pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.1, 0.8, 0.2, 1); filter: drop-shadow(0 10px 10px rgba(0,0,0,0.4));
         }
 
-        /* Responsif HP */
+        /* --- OVERLAYS (Finish Him & Fatality) --- */
+        .fullscreen-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 9999;
+            display: flex; justify-content: center; align-items: center; flex-direction: column;
+        }
+
+        /* Modal Finish Him */
+        .modal-box {
+            background: #111; padding: 40px; border-radius: 15px; text-align: center;
+            border: 4px solid var(--red-flag); box-shadow: 0 0 30px rgba(206,17,38,0.5);
+        }
+        .modal-box h2 {
+            color: var(--red-flag); font-size: 4em; margin-bottom: 30px; font-weight: 900;
+            text-shadow: 2px 2px 5px #000; text-transform: uppercase; font-style: italic;
+        }
+        .modal-btn-group { display: flex; gap: 20px; justify-content: center; }
+        .modal-btn-group button {
+            padding: 15px 40px; font-size: 1.5em; border-radius: 8px; cursor: pointer;
+            font-weight: bold; border: none; transition: transform 0.2s;
+        }
+        .btn-ya { background: var(--hp-high); color: white; }
+        .btn-tidak { background: #555; color: white; }
+        .modal-btn-group button:hover { transform: scale(1.1); }
+
+        /* Layar Fatality / Video */
+        #fatality-container { background: #000; }
+        #fatality-video { width: 100%; height: 100%; object-fit: cover; transition: opacity 1s; }
+        
+        /* Animasi Teks Akhir */
+        .cinematic-text {
+            position: absolute; font-size: 5em; font-weight: 900;
+            text-shadow: 0px 5px 20px rgba(0,0,0,1); text-align: center;
+            opacity: 0; transform: scale(0.5); pointer-events: none;
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        #eliminated-text { color: var(--red-flag); letter-spacing: 5px; text-transform: uppercase; }
+        #victory-text { color: #ffd700; font-size: 4em; }
+
+        .show-text { opacity: 1 !important; transform: scale(1) !important; }
+
         @media (max-width: 600px) {
             #header { padding: 15px; font-size: 0.95em; }
             .options-grid { grid-template-columns: 1fr; padding: 0 20px; gap: 10px; }
             #pejabat-img { height: 180px; width: 280px; }
             #question-text { font-size: 1.2em; }
             .projectile { font-size: 60px; }
+            .modal-box h2 { font-size: 2.5em; }
+            .cinematic-text { font-size: 3em !important; }
         }
     </style>
 </head>
@@ -214,19 +171,17 @@
                 <option value="medium">Level: Sedang (SMP)</option>
                 <option value="hard">Level: Sulit (SMA/Umum)</option>
             </select>
-            <button onclick="startGame()">Mulai Game</button>
+            <button class="start-btn" onclick="startGame()">Mulai Game</button>
         </div>
 
         <!-- Halaman Game -->
         <div id="game-screen">
-            <!-- Header Mirip Desain Referensi -->
             <div id="header">
                 <span id="display-name">Pemain: -</span>
                 <span id="display-level">Level: Mudah</span>
                 <span id="display-score">Skor: 0</span>
             </div>
 
-            <!-- Health Bar (Darah Pejabat) -->
             <div id="hp-container">
                 <div id="hp-bar"></div>
                 <div id="hp-text">HP Pejabat: 100% | Soal: 1/25</div>
@@ -238,13 +193,35 @@
 
             <div id="timer-container">⏳ Waktu: <span id="time-left">15</span> detik</div>
             <div id="question-text">Pertanyaan akan muncul di sini...</div>
-            
             <div class="options-grid" id="options-container"></div>
         </div>
     </div>
 
+    <!-- MODAL FINISH HIM -->
+    <div id="finish-him-modal" class="fullscreen-overlay" style="display:none;">
+        <div class="modal-box">
+            <h2>FINISH HIM!</h2>
+            <div class="modal-btn-group">
+                <button class="btn-ya" onclick="executeFatality()">Ya</button>
+                <button class="btn-tidak" onclick="normalWin()">Tidak</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FATALITY VIDEO & CINEMATIC SCREEN -->
+    <div id="fatality-container" class="fullscreen-overlay" style="display:none;">
+        <!-- Video Kekalahan MP4 -->
+        <video id="fatality-video" playsinline>
+            <source src="pejabat-kalah.mp4" type="video/mp4">
+        </video>
+        
+        <!-- Teks Animasi -->
+        <div id="eliminated-text" class="cinematic-text">Tereliminasi</div>
+        <div id="victory-text" class="cinematic-text"><span id="vic-name">Nama</span>,<br>Kamu Menang!</div>
+    </div>
+
     <script>
-        // Data Soal (25 soal per level)
+        // Data Soal
         const questionsData = {
             easy: [
                 { q: "Berapakah hasil dari 5 + 7?", options: ["10", "11", "12", "13"], answer: 2 },
@@ -329,33 +306,17 @@
             ]
         };
 
-        const throwItems = [
-            { emoji: '🥚', type: 'egg' },
-            { emoji: '🍌', type: 'banana' },
-            { emoji: '💣', type: 'bomb' },
-            { emoji: '🔪', type: 'knife' }
-        ];
-
-        // Nama file gambar
+        const throwItems = [{ emoji: '🥚', type: 'egg' }, { emoji: '🍌', type: 'banana' }, { emoji: '💣', type: 'bomb' }, { emoji: '🔪', type: 'knife' }];
         const baseImageNormal = 'pejabat-normal.jpg';
         const imageHurt = 'pejabat-sakit.jpg';
-        const imageBonyok = 'pejabat-bonyok.jpg'; // Gambar saat darah <= 20%
-        
-        let currentImageNormal = baseImageNormal; 
-        
+        const imageBonyok = 'pejabat-bonyok.jpg';
         const audioSalah = new Audio("reaksi-salah.mp3");
 
-        let currentQuestions = [], currentQIndex = 0;
-        let playerName = "", currentDifficultyText = "";
-        let score = 0;
-        let timeLeft = 15, timerInterval;
-        
-        // Fitur HP
-        let maxQuestions = 25;
-        let hp = 100;
-        let damagePerCorrect = 100 / maxQuestions; 
+        let currentImageNormal = baseImageNormal; 
+        let currentQuestions = [], currentQIndex = 0, score = 0, hp = 100, playerName = "";
+        let timeLeft = 15, timerInterval, maxQuestions = 25, damagePerCorrect = 100 / maxQuestions; 
 
-        // --- SISTEM AUDIO SINTESIS ---
+        // Sistem Audio SFX
         let audioCtx, noiseBuffer;
         function initAudio() {
             if(!audioCtx) {
@@ -370,8 +331,7 @@
 
         function playTone(freq, type, duration, slideFreq = null) {
             if(!audioCtx) return;
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
+            const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
             osc.type = type; osc.connect(gain); gain.connect(audioCtx.destination);
             osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
             if (slideFreq) osc.frequency.exponentialRampToValueAtTime(slideFreq, audioCtx.currentTime + duration);
@@ -382,12 +342,9 @@
 
         function playNoise(filterType, freq, duration, gainVolume = 1) {
             if (!noiseBuffer || !audioCtx) return;
-            const source = audioCtx.createBufferSource();
-            source.buffer = noiseBuffer;
-            const filter = audioCtx.createBiquadFilter();
-            filter.type = filterType; filter.frequency.value = freq;
-            const gain = audioCtx.createGain();
-            source.connect(filter); filter.connect(gain); gain.connect(audioCtx.destination);
+            const source = audioCtx.createBufferSource(); source.buffer = noiseBuffer;
+            const filter = audioCtx.createBiquadFilter(); filter.type = filterType; filter.frequency.value = freq;
+            const gain = audioCtx.createGain(); source.connect(filter); filter.connect(gain); gain.connect(audioCtx.destination);
             gain.gain.setValueAtTime(gainVolume, audioCtx.currentTime);
             gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
             source.start(); source.stop(audioCtx.currentTime + duration);
@@ -396,113 +353,83 @@
         function playSfx(type) {
             if (!audioCtx) return;
             switch(type) {
-                case 'throw':   playTone(600, 'sine', 0.3, 100); break;
-                case 'egg':     playNoise('highpass', 1500, 0.3, 1.5); break;
-                case 'banana':  playTone(800, 'sine', 0.5, 100); break;
-                case 'bomb':    playNoise('lowpass', 200, 1.2, 2.0); break;
-                case 'knife':   playTone(1500, 'sawtooth', 0.1, 100); break;
+                case 'throw': playTone(600, 'sine', 0.3, 100); break;
+                case 'egg': playNoise('highpass', 1500, 0.3, 1.5); break;
+                case 'banana': playTone(800, 'sine', 0.5, 100); break;
+                case 'bomb': playNoise('lowpass', 200, 1.2, 2.0); break;
+                case 'knife': playTone(1500, 'sawtooth', 0.1, 100); break;
             }
         }
 
+        // --- Logika Game ---
         function startGame() {
             const nameInput = document.getElementById('player-name').value;
             if (!nameInput) { alert("Silakan masukkan nama Anda terlebih dahulu!"); return; }
-            
             initAudio(); 
-
             playerName = nameInput;
+            
             const difficultySelect = document.getElementById('difficulty');
-            const difficulty = difficultySelect.value;
-            currentDifficultyText = difficultySelect.options[difficultySelect.selectedIndex].text.split(' ')[1]; // Ambil teks level (Mudah/Sedang/Sulit)
-
-            currentQuestions = [...questionsData[difficulty]];
-            currentQuestions.sort(() => Math.random() - 0.5); 
+            const diffText = difficultySelect.options[difficultySelect.selectedIndex].text.split(' ')[1]; 
+            
+            currentQuestions = [...questionsData[difficultySelect.value]].sort(() => Math.random() - 0.5); 
             
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('game-screen').style.display = 'flex';
             
             document.getElementById('display-name').innerText = `Pemain: ${playerName}`;
-            document.getElementById('display-level').innerText = `Level: ${currentDifficultyText}`;
-            score = 0;
-            hp = 100; 
-            currentQIndex = 0;
-            currentImageNormal = baseImageNormal;
+            document.getElementById('display-level').innerText = `Level: ${diffText}`;
+            
+            score = 0; hp = 100; currentQIndex = 0; currentImageNormal = baseImageNormal;
             document.getElementById('pejabat-img').src = currentImageNormal;
             
-            updateScore();
-            updateHP();
-            loadQuestion();
+            updateScore(); updateHP(); loadQuestion();
         }
 
-        function updateScore() {
-            document.getElementById('display-score').innerText = `Skor: ${score}`;
-        }
+        function updateScore() { document.getElementById('display-score').innerText = `Skor: ${score}`; }
 
         function updateHP() {
-            const hpBar = document.getElementById('hp-bar');
-            const hpText = document.getElementById('hp-text');
-            
             if(hp < 0) hp = 0;
-            
+            const hpBar = document.getElementById('hp-bar');
             hpBar.style.width = hp + '%';
-            hpText.innerText = `HP Pejabat: ${Math.round(hp)}% | Soal: ${currentQIndex + 1}/${maxQuestions}`;
+            document.getElementById('hp-text').innerText = `HP Pejabat: ${Math.round(hp)}% | Soal: ${currentQIndex + 1}/${maxQuestions}`;
 
-            // Ubah wajah jadi bonyok
-            if (hp <= 20) {
-                hpBar.style.backgroundColor = "var(--hp-low)";
-                currentImageNormal = imageBonyok; 
-            } else if (hp <= 50) {
-                hpBar.style.backgroundColor = "var(--hp-med)";
-            } else {
-                hpBar.style.backgroundColor = "var(--hp-high)";
-            }
+            if (hp <= 20) { hpBar.style.backgroundColor = "var(--hp-low)"; currentImageNormal = imageBonyok; } 
+            else if (hp <= 50) { hpBar.style.backgroundColor = "var(--hp-med)"; } 
+            else { hpBar.style.backgroundColor = "var(--hp-high)"; }
         }
 
         function startTimer() {
-            clearInterval(timerInterval);
-            timeLeft = 15;
+            clearInterval(timerInterval); timeLeft = 15;
             document.getElementById('time-left').innerText = timeLeft;
             document.getElementById('time-left').style.color = "var(--text-main)";
-            
             timerInterval = setInterval(() => {
-                timeLeft--;
-                document.getElementById('time-left').innerText = timeLeft;
+                timeLeft--; document.getElementById('time-left').innerText = timeLeft;
                 if (timeLeft <= 5) document.getElementById('time-left').style.color = "var(--red-flag)"; 
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    handleTimeOut();
-                }
+                if (timeLeft <= 0) { clearInterval(timerInterval); handleTimeOut(); }
             }, 1000);
         }
 
-        function triggerMp3Salah() {
-            audioSalah.currentTime = 0;
-            audioSalah.play().catch(e => console.log("Gagal memutar MP3:", e));
-        }
-
         function handleTimeOut() {
-            triggerMp3Salah(); 
+            audioSalah.currentTime = 0; audioSalah.play().catch(e=>{});
             const buttons = document.querySelectorAll('.option-btn');
             buttons.forEach(btn => btn.disabled = true);
             const correctIndex = currentQuestions[currentQIndex].answer;
-            buttons[correctIndex].style.background = '#2ed573';
-            buttons[correctIndex].style.color = 'white';
-            buttons[correctIndex].style.borderColor = '#2ed573';
-
+            buttons[correctIndex].style.background = '#2ed573'; buttons[correctIndex].style.color = 'white'; buttons[correctIndex].style.borderColor = '#2ed573';
             setTimeout(() => { currentQIndex++; loadQuestion(); }, 1500);
         }
 
         function loadQuestion() {
-            if (currentQIndex >= maxQuestions || hp <= 0) { 
+            // Cek kondisi kalahkan bos
+            if (hp <= 0) {
                 clearInterval(timerInterval);
-                setTimeout(() => {
-                    if(hp <= 0) {
-                        alert(`SELAMAT! ${playerName}, Anda berhasil mengalahkan pejabat!\nSkor Akhir: ${score}`);
-                    } else {
-                        alert(`GAME SELESAI!\nSkor Akhir: ${score}\nSisa Darah Pejabat: ${Math.round(hp)}%`);
-                    }
-                    location.reload(); 
-                }, 500);
+                document.getElementById('finish-him-modal').style.display = 'flex';
+                return;
+            } 
+            
+            // Cek habis soal tapi belum mati
+            if (currentQIndex >= maxQuestions) { 
+                clearInterval(timerInterval);
+                setTimeout(() => { alert(`GAME SELESAI!\nSkor Akhir: ${score}\nSisa Darah Pejabat: ${Math.round(hp)}%`); location.reload(); }, 500);
                 return;
             }
 
@@ -514,8 +441,6 @@
             
             const optionsContainer = document.getElementById('options-container');
             optionsContainer.innerHTML = '';
-            
-            // Generate A, B, C, D
             const prefixes = ['A', 'B', 'C', 'D'];
             
             qData.options.forEach((opt, index) => {
@@ -525,7 +450,6 @@
                 btn.onclick = () => checkAnswer(index, qData.answer, btn);
                 optionsContainer.appendChild(btn);
             });
-
             startTimer(); 
         }
 
@@ -535,27 +459,14 @@
             buttons.forEach(btn => btn.disabled = true);
 
             if (selectedIndex === correctIndex) {
-                // Jawaban Benar
-                hp -= damagePerCorrect;
-                score += 10;
-                updateScore();
-                updateHP();
-
-                clickedBtn.style.background = '#2ed573';
-                clickedBtn.style.color = 'white';
-                clickedBtn.style.borderColor = '#2ed573';
+                hp -= damagePerCorrect; score += 10;
+                updateScore(); updateHP();
+                clickedBtn.style.background = '#2ed573'; clickedBtn.style.color = 'white'; clickedBtn.style.borderColor = '#2ed573';
                 triggerCorrectAction();
             } else {
-                // Jawaban Salah
-                triggerMp3Salah(); 
-                clickedBtn.style.background = '#ff4757';
-                clickedBtn.style.color = 'white';
-                clickedBtn.style.borderColor = '#ff4757';
-                
-                buttons[correctIndex].style.background = '#2ed573'; 
-                buttons[correctIndex].style.color = 'white';
-                buttons[correctIndex].style.borderColor = '#2ed573';
-                
+                audioSalah.currentTime = 0; audioSalah.play().catch(e=>{});
+                clickedBtn.style.background = '#ff4757'; clickedBtn.style.color = 'white'; clickedBtn.style.borderColor = '#ff4757';
+                buttons[correctIndex].style.background = '#2ed573'; buttons[correctIndex].style.color = 'white'; buttons[correctIndex].style.borderColor = '#2ed573';
                 setTimeout(() => { currentQIndex++; loadQuestion(); }, 1500);
             }
         }
@@ -567,34 +478,76 @@
             const selectedItemObj = throwItems[Math.floor(Math.random() * throwItems.length)];
             
             const projectile = document.createElement('div');
-            projectile.className = 'projectile';
-            projectile.innerText = selectedItemObj.emoji;
-            projectile.style.left = '50%';
-            projectile.style.bottom = '-80px';
-            projectile.style.transform = 'translateX(-50%) rotate(0deg)';
-            
+            projectile.className = 'projectile'; projectile.innerText = selectedItemObj.emoji;
+            projectile.style.left = '50%'; projectile.style.bottom = '-80px'; projectile.style.transform = 'translateX(-50%) rotate(0deg)';
             charArea.appendChild(projectile);
 
-            setTimeout(() => {
-                projectile.style.bottom = '50%'; 
-                projectile.style.transform = 'translateX(-50%) rotate(720deg)';
-            }, 50);
+            setTimeout(() => { projectile.style.bottom = '50%'; projectile.style.transform = 'translateX(-50%) rotate(720deg)'; }, 50);
 
-            // Saat mengenai wajah
             setTimeout(() => {
-                projectile.remove();
-                playSfx(selectedItemObj.type); 
-                
-                imgPejabat.src = imageHurt; 
-                imgPejabat.classList.add('pain-effect');
+                projectile.remove(); playSfx(selectedItemObj.type); 
+                imgPejabat.src = imageHurt; imgPejabat.classList.add('pain-effect');
                 
                 setTimeout(() => {
                     imgPejabat.classList.remove('pain-effect');
-                    currentQIndex++;
-                    loadQuestion(); 
+                    currentQIndex++; loadQuestion(); 
                 }, 1300);
-
             }, 450); 
+        }
+
+        // --- SISTEM FATALITY ---
+        function normalWin() {
+            document.getElementById('finish-him-modal').style.display = 'none';
+            alert(`SELAMAT! ${playerName}, Anda berhasil mengalahkan pejabat secara damai!\nSkor Akhir: ${score}`);
+            location.reload();
+        }
+
+        function executeFatality() {
+            document.getElementById('finish-him-modal').style.display = 'none';
+            
+            const fatContainer = document.getElementById('fatality-container');
+            const fatVideo = document.getElementById('fatality-video');
+            
+            fatContainer.style.display = 'flex';
+            
+            // Coba play video mp4
+            fatVideo.play().catch(e => {
+                console.log("Video kekalahan gagal diputar (Mungkin file tidak ada):", e);
+                // Fallback jika video gagal load, langsung lompat ke teks
+                triggerCinematicEnding();
+            });
+
+            // Saat video selesai
+            fatVideo.onended = () => {
+                triggerCinematicEnding();
+            };
+        }
+
+        function triggerCinematicEnding() {
+            const fatVideo = document.getElementById('fatality-video');
+            fatVideo.style.opacity = '0.3'; // Gelapkan video di latar belakang
+
+            const elimText = document.getElementById('eliminated-text');
+            const vicText = document.getElementById('victory-text');
+            
+            // Animasi Tereliminasi
+            elimText.classList.add('show-text');
+
+            // 3 detik kemudian, hilangkan "Tereliminasi", munculkan "Kamu Menang"
+            setTimeout(() => {
+                elimText.classList.remove('show-text');
+                
+                setTimeout(() => {
+                    document.getElementById('vic-name').innerText = playerName;
+                    vicText.classList.add('show-text');
+                    
+                    // 4 detik kemudian, kembali ke awal
+                    setTimeout(() => {
+                        location.reload(); 
+                    }, 4000);
+                }, 1000); // jeda antara teks
+                
+            }, 3000);
         }
     </script>
 </body>
