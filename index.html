@@ -311,7 +311,7 @@
         
         // --- ASSET AUDIO ---
         const audioSalah = new Audio("reaksi-salah.mp3");
-        const audioFinishHim = new Audio("finish-him.mp3"); // Pastikan file audio finish him ada di folder yang sama
+        const audioFinishHim = new Audio("finish-him.mp3"); 
 
         let currentImageNormal = baseImageNormal; 
         let currentQuestions = [], currentQIndex = 0, score = 0, hp = 100, playerName = "";
@@ -369,9 +369,17 @@
         function startGame() {
             const nameInput = document.getElementById('player-name').value;
             if (!nameInput) { alert("Silakan masukkan nama Anda terlebih dahulu!"); return; }
-            initAudio(); 
-            playerName = nameInput;
             
+            initAudio(); 
+            
+            // --- PENTING: UNLOCK AUDIO BROWSER ---
+            // Kita pancing pemutaran audio sekali saat tombol Mulai Game diklik,
+            // lalu langsung dipause. Ini menjamin audio tidak akan diblokir browser nantinya.
+            audioSalah.play().then(() => { audioSalah.pause(); audioSalah.currentTime = 0; }).catch(e=>{});
+            audioFinishHim.play().then(() => { audioFinishHim.pause(); audioFinishHim.currentTime = 0; }).catch(e=>{});
+            // -------------------------------------
+
+            playerName = nameInput;
             const difficultySelect = document.getElementById('difficulty');
             const diffText = difficultySelect.options[difficultySelect.selectedIndex].text.split(' ')[1]; 
             
@@ -424,19 +432,19 @@
         }
 
         function loadQuestion() {
-            // 1. Cek KONDISI MENANG / BOS MATI
+            // Cek Menang / Bos Mati
             if (Math.round(hp) <= 0) {
                 clearInterval(timerInterval);
                 document.getElementById('finish-him-modal').style.display = 'flex';
                 
-                // MEMAINKAN AUDIO FINISH HIM 
+                // MEMAINKAN AUDIO FINISH HIM (Aman karena sudah di-unlock di awal)
                 audioFinishHim.currentTime = 0;
-                audioFinishHim.play().catch(e => console.log("Gagal memutar audio finish him:", e));
+                audioFinishHim.play().catch(e => console.log("Masih diblokir browser:", e));
                 
                 return;
             } 
             
-            // 2. Cek KONDISI GAME OVER KARENA SOAL HABIS (Tapi bos gagal dibunuh)
+            // Cek Soal Habis
             if (currentQIndex >= maxQuestions) { 
                 clearInterval(timerInterval);
                 setTimeout(() => { 
@@ -510,39 +518,31 @@
 
         // --- SISTEM FATALITY ---
         function normalWin() {
-            // Matikan suara "Finish Him" jika ditekan tidak
             audioFinishHim.pause();
-            
             document.getElementById('finish-him-modal').style.display = 'none';
             alert(`SELAMAT! ${playerName}, Anda melepaskan pejabat dengan skor ${score}!`);
             location.reload();
         }
 
         function executeFatality() {
-            audioFinishHim.pause(); // Matikan suara "Finish Him"
-            
+            audioFinishHim.pause();
             document.getElementById('finish-him-modal').style.display = 'none';
             const fatContainer = document.getElementById('fatality-container');
             const fatVideo = document.getElementById('fatality-video');
             fatContainer.style.display = 'flex';
             
             let playPromise = fatVideo.play();
-            
             if (playPromise !== undefined) {
                 playPromise.catch(error => {
-                    console.log("Video tidak ditemukan/gagal putar. Lanjut ke tulisan otomatis.", error);
+                    console.log("Video gagal putar:", error);
                     triggerCinematicEnding();
                 });
             }
-
-            fatVideo.onended = () => {
-                triggerCinematicEnding();
-            };
+            fatVideo.onended = () => { triggerCinematicEnding(); };
         }
 
         function triggerCinematicEnding() {
             document.getElementById('fatality-video').style.opacity = '0.2'; 
-
             const elimText = document.getElementById('eliminated-text');
             const vicText = document.getElementById('victory-text');
             
@@ -550,17 +550,11 @@
 
             setTimeout(() => {
                 elimText.classList.remove('show-text');
-                
                 setTimeout(() => {
                     document.getElementById('vic-name').innerText = playerName;
                     vicText.classList.add('show-text');
-                    
-                    setTimeout(() => {
-                        location.reload(); 
-                    }, 4000);
-                    
+                    setTimeout(() => { location.reload(); }, 4000);
                 }, 1000); 
-                
             }, 3000);
         }
     </script>
