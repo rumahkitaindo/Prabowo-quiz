@@ -308,15 +308,16 @@
         const baseImageNormal = 'pejabat-normal.jpg';
         const imageHurt = 'pejabat-sakit.jpg';
         const imageBonyok = 'pejabat-bonyok.jpg';
+        
+        // --- ASSET AUDIO ---
         const audioSalah = new Audio("reaksi-salah.mp3");
+        const audioFinishHim = new Audio("finish-him.mp3"); // Pastikan file audio finish him ada di folder yang sama
 
         let currentImageNormal = baseImageNormal; 
         let currentQuestions = [], currentQIndex = 0, score = 0, hp = 100, playerName = "";
         let timeLeft = 15, timerInterval;
         
         const maxQuestions = 25;
-        // PENTING: Daya serang dinaikkan menjadi 5% per jawaban benar.
-        // Dengan ini Anda HANYA butuh menjawab 20 benar (dari total 25 soal) untuk memicu HP 0%.
         const damagePerCorrect = 5; 
 
         // Sistem Audio SFX
@@ -391,14 +392,12 @@
         function updateScore() { document.getElementById('display-score').innerText = `Skor: ${score}`; }
 
         function updateHP() {
-            if(hp < 0) hp = 0; // Pastikan tidak tembus minus
+            if(hp < 0) hp = 0; 
             const hpBar = document.getElementById('hp-bar');
             hpBar.style.width = hp + '%';
             
-            // Format teks info
             document.getElementById('hp-text').innerText = `HP Pejabat: ${Math.round(hp)}% | Soal: ${Math.min(currentQIndex + 1, maxQuestions)}/${maxQuestions}`;
 
-            // Perubahan visual bar darah
             if (hp <= 20) { hpBar.style.backgroundColor = "var(--hp-low)"; currentImageNormal = imageBonyok; } 
             else if (hp <= 50) { hpBar.style.backgroundColor = "var(--hp-med)"; } 
             else { hpBar.style.backgroundColor = "var(--hp-high)"; }
@@ -426,10 +425,14 @@
 
         function loadQuestion() {
             // 1. Cek KONDISI MENANG / BOS MATI
-            // Math.round digunakan untuk menjamin tidak ada bug desimal.
             if (Math.round(hp) <= 0) {
                 clearInterval(timerInterval);
                 document.getElementById('finish-him-modal').style.display = 'flex';
+                
+                // MEMAINKAN AUDIO FINISH HIM 
+                audioFinishHim.currentTime = 0;
+                audioFinishHim.play().catch(e => console.log("Gagal memutar audio finish him:", e));
+                
                 return;
             } 
             
@@ -507,21 +510,22 @@
 
         // --- SISTEM FATALITY ---
         function normalWin() {
+            // Matikan suara "Finish Him" jika ditekan tidak
+            audioFinishHim.pause();
+            
             document.getElementById('finish-him-modal').style.display = 'none';
             alert(`SELAMAT! ${playerName}, Anda melepaskan pejabat dengan skor ${score}!`);
             location.reload();
         }
 
         function executeFatality() {
-            // 1. Sembunyikan modal konfirmasi
-            document.getElementById('finish-him-modal').style.display = 'none';
+            audioFinishHim.pause(); // Matikan suara "Finish Him"
             
-            // 2. Tampilkan kontainer hitam Fatality
+            document.getElementById('finish-him-modal').style.display = 'none';
             const fatContainer = document.getElementById('fatality-container');
             const fatVideo = document.getElementById('fatality-video');
             fatContainer.style.display = 'flex';
             
-            // 3. Putar video
             let playPromise = fatVideo.play();
             
             if (playPromise !== undefined) {
@@ -531,32 +535,26 @@
                 });
             }
 
-            // 4. Jika video selesai, panggil efek cinematic
             fatVideo.onended = () => {
                 triggerCinematicEnding();
             };
         }
 
         function triggerCinematicEnding() {
-            // Gelapkan video di latar belakang
             document.getElementById('fatality-video').style.opacity = '0.2'; 
 
             const elimText = document.getElementById('eliminated-text');
             const vicText = document.getElementById('victory-text');
             
-            // Langkah 1: Munculkan teks "Tereliminasi"
             elimText.classList.add('show-text');
 
-            // Langkah 2: Setelah 3 detik, hilangkan "Tereliminasi"
             setTimeout(() => {
                 elimText.classList.remove('show-text');
                 
-                // Langkah 3: Beri jeda 1 detik, lalu munculkan teks "Kamu Menang!"
                 setTimeout(() => {
                     document.getElementById('vic-name').innerText = playerName;
                     vicText.classList.add('show-text');
                     
-                    // Langkah 4: Setelah 4 detik perayaan, reload otomatis ke menu utama
                     setTimeout(() => {
                         location.reload(); 
                     }, 4000);
