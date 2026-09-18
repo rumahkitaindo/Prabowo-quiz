@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game Edukasi: Kalahkan Pejabat!</title>
+    
+    <!-- MENGAMBIL FONT GAME DARI GOOGLE FONTS -->
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+
     <style>
         :root {
             --red-flag: #ce1126;
@@ -20,7 +24,8 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: 'Russo One', sans-serif; 
+            letter-spacing: 0.5px;
         }
 
         body {
@@ -49,21 +54,22 @@
 
         /* --- Layar Login --- */
         #login-screen { padding: 50px 30px; display: flex; flex-direction: column; gap: 20px; }
-        #login-screen h1 { color: var(--red-flag); font-size: 2.8em; text-transform: uppercase; font-weight: 900; letter-spacing: 2px;}
+        #login-screen h1 { color: var(--red-flag); font-size: 3em; text-transform: uppercase; letter-spacing: 2px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);}
+        #login-screen p { font-size: 1.1em; color: #555; }
         input, select, .start-btn {
             padding: 15px; font-size: 1.1em; border-radius: 10px; border: 1px solid var(--btn-border);
             outline: none; width: 100%; max-width: 400px; margin: 0 auto;
         }
-        .start-btn { background: var(--red-flag); color: white; border: none; font-weight: bold; cursor: pointer; transition: all 0.2s ease; }
-        .start-btn:hover { background: #a70c1d; transform: scale(1.02); }
+        .start-btn { background: var(--red-flag); color: white; border: none; font-size: 1.3em; cursor: pointer; transition: all 0.2s ease; text-transform: uppercase; letter-spacing: 1px; }
+        .start-btn:hover { background: #a70c1d; transform: scale(1.02); box-shadow: 0 5px 15px rgba(206,17,38,0.4); }
 
         /* --- Layar Pilihan Karakter --- */
         #selection-screen { padding: 30px; display: none; flex-direction: column; align-items: center; gap: 20px; }
-        #selection-screen h2 { color: var(--red-flag); font-size: 2em; margin-bottom: 10px; }
+        #selection-screen h2 { color: var(--red-flag); font-size: 2.2em; margin-bottom: 10px; text-shadow: 1px 1px 3px rgba(0,0,0,0.1); }
         
         .showcase { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 20px;}
-        .showcase-img { width: 180px; height: 180px; border-radius: 20px; object-fit: cover; border: 3px solid var(--text-main); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-        .showcase-name { font-size: 2.2em; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; color: #111; }
+        .showcase-img { width: 180px; height: 180px; border-radius: 20px; object-fit: cover; border: 4px solid var(--text-main); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+        .showcase-name { font-size: 2.2em; text-transform: uppercase; letter-spacing: 2px; color: #111; }
         
         .character-grid { 
             display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; background: #f1f3f5; padding: 15px; border-radius: 15px; border: 2px solid #dee2e6;
@@ -82,21 +88,21 @@
         
         #header {
             display: flex; justify-content: space-between; padding: 20px 30px; background: #f8f9fa;
-            border-bottom: 2px solid #e9ecef; font-size: 1.1em; font-weight: 500;
+            border-bottom: 2px solid #e9ecef; font-size: 1.1em;
         }
 
         #hp-container {
-            width: 80%; background-color: #e9ecef; border-radius: 10px; height: 22px;
-            margin: 15px auto 0 auto; overflow: hidden; border: 1px solid #ced4da; position: relative;
+            width: 80%; background-color: #e9ecef; border-radius: 10px; height: 25px;
+            margin: 15px auto 0 auto; overflow: hidden; border: 2px solid #ced4da; position: relative;
         }
         #hp-bar { height: 100%; width: 100%; background-color: var(--hp-high); transition: width 0.4s ease, background-color 0.4s ease; }
-        #hp-text { position: absolute; width: 100%; text-align: center; top: 1px; font-size: 0.85em; font-weight: 700; color: #333; }
+        #hp-text { position: absolute; width: 100%; text-align: center; top: 2px; font-size: 0.9em; color: #333; text-shadow: 1px 1px 2px rgba(255,255,255,0.8); }
 
         #character-area { position: relative; height: 260px; display: flex; justify-content: center; align-items: center; margin: 20px 0; }
         
         #pejabat-img {
-            height: 240px; width: 380px; border-radius: 12px; border: 1px solid #ddd;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); object-fit: cover; position: relative; z-index: 10;
+            height: 240px; width: 380px; border-radius: 12px; border: 3px solid #ddd;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2); object-fit: cover; position: relative; z-index: 10;
         }
         
         .pain-effect { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both !important; filter: drop-shadow(0 0 20px var(--red-flag)) saturate(1.5); }
@@ -108,18 +114,18 @@
             40%, 60% { transform: translate3d(20px, 0, 0); }
         }
 
-        #timer-container { font-size: 1.1em; font-weight: 500; color: #555; margin-bottom: 5px;}
-        #question-text { font-size: 1.4em; margin: 10px 20px 25px 20px; font-weight: 600; color: #000; }
+        #timer-container { font-size: 1.3em; color: #555; margin-bottom: 5px;}
+        #question-text { font-size: 1.4em; margin: 10px 20px 25px 20px; color: #000; line-height: 1.3; }
         
         .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 40px; max-width: 800px; margin: 0 auto; }
         
         .option-btn {
             background: #ffffff; color: #000; padding: 15px 20px; font-size: 1.1em; border-radius: 12px;
-            border: 1px solid var(--btn-border); cursor: pointer; font-weight: 500; text-align: left;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: all 0.2s ease;
+            border: 2px solid var(--btn-border); cursor: pointer; text-align: left;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: all 0.2s ease;
         }
-        .option-btn:hover { background: var(--btn-hover); border-color: #adb5bd; }
-        .option-btn:disabled { cursor: not-allowed; opacity: 0.9; }
+        .option-btn:hover { background: var(--btn-hover); border-color: #adb5bd; transform: translateY(-2px); }
+        .option-btn:disabled { cursor: not-allowed; opacity: 0.9; transform: none; }
 
         .projectile {
             position: absolute; font-size: 90px; z-index: 20; pointer-events: none;
@@ -138,14 +144,14 @@
             border: 4px solid var(--red-flag); box-shadow: 0 0 30px rgba(206,17,38,0.5);
         }
         .modal-box h2 {
-            font-size: 4em; margin-bottom: 20px; font-weight: 900;
+            font-size: 4em; margin-bottom: 20px; 
             text-shadow: 2px 2px 5px #000; text-transform: uppercase; font-style: italic;
         }
-        .modal-text { color: white; font-size: 1.4em; margin-bottom: 25px; }
+        .modal-text { color: white; font-size: 1.5em; margin-bottom: 25px; }
         .modal-btn-group { display: flex; gap: 20px; justify-content: center; }
         .modal-btn-group button {
             padding: 15px 40px; font-size: 1.5em; border-radius: 8px; cursor: pointer;
-            font-weight: bold; border: none; transition: transform 0.2s;
+            border: none; transition: transform 0.2s; text-transform: uppercase;
         }
         .btn-ya { background: var(--hp-high); color: white; }
         .btn-tidak { background: #555; color: white; }
@@ -158,7 +164,7 @@
         #fatality-video { width: 100%; height: 100%; object-fit: cover; transition: opacity 1s; }
         
         .cinematic-text {
-            position: absolute; font-size: 5em; font-weight: 900;
+            position: absolute; font-size: 5em;
             text-shadow: 0px 5px 20px rgba(0,0,0,1); text-align: center;
             opacity: 0; transform: scale(0.5); pointer-events: none;
             transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -168,16 +174,16 @@
         .show-text { opacity: 1 !important; transform: scale(1) !important; }
 
         @media (max-width: 600px) {
-            #header { padding: 15px; font-size: 0.95em; }
+            #header { padding: 15px; font-size: 0.9em; }
             .options-grid { grid-template-columns: 1fr; padding: 0 20px; gap: 10px; }
             #pejabat-img { height: 180px; width: 280px; }
-            #question-text { font-size: 1.2em; }
+            #question-text { font-size: 1.1em; }
             .projectile { font-size: 60px; }
             #login-screen h1 { font-size: 2em; }
-            .modal-box h2 { font-size: 2.5em !important; }
-            .cinematic-text { font-size: 3em !important; }
+            .modal-box h2 { font-size: 2.2em !important; }
+            .cinematic-text { font-size: 2.5em !important; }
             .character-grid { gap: 5px; padding: 10px; }
-            .char-box { width: 60px; height: 60px; }
+            .char-box { width: 60px; height: 60px; font-size: 1.5em; }
         }
     </style>
 </head>
@@ -207,17 +213,17 @@
             
             <div class="character-grid">
                 <!-- Karakter 1 (Aktif & Bergaris Merah) -->
-                <div class="char-box active" onclick="alert('Karakter ini sudah terpilih!')">
+                <div class="char-box active" onclick="selectCharacter(true)">
                     <img src="pejabat-normal.jpg" onerror="this.src='https://via.placeholder.com/100'">
                 </div>
                 <!-- Karakter lainnya (Disabled) -->
-                <div class="char-box disabled" onclick="alert('Karakter belum terbuka!')">🔒</div>
-                <div class="char-box disabled" onclick="alert('Karakter belum terbuka!')">🔒</div>
-                <div class="char-box disabled" onclick="alert('Karakter belum terbuka!')">🔒</div>
-                <div class="char-box disabled" onclick="alert('Karakter belum terbuka!')">🔒</div>
-                <div class="char-box disabled" onclick="alert('Karakter belum terbuka!')">🔒</div>
-                <div class="char-box disabled" onclick="alert('Karakter belum terbuka!')">🔒</div>
-                <div class="char-box disabled" onclick="alert('Karakter belum terbuka!')">🔒</div>
+                <div class="char-box disabled" onclick="selectCharacter(false)">🔒</div>
+                <div class="char-box disabled" onclick="selectCharacter(false)">🔒</div>
+                <div class="char-box disabled" onclick="selectCharacter(false)">🔒</div>
+                <div class="char-box disabled" onclick="selectCharacter(false)">🔒</div>
+                <div class="char-box disabled" onclick="selectCharacter(false)">🔒</div>
+                <div class="char-box disabled" onclick="selectCharacter(false)">🔒</div>
+                <div class="char-box disabled" onclick="selectCharacter(false)">🔒</div>
             </div>
             
             <button class="start-btn" style="margin-top: 10px;" onclick="startGame()">MULAI PERTARUNGAN</button>
@@ -261,8 +267,8 @@
     <div id="game-over-modal" class="fullscreen-overlay" style="display:none;">
         <div class="modal-box">
             <h2>GAME OVER</h2>
-            <div class="modal-text">Pejabat gagal dikalahkan. Sisa Darah: <span id="go-hp"></span>%</div>
-            <div class="modal-text" style="font-size: 1.2em; color: #adb5bd;">Coba lagi? (<span id="go-timer">10</span>)</div>
+            <div class="modal-text">Pejabat gagal dikalahkan.<br>Sisa Darah: <span id="go-hp"></span>%</div>
+            <div class="modal-text" style="font-size: 1.1em; color: #adb5bd;">Coba lagi? (<span id="go-timer">10</span>)</div>
             <div class="modal-btn-group">
                 <button class="btn-ya" onclick="retryGameYes()">Ya</button>
                 <button class="btn-tidak" onclick="retryGameNo()">Tidak</button>
@@ -382,11 +388,12 @@
         // --- ASSET AUDIO UTAMA ---
         const audioSalah = new Audio("reaksi-salah.mp3");
         const audioFinishHim = new Audio("finish-him.mp3"); 
-
-        // --- ASSET AUDIO BARU ---
-        const audioGameOver = new Audio("game-over.mp3"); // Pastikan file audio Game Over ada
-        const audioEliminated = new Audio("eliminated.mp3"); // Pastikan file audio Eliminated (Boom) ada
-        const audioMenang = new Audio("menang.mp3"); // Pastikan file audio Menang (You Win) ada
+        const audioGameOver = new Audio("game-over.mp3"); 
+        const audioEliminated = new Audio("eliminated.mp3"); 
+        const audioMenang = new Audio("menang.mp3"); 
+        
+        // --- AUDIO CHOOSE YOUR FIGHTER ---
+        const audioChooseFighter = new Audio("choose-your-fighter.mp3");
 
         let currentImageNormal = baseImageNormal; 
         let currentQuestions = [], currentQIndex = 0, score = 0, hp = 100, playerName = "", diffText = "";
@@ -395,7 +402,7 @@
         const maxQuestions = 25;
         const damagePerCorrect = 5; 
 
-        // Sistem Audio SFX
+        // Sistem Audio SFX Bawaan (Web Audio API)
         let audioCtx, noiseBuffer;
         function initAudio() {
             if(!audioCtx) {
@@ -439,6 +446,21 @@
                 case 'knife': playTone(1500, 'sawtooth', 0.1, 100); break;
                 case 'poop': playNoise('lowpass', 150, 0.3, 1.5); break;
                 case 'snake': playNoise('highpass', 4000, 0.5, 1.0); break;
+                case 'select': playTone(800, 'square', 0.15, 1200); break; 
+                case 'locked': playTone(200, 'sawtooth', 0.2, 150); break; 
+            }
+        }
+
+        // --- Logika Pilih Lawan ---
+        function selectCharacter(isActive) {
+            if (!audioCtx || audioCtx.state === 'suspended') initAudio();
+            
+            if (isActive) {
+                playSfx('select');
+                alert('Karakter ini sudah terpilih!');
+            } else {
+                playSfx('locked');
+                alert('Karakter belum terbuka!');
             }
         }
 
@@ -462,9 +484,16 @@
             
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('selection-screen').style.display = 'flex';
+            
+            // PUTAR SUARA CHOOSE YOUR FIGHTER
+            audioChooseFighter.currentTime = 0;
+            audioChooseFighter.play().catch(e => console.log("Gagal memutar audio choose fighter:", e));
         }
 
         function startGame() {
+            // Matikan suara choose your fighter jika masih berbunyi saat klik mulai
+            audioChooseFighter.pause();
+            
             document.getElementById('selection-screen').style.display = 'none';
             document.getElementById('game-screen').style.display = 'flex';
             
@@ -590,7 +619,6 @@
 
         // --- SISTEM GAME OVER MODAL ---
         function showGameOverModal() {
-            // MEMAINKAN AUDIO GAME OVER [source: 9]
             audioGameOver.currentTime = 0;
             audioGameOver.play().catch(e => console.log(e));
 
@@ -652,7 +680,6 @@
             const elimText = document.getElementById('eliminated-text');
             const vicText = document.getElementById('victory-text');
             
-            // MEMAINKAN AUDIO ELIMINATED (BUNYI BOOM IMPACT) [source: 11]
             audioEliminated.currentTime = 0;
             audioEliminated.play().catch(e => console.log(e));
 
@@ -663,7 +690,6 @@
                 setTimeout(() => {
                     document.getElementById('vic-name').innerText = playerName;
 
-                    // MEMAINKAN AUDIO YOU WIN [source: 10]
                     audioMenang.currentTime = 0;
                     audioMenang.play().catch(e => console.log(e));
 
