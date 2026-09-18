@@ -366,7 +366,6 @@
             ]
         };
 
-        // --- DAFTAR ITEM LEMPAR (Diperbarui dengan Poop dan Ular) ---
         const throwItems = [
             { emoji: '🥚', type: 'egg' }, 
             { emoji: '🍌', type: 'banana' }, 
@@ -380,9 +379,14 @@
         const imageHurt = 'pejabat-sakit.jpg';
         const imageBonyok = 'pejabat-bonyok.jpg';
         
-        // --- ASSET AUDIO ---
+        // --- ASSET AUDIO UTAMA ---
         const audioSalah = new Audio("reaksi-salah.mp3");
         const audioFinishHim = new Audio("finish-him.mp3"); 
+
+        // --- ASSET AUDIO BARU ---
+        const audioGameOver = new Audio("game-over.mp3"); // Pastikan file audio Game Over ada
+        const audioEliminated = new Audio("eliminated.mp3"); // Pastikan file audio Eliminated (Boom) ada
+        const audioMenang = new Audio("menang.mp3"); // Pastikan file audio Menang (You Win) ada
 
         let currentImageNormal = baseImageNormal; 
         let currentQuestions = [], currentQIndex = 0, score = 0, hp = 100, playerName = "", diffText = "";
@@ -433,9 +437,7 @@
                 case 'banana': playTone(800, 'sine', 0.5, 100); break;
                 case 'bomb': playNoise('lowpass', 200, 1.2, 2.0); break;
                 case 'knife': playTone(1500, 'sawtooth', 0.1, 100); break;
-                // Suara kotoran/poop (berbunyi splat/jatuh berat)
                 case 'poop': playNoise('lowpass', 150, 0.3, 1.5); break;
-                // Suara ular (berbunyi desisan nyaring)
                 case 'snake': playNoise('highpass', 4000, 0.5, 1.0); break;
             }
         }
@@ -446,9 +448,12 @@
             if (!nameInput) { alert("Silakan masukkan nama Anda terlebih dahulu!"); return; }
             
             initAudio(); 
-            // Unlock audio browser
+            // Unlock audio browser agar tidak diblokir
             audioSalah.play().then(() => { audioSalah.pause(); audioSalah.currentTime = 0; }).catch(e=>{});
             audioFinishHim.play().then(() => { audioFinishHim.pause(); audioFinishHim.currentTime = 0; }).catch(e=>{});
+            audioGameOver.play().then(() => { audioGameOver.pause(); audioGameOver.currentTime = 0; }).catch(e=>{});
+            audioEliminated.play().then(() => { audioEliminated.pause(); audioEliminated.currentTime = 0; }).catch(e=>{});
+            audioMenang.play().then(() => { audioMenang.pause(); audioMenang.currentTime = 0; }).catch(e=>{});
 
             playerName = nameInput;
             const difficultySelect = document.getElementById('difficulty');
@@ -585,6 +590,10 @@
 
         // --- SISTEM GAME OVER MODAL ---
         function showGameOverModal() {
+            // MEMAINKAN AUDIO GAME OVER [source: 9]
+            audioGameOver.currentTime = 0;
+            audioGameOver.play().catch(e => console.log(e));
+
             document.getElementById('go-hp').innerText = Math.round(hp);
             document.getElementById('game-over-modal').style.display = 'flex';
             
@@ -643,12 +652,21 @@
             const elimText = document.getElementById('eliminated-text');
             const vicText = document.getElementById('victory-text');
             
+            // MEMAINKAN AUDIO ELIMINATED (BUNYI BOOM IMPACT) [source: 11]
+            audioEliminated.currentTime = 0;
+            audioEliminated.play().catch(e => console.log(e));
+
             elimText.classList.add('show-text');
 
             setTimeout(() => {
                 elimText.classList.remove('show-text');
                 setTimeout(() => {
                     document.getElementById('vic-name').innerText = playerName;
+
+                    // MEMAINKAN AUDIO YOU WIN [source: 10]
+                    audioMenang.currentTime = 0;
+                    audioMenang.play().catch(e => console.log(e));
+
                     vicText.classList.add('show-text');
                     setTimeout(() => { location.reload(); }, 4000);
                 }, 1000); 
