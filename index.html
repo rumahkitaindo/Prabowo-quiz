@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Edukasi: Uji Pengetahuanmu!</title>
+    <title>Game Edukasi: Kalahkan Pejabat!</title>
     <style>
         :root {
             --red-flag: #ce1126;
@@ -49,13 +49,33 @@
 
         /* --- Layar Login --- */
         #login-screen { padding: 50px 30px; display: flex; flex-direction: column; gap: 20px; }
-        #login-screen h1 { color: var(--red-flag); font-size: 2.5em; }
+        #login-screen h1 { color: var(--red-flag); font-size: 2.8em; text-transform: uppercase; font-weight: 900; letter-spacing: 2px;}
         input, select, .start-btn {
             padding: 15px; font-size: 1.1em; border-radius: 10px; border: 1px solid var(--btn-border);
             outline: none; width: 100%; max-width: 400px; margin: 0 auto;
         }
         .start-btn { background: var(--red-flag); color: white; border: none; font-weight: bold; cursor: pointer; transition: all 0.2s ease; }
         .start-btn:hover { background: #a70c1d; transform: scale(1.02); }
+
+        /* --- Layar Pilihan Karakter --- */
+        #selection-screen { padding: 30px; display: none; flex-direction: column; align-items: center; gap: 20px; }
+        #selection-screen h2 { color: var(--red-flag); font-size: 2em; margin-bottom: 10px; }
+        
+        .showcase { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 20px;}
+        .showcase-img { width: 180px; height: 180px; border-radius: 20px; object-fit: cover; border: 3px solid var(--text-main); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+        .showcase-name { font-size: 2.2em; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; color: #111; }
+        
+        .character-grid { 
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; background: #f1f3f5; padding: 15px; border-radius: 15px; border: 2px solid #dee2e6;
+        }
+        .char-box { 
+            width: 75px; height: 75px; border-radius: 10px; display: flex; justify-content: center; align-items: center; 
+            border: 3px solid transparent; overflow: hidden; background: #fff; cursor: pointer; transition: all 0.2s;
+        }
+        .char-box img { width: 100%; height: 100%; object-fit: cover; }
+        .char-box.active { border-color: var(--red-flag); transform: scale(1.05); box-shadow: 0 4px 10px rgba(206,17,38,0.3); }
+        .char-box.disabled { background: #e9ecef; cursor: not-allowed; opacity: 0.6; font-size: 2em; }
+        .char-box.disabled:hover { transform: none; }
 
         /* --- Layar Game --- */
         #game-screen { display: none; flex-direction: column; padding-bottom: 30px; }
@@ -106,22 +126,22 @@
             transition: all 0.4s cubic-bezier(0.1, 0.8, 0.2, 1); filter: drop-shadow(0 10px 10px rgba(0,0,0,0.4));
         }
 
-        /* --- OVERLAYS (Finish Him & Fatality) --- */
+        /* --- OVERLAYS (Modals & Fatality) --- */
         .fullscreen-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.9); z-index: 9999;
             display: flex; justify-content: center; align-items: center; flex-direction: column;
         }
 
-        /* Modal Finish Him */
         .modal-box {
             background: #111; padding: 40px; border-radius: 15px; text-align: center;
             border: 4px solid var(--red-flag); box-shadow: 0 0 30px rgba(206,17,38,0.5);
         }
         .modal-box h2 {
-            color: var(--red-flag); font-size: 4em; margin-bottom: 30px; font-weight: 900;
+            font-size: 4em; margin-bottom: 20px; font-weight: 900;
             text-shadow: 2px 2px 5px #000; text-transform: uppercase; font-style: italic;
         }
+        .modal-text { color: white; font-size: 1.4em; margin-bottom: 25px; }
         .modal-btn-group { display: flex; gap: 20px; justify-content: center; }
         .modal-btn-group button {
             padding: 15px 40px; font-size: 1.5em; border-radius: 8px; cursor: pointer;
@@ -131,11 +151,12 @@
         .btn-tidak { background: #555; color: white; }
         .modal-btn-group button:hover { transform: scale(1.1); }
 
-        /* Layar Fatality / Video */
+        #game-over-modal .modal-box { border-color: #7f8c8d; box-shadow: 0 0 30px rgba(127,140,141,0.5); }
+        #game-over-modal h2 { color: var(--red-flag); font-size: 3.5em; }
+
         #fatality-container { background: #000; }
         #fatality-video { width: 100%; height: 100%; object-fit: cover; transition: opacity 1s; }
         
-        /* Animasi Teks Akhir */
         .cinematic-text {
             position: absolute; font-size: 5em; font-weight: 900;
             text-shadow: 0px 5px 20px rgba(0,0,0,1); text-align: center;
@@ -144,7 +165,6 @@
         }
         #eliminated-text { color: var(--red-flag); letter-spacing: 5px; text-transform: uppercase; }
         #victory-text { color: #ffd700; font-size: 4em; }
-
         .show-text { opacity: 1 !important; transform: scale(1) !important; }
 
         @media (max-width: 600px) {
@@ -153,8 +173,11 @@
             #pejabat-img { height: 180px; width: 280px; }
             #question-text { font-size: 1.2em; }
             .projectile { font-size: 60px; }
-            .modal-box h2 { font-size: 2.5em; }
+            #login-screen h1 { font-size: 2em; }
+            .modal-box h2 { font-size: 2.5em !important; }
             .cinematic-text { font-size: 3em !important; }
+            .character-grid { gap: 5px; padding: 10px; }
+            .char-box { width: 60px; height: 60px; }
         }
     </style>
 </head>
@@ -163,7 +186,7 @@
     <div id="app-container">
         <!-- Halaman Login -->
         <div id="login-screen">
-            <h1>Uji Pengetahuanmu!</h1>
+            <h1>Kalahkan Pejabat</h1>
             <p>Jawab pertanyaan dengan benar untuk mengalahkan pejabat!</p>
             <input type="text" id="player-name" placeholder="Masukkan Nama Anda..." required autocomplete="off">
             <select id="difficulty">
@@ -171,7 +194,33 @@
                 <option value="medium">Level: Sedang (SMP)</option>
                 <option value="hard">Level: Sulit (SMA/Umum)</option>
             </select>
-            <button class="start-btn" onclick="startGame()">Mulai Game</button>
+            <button class="start-btn" onclick="goToSelection()">Lanjut</button>
+        </div>
+
+        <!-- Halaman Pemilihan Karakter -->
+        <div id="selection-screen">
+            <h2>Pilih Lawanmu!</h2>
+            <div class="showcase">
+                <img src="pejabat-normal.jpg" alt="Karakter Pejabat" class="showcase-img" onerror="this.src='https://via.placeholder.com/200'">
+                <div class="showcase-name">Pejabat Utama</div>
+            </div>
+            
+            <div class="character-grid">
+                <!-- Karakter 1 (Aktif & Bergaris Merah) -->
+                <div class="char-box active" onclick="alert('Karakter ini sudah terpilih!')">
+                    <img src="pejabat-normal.jpg" onerror="this.src='https://via.placeholder.com/100'">
+                </div>
+                <!-- Karakter lainnya (Disabled) -->
+                <div class="char-box disabled" onclick="alert('Karakter belum terbuka!')">🔒</div>
+                <div class="char-box disabled" onclick="alert('Karakter belum terbuka!')">🔒</div>
+                <div class="char-box disabled" onclick="alert('Karakter belum terbuka!')">🔒</div>
+                <div class="char-box disabled" onclick="alert('Karakter belum terbuka!')">🔒</div>
+                <div class="char-box disabled" onclick="alert('Karakter belum terbuka!')">🔒</div>
+                <div class="char-box disabled" onclick="alert('Karakter belum terbuka!')">🔒</div>
+                <div class="char-box disabled" onclick="alert('Karakter belum terbuka!')">🔒</div>
+            </div>
+            
+            <button class="start-btn" style="margin-top: 10px;" onclick="startGame()">MULAI PERTARUNGAN</button>
         </div>
 
         <!-- Halaman Game -->
@@ -200,10 +249,23 @@
     <!-- MODAL FINISH HIM -->
     <div id="finish-him-modal" class="fullscreen-overlay" style="display:none;">
         <div class="modal-box">
-            <h2>FINISH HIM!</h2>
+            <h2 style="color: var(--red-flag);">FINISH HIM!</h2>
             <div class="modal-btn-group">
                 <button class="btn-ya" onclick="executeFatality()">Ya</button>
                 <button class="btn-tidak" onclick="normalWin()">Tidak</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL GAME OVER -->
+    <div id="game-over-modal" class="fullscreen-overlay" style="display:none;">
+        <div class="modal-box">
+            <h2>GAME OVER</h2>
+            <div class="modal-text">Pejabat gagal dikalahkan. Sisa Darah: <span id="go-hp"></span>%</div>
+            <div class="modal-text" style="font-size: 1.2em; color: #adb5bd;">Coba lagi? (<span id="go-timer">10</span>)</div>
+            <div class="modal-btn-group">
+                <button class="btn-ya" onclick="retryGameYes()">Ya</button>
+                <button class="btn-tidak" onclick="retryGameNo()">Tidak</button>
             </div>
         </div>
     </div>
@@ -314,8 +376,8 @@
         const audioFinishHim = new Audio("finish-him.mp3"); 
 
         let currentImageNormal = baseImageNormal; 
-        let currentQuestions = [], currentQIndex = 0, score = 0, hp = 100, playerName = "";
-        let timeLeft = 15, timerInterval;
+        let currentQuestions = [], currentQIndex = 0, score = 0, hp = 100, playerName = "", diffText = "";
+        let timeLeft = 15, timerInterval, goTimerInterval;
         
         const maxQuestions = 25;
         const damagePerCorrect = 5; 
@@ -365,27 +427,27 @@
             }
         }
 
-        // --- Logika Game ---
-        function startGame() {
+        // --- Alur Transisi Layar ---
+        function goToSelection() {
             const nameInput = document.getElementById('player-name').value;
             if (!nameInput) { alert("Silakan masukkan nama Anda terlebih dahulu!"); return; }
             
             initAudio(); 
-            
-            // --- PENTING: UNLOCK AUDIO BROWSER ---
-            // Kita pancing pemutaran audio sekali saat tombol Mulai Game diklik,
-            // lalu langsung dipause. Ini menjamin audio tidak akan diblokir browser nantinya.
+            // Unlock audio browser
             audioSalah.play().then(() => { audioSalah.pause(); audioSalah.currentTime = 0; }).catch(e=>{});
             audioFinishHim.play().then(() => { audioFinishHim.pause(); audioFinishHim.currentTime = 0; }).catch(e=>{});
-            // -------------------------------------
 
             playerName = nameInput;
             const difficultySelect = document.getElementById('difficulty');
-            const diffText = difficultySelect.options[difficultySelect.selectedIndex].text.split(' ')[1]; 
-            
+            diffText = difficultySelect.options[difficultySelect.selectedIndex].text.split(' ')[1]; 
             currentQuestions = [...questionsData[difficultySelect.value]].sort(() => Math.random() - 0.5); 
             
             document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('selection-screen').style.display = 'flex';
+        }
+
+        function startGame() {
+            document.getElementById('selection-screen').style.display = 'none';
             document.getElementById('game-screen').style.display = 'flex';
             
             document.getElementById('display-name').innerText = `Pemain: ${playerName}`;
@@ -432,25 +494,17 @@
         }
 
         function loadQuestion() {
-            // Cek Menang / Bos Mati
             if (Math.round(hp) <= 0) {
                 clearInterval(timerInterval);
                 document.getElementById('finish-him-modal').style.display = 'flex';
-                
-                // MEMAINKAN AUDIO FINISH HIM (Aman karena sudah di-unlock di awal)
                 audioFinishHim.currentTime = 0;
-                audioFinishHim.play().catch(e => console.log("Masih diblokir browser:", e));
-                
+                audioFinishHim.play().catch(e => console.log(e));
                 return;
             } 
             
-            // Cek Soal Habis
             if (currentQIndex >= maxQuestions) { 
                 clearInterval(timerInterval);
-                setTimeout(() => { 
-                    alert(`YAHH! SOAL HABIS!\nSkor Akhir: ${score}\nPejabat gagal dikalahkan. Sisa Darah: ${Math.round(hp)}%`); 
-                    location.reload(); 
-                }, 500);
+                showGameOverModal();
                 return;
             }
 
@@ -514,6 +568,36 @@
                     currentQIndex++; loadQuestion(); 
                 }, 1300);
             }, 450); 
+        }
+
+        // --- SISTEM GAME OVER MODAL ---
+        function showGameOverModal() {
+            document.getElementById('go-hp').innerText = Math.round(hp);
+            document.getElementById('game-over-modal').style.display = 'flex';
+            
+            let goTimeLeft = 10;
+            document.getElementById('go-timer').innerText = goTimeLeft;
+
+            goTimerInterval = setInterval(() => {
+                goTimeLeft--;
+                document.getElementById('go-timer').innerText = goTimeLeft;
+                if (goTimeLeft <= 0) {
+                    clearInterval(goTimerInterval);
+                    retryGameNo(); 
+                }
+            }, 1000);
+        }
+
+        function retryGameYes() {
+            clearInterval(goTimerInterval);
+            location.reload(); 
+        }
+
+        function retryGameNo() {
+            clearInterval(goTimerInterval);
+            document.getElementById('game-over-modal').style.display = 'none';
+            alert(`Sayang sekali, ${playerName}. Silakan coba lagi lain waktu.\nSkor Akhir: ${score}`);
+            location.reload();
         }
 
         // --- SISTEM FATALITY ---
