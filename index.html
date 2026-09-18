@@ -391,9 +391,11 @@
         const audioGameOver = new Audio("game-over.mp3"); 
         const audioEliminated = new Audio("eliminated.mp3"); 
         const audioMenang = new Audio("menang.mp3"); 
-        
-        // --- AUDIO CHOOSE YOUR FIGHTER ---
         const audioChooseFighter = new Audio("choose-your-fighter.mp3");
+        
+        // --- AUDIO MUSIK PERTARUNGAN ---
+        const audioBattle = new Audio("battle.mp3");
+        audioBattle.loop = true; // Set lagu untuk diulang terus selama pertarungan
 
         let currentImageNormal = baseImageNormal; 
         let currentQuestions = [], currentQIndex = 0, score = 0, hp = 100, playerName = "", diffText = "";
@@ -476,6 +478,7 @@
             audioGameOver.play().then(() => { audioGameOver.pause(); audioGameOver.currentTime = 0; }).catch(e=>{});
             audioEliminated.play().then(() => { audioEliminated.pause(); audioEliminated.currentTime = 0; }).catch(e=>{});
             audioMenang.play().then(() => { audioMenang.pause(); audioMenang.currentTime = 0; }).catch(e=>{});
+            audioBattle.play().then(() => { audioBattle.pause(); audioBattle.currentTime = 0; }).catch(e=>{}); // Unlock battle music
 
             playerName = nameInput;
             const difficultySelect = document.getElementById('difficulty');
@@ -491,7 +494,7 @@
         }
 
         function startGame() {
-            // Matikan suara choose your fighter jika masih berbunyi saat klik mulai
+            // Matikan suara choose your fighter jika masih berbunyi
             audioChooseFighter.pause();
             
             document.getElementById('selection-screen').style.display = 'none';
@@ -503,6 +506,10 @@
             score = 0; hp = 100; currentQIndex = 0; currentImageNormal = baseImageNormal;
             document.getElementById('pejabat-img').src = currentImageNormal;
             
+            // PUTAR MUSIK PERTARUNGAN
+            audioBattle.currentTime = 0;
+            audioBattle.play().catch(e => console.log("Gagal memutar lagu pertarungan:", e));
+
             updateScore(); updateHP(); loadQuestion();
         }
 
@@ -543,6 +550,8 @@
         function loadQuestion() {
             if (Math.round(hp) <= 0) {
                 clearInterval(timerInterval);
+                audioBattle.pause(); // MATIKAN MUSIK PERTARUNGAN
+                
                 document.getElementById('finish-him-modal').style.display = 'flex';
                 audioFinishHim.currentTime = 0;
                 audioFinishHim.play().catch(e => console.log(e));
@@ -619,6 +628,8 @@
 
         // --- SISTEM GAME OVER MODAL ---
         function showGameOverModal() {
+            audioBattle.pause(); // MATIKAN MUSIK PERTARUNGAN
+
             audioGameOver.currentTime = 0;
             audioGameOver.play().catch(e => console.log(e));
 
