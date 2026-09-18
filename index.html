@@ -366,7 +366,16 @@
             ]
         };
 
-        const throwItems = [{ emoji: '🥚', type: 'egg' }, { emoji: '🍌', type: 'banana' }, { emoji: '💣', type: 'bomb' }, { emoji: '🔪', type: 'knife' }];
+        // --- DAFTAR ITEM LEMPAR (Diperbarui dengan Poop dan Ular) ---
+        const throwItems = [
+            { emoji: '🥚', type: 'egg' }, 
+            { emoji: '🍌', type: 'banana' }, 
+            { emoji: '💣', type: 'bomb' }, 
+            { emoji: '🔪', type: 'knife' },
+            { emoji: '💩', type: 'poop' },
+            { emoji: '🐍', type: 'snake' }
+        ];
+
         const baseImageNormal = 'pejabat-normal.jpg';
         const imageHurt = 'pejabat-sakit.jpg';
         const imageBonyok = 'pejabat-bonyok.jpg';
@@ -424,6 +433,10 @@
                 case 'banana': playTone(800, 'sine', 0.5, 100); break;
                 case 'bomb': playNoise('lowpass', 200, 1.2, 2.0); break;
                 case 'knife': playTone(1500, 'sawtooth', 0.1, 100); break;
+                // Suara kotoran/poop (berbunyi splat/jatuh berat)
+                case 'poop': playNoise('lowpass', 150, 0.3, 1.5); break;
+                // Suara ular (berbunyi desisan nyaring)
+                case 'snake': playNoise('highpass', 4000, 0.5, 1.0); break;
             }
         }
 
