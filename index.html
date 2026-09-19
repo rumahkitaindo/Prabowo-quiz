@@ -50,7 +50,6 @@
             overflow: visible;
             border: 1px solid #e9ecef;
             margin: auto;
-            /* Efek Animasi Transisi Halus */
             animation: fadeIn 0.4s ease-in-out;
         }
 
@@ -153,7 +152,6 @@
 
         #timer-container { font-size: 1.2em; color: #555; margin-bottom: 2px;}
         
-        /* Notifikasi Streak */
         #streak-notification {
             font-size: 1.1em;
             color: #ff9f43;
@@ -170,7 +168,6 @@
             min-height: 50px; 
         }
         
-        /* Tombol Bantuan (Lifeline) */
         .lifeline-container {
             display: flex;
             justify-content: center;
@@ -190,14 +187,23 @@
         .lifeline-btn:hover:not(:disabled) { transform: scale(1.05); background: #2980b9; }
         .lifeline-btn:disabled { background: #bdc3c7; cursor: not-allowed; }
 
-        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 20px; max-width: 800px; margin: 0 auto; }
+        /* KONTROL GRID 2x2 PERMANEN (Bahkan di Mobile) */
+        .options-grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 12px; 
+            padding: 0 20px; 
+            max-width: 800px; 
+            margin: 0 auto; 
+        }
         
         .option-btn {
-            background: #ffffff; color: #000; padding: 12px 15px; font-size: 1em; border-radius: 12px;
+            background: #ffffff; color: #000; padding: 12px 15px; font-size: 0.95em; border-radius: 12px;
             border: 2px solid var(--btn-border); cursor: pointer; text-align: left;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: all 0.2s ease;
-            min-height: 60px; /* Menjamin tombol tidak terpotong */
+            min-height: 65px; 
             display: flex; align-items: center;
+            word-break: break-word;
         }
         .option-btn:hover:not(:disabled) { background: var(--btn-hover); border-color: #adb5bd; transform: translateY(-2px); }
         .option-btn:disabled { cursor: not-allowed; opacity: 0.9; transform: none; }
@@ -294,9 +300,13 @@
             body { align-items: flex-start; padding: 10px; }
             #app-container { margin-top: 10px; margin-bottom: 20px; }
             #header { padding: 10px 15px; font-size: 0.9em; }
-            .options-grid { grid-template-columns: 1fr; padding: 0 15px; gap: 10px; }
+            
+            /* Mempertahankan grid 2x2 di perangkat seluler kecil dengan penyesuaian padding & ukuran font */
+            .options-grid { padding: 0 10px; gap: 8px; }
+            .option-btn { font-size: 0.85em; padding: 8px 10px; min-height: 60px; }
+
             #pejabat-img { height: 160px; width: 250px; }
-            #question-text { font-size: 1.1em; margin-bottom: 12px; }
+            #question-text { font-size: 1.1em; margin-bottom: 10px; }
             .projectile { font-size: 60px; }
             #login-screen h1 { font-size: 2em; }
             .modal-box h2 { font-size: 2em !important; }
@@ -309,10 +319,8 @@
 </head>
 <body>
 
-    <!-- TOMBOL MUTE / UNMUTE AUDIO -->
     <button id="audio-toggle-btn" onclick="toggleAudioMute()" title="Matikan/Nyalakan Suara">🔊</button>
 
-    <!-- KOMPONEN LAYAR LOADING -->
     <div id="loading-screen">
         <div class="flag-wrapper">
             <div class="flag-pole"></div>
@@ -325,7 +333,6 @@
     </div>
 
     <div id="app-container">
-        <!-- Halaman Login -->
         <div id="login-screen">
             <h1>Perang Tikus</h1>
             <p>Jawab pertanyaan dengan benar untuk mengalahkan Prororo!</p>
@@ -339,7 +346,6 @@
             <button class="start-btn" onclick="goToSelection()">Lanjut</button>
         </div>
 
-        <!-- Halaman Pemilihan Karakter -->
         <div id="selection-screen" style="display: none;">
             <h2>Pilih Lawanmu!</h2>
             <div class="showcase">
@@ -363,7 +369,6 @@
             <button class="start-btn" style="margin-top: 10px;" onclick="startGame()">MULAI PERTARUNGAN</button>
         </div>
 
-        <!-- Halaman Game -->
         <div id="game-screen" style="display: none;">
             <div id="header">
                 <span id="display-name">Pemain: -</span>
@@ -383,7 +388,6 @@
             <div id="timer-container">⏳ Waktu: <span id="time-left">15</span> detik</div>
             <div id="streak-notification"></div>
             
-            <!-- TOMBOL BANTUAN (LIFELINE) -->
             <div class="lifeline-container">
                 <button id="lifeline-5050" class="lifeline-btn" onclick="useLifeline5050()">💡 50:50</button>
                 <button id="lifeline-skip" class="lifeline-btn" onclick="useLifelineSkip()">⏭️ Lewati Soal</button>
@@ -394,7 +398,6 @@
         </div>
     </div>
 
-    <!-- MODAL FINISH HIM -->
     <div id="finish-him-modal" class="fullscreen-overlay" style="display:none;">
         <div class="modal-box">
             <h2 style="color: var(--red-flag);">FINISH HIM!</h2>
@@ -405,7 +408,6 @@
         </div>
     </div>
 
-    <!-- MODAL GAME OVER -->
     <div id="game-over-modal" class="fullscreen-overlay" style="display:none;">
         <div class="modal-box">
             <img src="game-over.jpg" alt="Game Over" class="game-over-img" onerror="this.style.display='none'">
@@ -419,7 +421,6 @@
         </div>
     </div>
 
-    <!-- FATALITY & CAPTURED VIDEO SCREEN -->
     <div id="fatality-container" class="fullscreen-overlay" style="display:none;">
         <video id="fatality-video" class="cinematic-video" playsinline preload="auto">
             <source src="pejabat-kalah.mp4" type="video/mp4">
@@ -433,7 +434,6 @@
     </div>
 
     <script>
-        // --- LOCAL STORAGE HIGH SCORE MANAGEMENT ---
         function checkHighScoreOnInit() {
             let savedHighScore = localStorage.getItem('perang_tikus_highscore') || 0;
             document.getElementById('high-score-display').innerText = `🏆 High Score: ${savedHighScore}`;
@@ -447,14 +447,12 @@
             }
         }
 
-        // --- AUDIO MUTE SYSTEM ---
         let isMuted = false;
         function toggleAudioMute() {
             isMuted = !isMuted;
             const btn = document.getElementById('audio-toggle-btn');
             btn.innerText = isMuted ? "🔇" : "🔊";
 
-            // Matikan/Nyalakan seluruh objek audio aktif
             audioBattle.muted = isMuted;
             audioSalah.muted = isMuted;
             audioFinishHim.muted = isMuted;
@@ -587,7 +585,7 @@
         let currentImageNormal = baseImageNormal; 
         let currentQuestions = [], currentQIndex = 0, score = 0, hp = 100, playerName = "", diffText = "";
         let timeLeft = 15, timerInterval, goTimerInterval;
-        let streakCount = 0; // Pelacak combo benar beruntun
+        let streakCount = 0;
         let lifeline5050Used = false;
         let lifelineSkipUsed = false;
         
@@ -769,7 +767,7 @@
         }
 
         function handleTimeOut() {
-            streakCount = 0; // Reset streak
+            streakCount = 0; 
             document.getElementById('streak-notification').innerText = "Waktu Habis! Streak Terputus.";
             audioSalah.currentTime = 0; audioSalah.play().catch(e=>{});
             const buttons = document.querySelectorAll('.option-btn');
@@ -817,7 +815,7 @@
                 let bonusScore = 0;
                 let streakText = "";
                 if (streakCount >= 3) {
-                    bonusScore = 5; // Bonus combo benar beruntun
+                    bonusScore = 5; 
                     streakText = `🔥 STREAK x${streakCount}! (+5 Bonus Skor)`;
                 } else {
                     streakText = `Benar!`;
@@ -830,7 +828,7 @@
                 clickedBtn.style.background = '#2ed573'; clickedBtn.style.color = 'white'; clickedBtn.style.borderColor = '#2ed573';
                 triggerCorrectAction();
             } else {
-                streakCount = 0; // Reset streak
+                streakCount = 0; 
                 document.getElementById('streak-notification').innerText = "Jawaban Salah! Streak Terputus.";
                 audioSalah.currentTime = 0; audioSalah.play().catch(e=>{});
                 clickedBtn.style.background = '#ff4757'; clickedBtn.style.color = 'white'; clickedBtn.style.borderColor = '#ff4757';
@@ -839,7 +837,6 @@
             }
         }
 
-        // --- FITUR BANTUAN (LIFELINES) ---
         function useLifeline5050() {
             if (lifeline5050Used) return;
             lifeline5050Used = true;
@@ -847,7 +844,6 @@
 
             const buttons = Array.from(document.querySelectorAll('.option-btn'));
             let incorrectButtons = buttons.filter(btn => btn.dataset.correct !== 'true');
-            // Acak dan sembunyikan 2 tombol salah
             incorrectButtons.sort(() => Math.random() - 0.5);
             for (let i = 0; i < 2; i++) {
                 if (incorrectButtons[i]) {
