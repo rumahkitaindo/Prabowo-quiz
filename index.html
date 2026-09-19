@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game Edukasi: Perang Tikus</title>
     
+    <!-- Favicon menggunakan logo.png -->
+    <link rel="icon" type="image/png" href="logo.png">
+    
     <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
 
     <style>
@@ -58,26 +61,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* --- Tombol Audio Mute di Pojok --- */
-        #audio-toggle-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #fff;
-            border: 2px solid var(--red-flag);
-            color: var(--red-flag);
-            font-size: 1.2em;
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            cursor: pointer;
-            z-index: 999999;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            transition: transform 0.2s;
-        }
-        #audio-toggle-btn:hover { transform: scale(1.1); }
-
-        /* --- High Score di Login --- */
         #high-score-display {
             font-size: 1em;
             color: #444;
@@ -90,8 +73,19 @@
         }
 
         /* --- Layar Login --- */
-        #login-screen { padding: 40px 20px; display: flex; flex-direction: column; gap: 20px; }
-        #login-screen h1 { color: var(--red-flag); font-size: 2.5em; text-transform: uppercase; letter-spacing: 2px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);}
+        #login-screen { padding: 40px 20px; display: flex; flex-direction: column; gap: 20px; align-items: center; }
+        
+        /* Style untuk Logo Utama di Halaman Login */
+        .login-logo {
+            width: 180px;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid var(--red-flag);
+            box-shadow: 0 5px 20px rgba(206, 17, 38, 0.4);
+            margin-bottom: 5px;
+        }
+
         #login-screen p { font-size: 1.1em; color: #555; }
         input, select, .start-btn {
             padding: 15px; font-size: 1.1em; border-radius: 10px; border: 1px solid var(--btn-border);
@@ -187,7 +181,6 @@
         .lifeline-btn:hover:not(:disabled) { transform: scale(1.05); background: #2980b9; }
         .lifeline-btn:disabled { background: #bdc3c7; cursor: not-allowed; }
 
-        /* KONTROL GRID 2x2 PERMANEN (Bahkan di Mobile) */
         .options-grid { 
             display: grid; 
             grid-template-columns: repeat(2, 1fr); 
@@ -262,7 +255,7 @@
             border: 4px solid var(--red-flag); box-shadow: 0 0 30px rgba(206,17,38,0.5);
         }
         .modal-box h2 { font-size: 2.5em; margin-bottom: 15px; text-shadow: 2px 2px 5px #000; text-transform: uppercase; font-style: italic; }
-        .modal-text { color: white; font-size: 1.2em; margin-bottom: 20px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); }
+        .modal-text { color: white; font-size: 1.1em; margin-bottom: 15px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); line-height: 1.4; }
         .modal-btn-group { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
         .modal-btn-group button { padding: 12px 30px; font-size: 1.2em; border-radius: 8px; cursor: pointer; border: none; transition: transform 0.2s; text-transform: uppercase; }
         .btn-ya { background: var(--hp-high); color: white; }
@@ -271,10 +264,10 @@
 
         .game-over-img {
             width: 100%;
-            height: 160px;
+            height: 150px;
             object-fit: cover;
             border-radius: 10px;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             border: 2px solid var(--red-flag);
         }
 
@@ -301,14 +294,13 @@
             #app-container { margin-top: 10px; margin-bottom: 20px; }
             #header { padding: 10px 15px; font-size: 0.9em; }
             
-            /* Mempertahankan grid 2x2 di perangkat seluler kecil dengan penyesuaian padding & ukuran font */
             .options-grid { padding: 0 10px; gap: 8px; }
             .option-btn { font-size: 0.85em; padding: 8px 10px; min-height: 60px; }
 
             #pejabat-img { height: 160px; width: 250px; }
             #question-text { font-size: 1.1em; margin-bottom: 10px; }
             .projectile { font-size: 60px; }
-            #login-screen h1 { font-size: 2em; }
+            .login-logo { width: 140px; height: 140px; }
             .modal-box h2 { font-size: 2em !important; }
             .cinematic-text { font-size: 2.2em !important; }
             .character-grid { gap: 5px; padding: 10px; }
@@ -319,8 +311,7 @@
 </head>
 <body>
 
-    <button id="audio-toggle-btn" onclick="toggleAudioMute()" title="Matikan/Nyalakan Suara">🔊</button>
-
+    <!-- KOMPONEN LAYAR LOADING -->
     <div id="loading-screen">
         <div class="flag-wrapper">
             <div class="flag-pole"></div>
@@ -333,8 +324,10 @@
     </div>
 
     <div id="app-container">
+        <!-- Halaman Login -->
         <div id="login-screen">
-            <h1>Perang Tikus</h1>
+            <!-- Tulisan Perang Tikus diganti dengan logo.png -->
+            <img src="logo.png" alt="Logo Perang Tikus" class="login-logo" onerror="this.src='https://via.placeholder.com/180?text=Logo+Perang+Tikus'">
             <p>Jawab pertanyaan dengan benar untuk mengalahkan Prororo!</p>
             <input type="text" id="player-name" placeholder="Masukkan Nama Anda..." required autocomplete="off">
             <select id="difficulty">
@@ -346,6 +339,7 @@
             <button class="start-btn" onclick="goToSelection()">Lanjut</button>
         </div>
 
+        <!-- Halaman Pemilihan Karakter -->
         <div id="selection-screen" style="display: none;">
             <h2>Pilih Lawanmu!</h2>
             <div class="showcase">
@@ -369,6 +363,7 @@
             <button class="start-btn" style="margin-top: 10px;" onclick="startGame()">MULAI PERTARUNGAN</button>
         </div>
 
+        <!-- Halaman Game -->
         <div id="game-screen" style="display: none;">
             <div id="header">
                 <span id="display-name">Pemain: -</span>
@@ -398,6 +393,7 @@
         </div>
     </div>
 
+    <!-- MODAL FINISH HIM -->
     <div id="finish-him-modal" class="fullscreen-overlay" style="display:none;">
         <div class="modal-box">
             <h2 style="color: var(--red-flag);">FINISH HIM!</h2>
@@ -408,19 +404,22 @@
         </div>
     </div>
 
+    <!-- MODAL GAME OVER -->
     <div id="game-over-modal" class="fullscreen-overlay" style="display:none;">
         <div class="modal-box">
             <img src="game-over.jpg" alt="Game Over" class="game-over-img" onerror="this.style.display='none'">
-            <h2>GAME OVER</h2>
-            <div class="modal-text">Prororo gagal dikalahkan.<br>Sisa Darah: <span id="go-hp"></span>%</div>
-            <div class="modal-text" style="font-size: 1.1em; color: #adb5bd;">Coba lagi? (<span id="go-timer">10</span>)</div>
-            <div class="modal-btn-group">
-                <button class="btn-ya" onclick="retryGameYes()">Ya</button>
-                <button class="btn-tidak" onclick="retryGameNo()">Tidak</button>
+            <h2 id="go-title" style="color: var(--red-flag);">KAMU KALAH</h2>
+            <div class="modal-text" id="go-stats-text">
+                Skor Akhir: <span id="go-score">0</span><br>
+                Sisa Darah Prororo: <span id="go-hp">0</span>%
+            </div>
+            <div class="modal-text" style="font-size: 1em; color: #adb5bd; margin-bottom: 0;">
+                Kembali ke menu login dalam <span id="go-timer" style="color: #fff; font-weight: bold;">5</span> detik...
             </div>
         </div>
     </div>
 
+    <!-- FATALITY & CAPTURED VIDEO SCREEN -->
     <div id="fatality-container" class="fullscreen-overlay" style="display:none;">
         <video id="fatality-video" class="cinematic-video" playsinline preload="auto">
             <source src="pejabat-kalah.mp4" type="video/mp4">
@@ -437,6 +436,11 @@
         function checkHighScoreOnInit() {
             let savedHighScore = localStorage.getItem('perang_tikus_highscore') || 0;
             document.getElementById('high-score-display').innerText = `🏆 High Score: ${savedHighScore}`;
+
+            let savedName = localStorage.getItem('perang_tikus_player_name');
+            if (savedName) {
+                document.getElementById('player-name').value = savedName;
+            }
         }
         window.onload = checkHighScoreOnInit;
 
@@ -445,21 +449,6 @@
             if (finalScore > savedHighScore) {
                 localStorage.setItem('perang_tikus_highscore', finalScore);
             }
-        }
-
-        let isMuted = false;
-        function toggleAudioMute() {
-            isMuted = !isMuted;
-            const btn = document.getElementById('audio-toggle-btn');
-            btn.innerText = isMuted ? "🔇" : "🔊";
-
-            audioBattle.muted = isMuted;
-            audioSalah.muted = isMuted;
-            audioFinishHim.muted = isMuted;
-            audioGameOver.muted = isMuted;
-            audioEliminated.muted = isMuted;
-            audioMenang.muted = isMuted;
-            audioChooseFighter.muted = isMuted;
         }
 
         const questionsData = {
@@ -603,7 +592,7 @@
         }
 
         function playTone(freq, type, duration, slideFreq = null) {
-            if(!audioCtx || isMuted) return;
+            if(!audioCtx) return;
             const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
             osc.type = type; osc.connect(gain); gain.connect(audioCtx.destination);
             osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
@@ -613,7 +602,7 @@
         }
 
         function playNoise(filterType, freq, duration, gainVolume = 1) {
-            if (!noiseBuffer || !audioCtx || isMuted) return;
+            if (!noiseBuffer || !audioCtx) return;
             const source = audioCtx.createBufferSource(); source.buffer = noiseBuffer; const filter = audioCtx.createBiquadFilter(); 
             filter.type = filterType; filter.frequency.value = freq; const gain = audioCtx.createGain(); 
             source.connect(filter); filter.connect(gain); gain.connect(audioCtx.destination);
@@ -622,7 +611,6 @@
         }
 
         function playSfx(type) {
-            if (isMuted) return;
             switch(type) {
                 case 'throw': playTone(600, 'sine', 0.3, 100); break;
                 case 'egg': playNoise('highpass', 1500, 0.3, 1.5); break;
@@ -692,6 +680,8 @@
             const nameInput = document.getElementById('player-name').value;
             if (!nameInput) { alert("Silakan masukkan nama Anda terlebih dahulu!"); return; }
             
+            localStorage.setItem('perang_tikus_player_name', nameInput);
+
             initAudio(); 
             audioSalah.play().then(() => { audioSalah.pause(); audioSalah.currentTime = 0; }).catch(e=>{});
             audioFinishHim.play().then(() => { audioFinishHim.pause(); audioFinishHim.currentTime = 0; }).catch(e=>{});
@@ -711,7 +701,7 @@
             
             document.getElementById('login-screen').style.display = 'none';
             
-            runLoadingScreen([baseImageNormal], () => {
+            runLoadingScreen([baseImageLocation = baseImageNormal], () => {
                 const selScreen = document.getElementById('selection-screen');
                 selScreen.style.display = 'flex';
                 audioChooseFighter.currentTime = 0;
@@ -768,12 +758,19 @@
 
         function handleTimeOut() {
             streakCount = 0; 
-            document.getElementById('streak-notification').innerText = "Waktu Habis! Streak Terputus.";
             audioSalah.currentTime = 0; audioSalah.play().catch(e=>{});
             const buttons = document.querySelectorAll('.option-btn');
             buttons.forEach(btn => btn.disabled = true);
             buttons.forEach(btn => { if (btn.dataset.correct === 'true') { btn.style.background = '#2ed573'; btn.style.color = 'white'; btn.style.borderColor = '#2ed573'; } });
-            setTimeout(() => { currentQIndex++; loadQuestion(); }, 1500);
+            
+            setTimeout(() => { 
+                currentQIndex++; 
+                if (currentQIndex >= maxQuestions) {
+                    showGameOverModal();
+                } else {
+                    loadQuestion(); 
+                }
+            }, 1500);
         }
 
         function loadQuestion() {
@@ -833,7 +830,14 @@
                 audioSalah.currentTime = 0; audioSalah.play().catch(e=>{});
                 clickedBtn.style.background = '#ff4757'; clickedBtn.style.color = 'white'; clickedBtn.style.borderColor = '#ff4757';
                 buttons.forEach(btn => { if (btn.dataset.correct === 'true') { btn.style.background = '#2ed573'; btn.style.color = 'white'; btn.style.borderColor = '#2ed573'; } });
-                setTimeout(() => { currentQIndex++; loadQuestion(); }, 1500);
+                setTimeout(() => { 
+                    currentQIndex++; 
+                    if (currentQIndex >= maxQuestions && Math.round(hp) > 0) {
+                        showGameOverModal();
+                    } else {
+                        loadQuestion(); 
+                    }
+                }, 1500);
             }
         }
 
@@ -860,7 +864,11 @@
             document.getElementById('streak-notification').innerText = "Soal Dilewati!";
             setTimeout(() => {
                 currentQIndex++;
-                loadQuestion();
+                if (currentQIndex >= maxQuestions && Math.round(hp) > 0) {
+                    showGameOverModal();
+                } else {
+                    loadQuestion();
+                }
             }, 800);
         }
 
@@ -879,28 +887,39 @@
             setTimeout(() => {
                 projectile.remove(); playSfx(selectedItemObj.type); 
                 imgPejabat.src = imageHurt; imgPejabat.classList.add('pain-effect');
-                setTimeout(() => { imgPejabat.classList.remove('pain-effect'); currentQIndex++; loadQuestion(); }, 1300);
+                setTimeout(() => { 
+                    imgPejabat.classList.remove('pain-effect'); 
+                    currentQIndex++; 
+                    if (currentQIndex >= maxQuestions && Math.round(hp) > 0) {
+                        showGameOverModal();
+                    } else {
+                        loadQuestion(); 
+                    }
+                }, 1300);
             }, 450); 
         }
 
         function showGameOverModal() {
             audioBattle.pause(); audioGameOver.currentTime = 0; audioGameOver.play().catch(e => console.log(e));
             saveHighScore(score);
+
+            document.getElementById('go-score').innerText = score;
             document.getElementById('go-hp').innerText = Math.round(hp);
             document.getElementById('game-over-modal').style.display = 'flex';
             
-            let goTimeLeft = 10; document.getElementById('go-timer').innerText = goTimeLeft;
-            goTimerInterval = setInterval(() => {
-                goTimeLeft--; document.getElementById('go-timer').innerText = goTimeLeft;
-                if (goTimeLeft <= 0) { clearInterval(goTimerInterval); retryGameNo(); }
-            }, 1000);
-        }
+            let goTimeLeft = 5; 
+            document.getElementById('go-timer').innerText = goTimeLeft;
 
-        function retryGameYes() { clearInterval(goTimerInterval); location.reload(); }
-        function retryGameNo() {
-            clearInterval(goTimerInterval); document.getElementById('game-over-modal').style.display = 'none';
-            alert(`Sayang sekali, ${playerName}. Silakan coba lagi lain waktu.\nSkor Akhir: ${score}`);
-            location.reload();
+            clearInterval(goTimerInterval);
+            goTimerInterval = setInterval(() => {
+                goTimeLeft--; 
+                document.getElementById('go-timer').innerText = goTimeLeft;
+                if (goTimeLeft <= 0) { 
+                    clearInterval(goTimerInterval); 
+                    document.getElementById('game-over-modal').style.display = 'none';
+                    location.reload(); 
+                }
+            }, 1000);
         }
 
         function executeFatality() {
