@@ -259,11 +259,9 @@
             </div>
             
             <div class="character-grid">
-                <!-- Karakter 1 (Aktif & Bergaris Merah) -->
                 <div class="char-box active" onclick="selectCharacter(true)">
                     <img src="pejabat-normal.jpg" onerror="this.src='https://via.placeholder.com/100'">
                 </div>
-                <!-- Karakter lainnya (Disabled) -->
                 <div class="char-box disabled" onclick="selectCharacter(false)">🔒</div>
                 <div class="char-box disabled" onclick="selectCharacter(false)">🔒</div>
                 <div class="char-box disabled" onclick="selectCharacter(false)">🔒</div>
@@ -305,7 +303,6 @@
             <h2 style="color: var(--red-flag);">FINISH HIM!</h2>
             <div class="modal-btn-group">
                 <button class="btn-ya" onclick="executeFatality()">Ya</button>
-                <!-- Tombol TIDAK sekarang akan memanggil executeCapture -->
                 <button class="btn-tidak" onclick="executeCapture()">Tidak</button>
             </div>
         </div>
@@ -326,11 +323,9 @@
 
     <!-- FATALITY & CAPTURED VIDEO SCREEN -->
     <div id="fatality-container" class="fullscreen-overlay" style="display:none;">
-        <!-- Video Pilihan YA (Fatality) -->
         <video id="fatality-video" class="cinematic-video" playsinline preload="auto">
             <source src="pejabat-kalah.mp4" type="video/mp4">
         </video>
-        <!-- Video Pilihan TIDAK (Captured) -->
         <video id="captured-video" class="cinematic-video" playsinline preload="auto">
             <source src="captured.mp4" type="video/mp4">
         </video>
@@ -340,105 +335,106 @@
     </div>
 
     <script>
-        // Data Soal Awal (Statik)
+        // --- DATA SOAL DASAR (Tanpa Matematika) ---
+        // Pilihan index 0 pada array adalah jawaban yang benar. (Nanti diacak secara otomatis saat ditampilkan)
         const questionsData = {
             easy: [
-                { q: "Berapakah hasil dari 5 + 7?", options: ["10", "11", "12", "13"], answer: 2 },
-                { q: "Hewan apa yang dikenal sebagai raja hutan?", options: ["Gajah", "Singa", "Harimau", "Jerapah"], answer: 1 },
-                { q: "Apa warna bendera Indonesia?", options: ["Putih Merah", "Merah Putih", "Merah Hitam", "Kuning Merah"], answer: 1 },
-                { q: "Apa nama ibukota Indonesia?", options: ["Surabaya", "Bandung", "Jakarta", "Medan"], answer: 2 },
-                { q: "Berapa hasil dari 10 - 4?", options: ["5", "6", "7", "8"], answer: 1 },
-                { q: "Binatang apa yang lehernya sangat panjang?", options: ["Kuda", "Jerapah", "Gajah", "Unta"], answer: 1 },
-                { q: "Apa rasa dari gula?", options: ["Pahit", "Asin", "Asam", "Manis"], answer: 3 },
-                { q: "Berapa hasil dari 2 x 3?", options: ["5", "6", "7", "8"], answer: 1 },
-                { q: "Sapi biasanya menghasilkan?", options: ["Kopi", "Teh", "Susu", "Sirup"], answer: 2 },
-                { q: "Benda yang digunakan untuk menulis di papan tulis hitam?", options: ["Spidol", "Kapur", "Pena", "Pensil"], answer: 1 },
-                { q: "Berapa jumlah jari tangan manusia normal?", options: ["8", "10", "12", "14"], answer: 1 },
-                { q: "Bintang yang terlihat di siang hari adalah?", options: ["Bulan", "Meteor", "Matahari", "Komet"], answer: 2 },
-                { q: "Tempat pesawat terbang lepas landas disebut?", options: ["Terminal", "Stasiun", "Bandara", "Pelabuhan"], answer: 2 },
-                { q: "Ikan bernapas menggunakan?", options: ["Paru-paru", "Insang", "Hidung", "Kulit"], answer: 1 },
-                { q: "Angka setelah 19 adalah?", options: ["18", "20", "21", "22"], answer: 1 },
-                { q: "Roda sepeda berbentuk?", options: ["Kotak", "Segitiga", "Lingkaran", "Persegi"], answer: 2 },
-                { q: "Buah yang kulitnya berduri dan baunya menyengat?", options: ["Apel", "Mangga", "Durian", "Pisang"], answer: 2 },
-                { q: "Kendaraan yang berjalan di atas rel?", options: ["Bus", "Mobil", "Kereta Api", "Kapal"], answer: 2 },
-                { q: "Berapa hasil dari 20 dibagi 2?", options: ["5", "10", "15", "20"], answer: 1 },
-                { q: "Alat untuk mengukur suhu tubuh?", options: ["Meteran", "Timbangan", "Termometer", "Penggaris"], answer: 2 },
-                { q: "Binatang yang bisa terbang?", options: ["Ayam", "Burung", "Kucing", "Anjing"], answer: 1 },
-                { q: "Es terbuat dari air yang?", options: ["Mendidih", "Membeku", "Menguap", "Mencair"], answer: 1 },
-                { q: "Lagu kebangsaan Indonesia adalah?", options: ["Garuda Pancasila", "Indonesia Raya", "Maju Tak Gentar", "Padamu Negeri"], answer: 1 },
-                { q: "Warna daun yang masih segar biasanya?", options: ["Merah", "Kuning", "Hijau", "Coklat"], answer: 2 },
-                { q: "Tempat menyimpan uang yang aman?", options: ["Pasar", "Bank", "Sekolah", "Rumah Sakit"], answer: 1 }
+                { q: "Bumi berbentuk?", options: ["Bulat", "Lontong", "Datar", "Panjang"], answer: 0 },
+                { q: "Hewan apa yang dikenal sebagai raja hutan?", options: ["Singa", "Gajah", "Harimau", "Jerapah"], answer: 0 },
+                { q: "Apa warna bendera Indonesia?", options: ["Merah Putih", "Putih Merah", "Merah Hitam", "Kuning Merah"], answer: 0 },
+                { q: "Binatang apa yang lehernya sangat panjang?", options: ["Jerapah", "Kuda", "Gajah", "Unta"], answer: 0 },
+                { q: "Apa rasa dari gula?", options: ["Manis", "Pahit", "Asin", "Asam"], answer: 0 },
+                { q: "Sapi biasanya menghasilkan?", options: ["Susu", "Kopi", "Teh", "Sirup"], answer: 0 },
+                { q: "Benda yang digunakan untuk menulis di papan tulis hitam?", options: ["Kapur", "Spidol", "Pena", "Pensil"], answer: 0 },
+                { q: "Bintang yang terlihat di siang hari adalah?", options: ["Matahari", "Bulan", "Meteor", "Komet"], answer: 0 },
+                { q: "Tempat pesawat terbang lepas landas disebut?", options: ["Bandara", "Terminal", "Stasiun", "Pelabuhan"], answer: 0 },
+                { q: "Ikan bernapas menggunakan?", options: ["Insang", "Paru-paru", "Hidung", "Kulit"], answer: 0 }
             ],
             medium: [
-                { q: "Tahun berapakah Indonesia merdeka?", options: ["1942", "1945", "1928", "1998"], answer: 1 },
-                { q: "Planet terbesar di tata surya?", options: ["Bumi", "Mars", "Jupiter", "Saturnus"], answer: 2 },
-                { q: "Penulis novel 'Laskar Pelangi'?", options: ["Andrea Hirata", "Tere Liye", "Pramoedya", "Raditya Dika"], answer: 0 },
-                { q: "Dasar negara Indonesia?", options: ["UUD 1945", "Pancasila", "Bhinneka", "Tap MPR"], answer: 1 },
-                { q: "Candi Buddha terbesar di Indonesia?", options: ["Prambanan", "Borobudur", "Mendut", "Muara Takus"], answer: 1 },
-                { q: "Berapakah hasil dari 15 x 4?", options: ["50", "60", "70", "80"], answer: 1 },
+                { q: "Tahun berapakah Indonesia merdeka?", options: ["1945", "1942", "1928", "1998"], answer: 0 },
+                { q: "Candi Buddha terbesar di Indonesia?", options: ["Borobudur", "Prambanan", "Mendut", "Muara Takus"], answer: 0 },
                 { q: "Pencipta lagu Indonesia Raya?", options: ["W.R. Supratman", "Ismail Marzuki", "Ibu Sud", "C. Simanjuntak"], answer: 0 },
-                { q: "Provinsi paling timur di Indonesia?", options: ["Maluku", "NTT", "Papua", "Sulawesi Utara"], answer: 2 },
-                { q: "Kota pahlawan adalah julukan kota?", options: ["Hujan", "Kembang", "Surabaya", "Pelajar"], answer: 2 },
-                { q: "Gunung tertinggi di Pulau Jawa?", options: ["Merapi", "Bromo", "Semeru", "Rinjani"], answer: 2 },
-                { q: "Berapa hasil dari 100 - 35?", options: ["55", "65", "75", "85"], answer: 1 },
-                { q: "Gurun terluas di dunia?", options: ["Gobi", "Kalahari", "Sahara", "Atacama"], answer: 2 },
-                { q: "Ibukota provinsi Jawa Tengah?", options: ["Surabaya", "Bandung", "Semarang", "Yogyakarta"], answer: 2 },
-                { q: "Benua terbesar di dunia?", options: ["Afrika", "Amerika", "Asia", "Eropa"], answer: 2 },
-                { q: "Satuan untuk mengukur berat?", options: ["Meter", "Liter", "Kilogram", "Celcius"], answer: 2 },
+                { q: "Provinsi paling timur di Indonesia?", options: ["Papua", "Maluku", "NTT", "Sulawesi Utara"], answer: 0 },
+                { q: "Kota pahlawan adalah julukan kota?", options: ["Surabaya", "Hujan", "Kembang", "Pelajar"], answer: 0 },
+                { q: "Ibukota provinsi Jawa Tengah?", options: ["Semarang", "Surabaya", "Bandung", "Yogyakarta"], answer: 0 },
                 { q: "Danau vulkanik terbesar di Indonesia?", options: ["Danau Toba", "Danau Poso", "Danau Singkarak", "Danau Batur"], answer: 0 },
-                { q: "Hewan mamalia yang bisa terbang?", options: ["Burung Hantu", "Kelelawar", "Elang", "Kupu-kupu"], answer: 1 },
-                { q: "Tokoh yang memproklamasikan kemerdekaan RI?", options: ["Soeharto", "Soekarno-Hatta", "Jenderal Sudirman", "B.J. Habibie"], answer: 1 },
-                { q: "Alat pernapasan pada tumbuhan?", options: ["Insang", "Stomata", "Paru-paru", "Klorofil"], answer: 1 },
-                { q: "Mata uang negara Malaysia?", options: ["Peso", "Baht", "Ringgit", "Dong"], answer: 2 },
-                { q: "Siapa penemu telepon?", options: ["Thomas Edison", "Nikola Tesla", "Alexander G. Bell", "Isaac Newton"], answer: 2 },
-                { q: "Sila ketiga Pancasila berbunyi?", options: ["Ketuhanan", "Kemanusiaan", "Persatuan Indonesia", "Keadilan Sosial"], answer: 2 },
-                { q: "Rumus luas persegi panjang?", options: ["s x s", "p x l", "1/2 a x t", "p + l"], answer: 1 },
-                { q: "Pusat peredaran tata surya kita?", options: ["Bumi", "Bulan", "Matahari", "Jupiter"], answer: 2 },
-                { q: "Alat musik yang dipukul?", options: ["Gitar", "Seruling", "Gendang", "Biola"], answer: 2 }
+                { q: "Hewan mamalia yang bisa terbang?", options: ["Kelelawar", "Burung Hantu", "Elang", "Kupu-kupu"], answer: 0 },
+                { q: "Tokoh yang memproklamasikan kemerdekaan RI?", options: ["Soekarno-Hatta", "Soeharto", "Jenderal Sudirman", "B.J. Habibie"], answer: 0 },
+                { q: "Mata uang negara Malaysia?", options: ["Ringgit", "Peso", "Baht", "Dong"], answer: 0 }
             ],
             hard: [
-                { q: "Berapakah akar kuadrat dari 144?", options: ["10", "12", "14", "16"], answer: 1 },
-                { q: "Unsur kimia bersimbol 'Au'?", options: ["Perak", "Tembaga", "Emas", "Aluminium"], answer: 2 },
-                { q: "Presiden ketiga RI?", options: ["Soeharto", "Gus Dur", "B.J. Habibie", "Megawati"], answer: 2 },
-                { q: "Ibukota provinsi Kalimantan Utara?", options: ["Tarakan", "Tanjung Selor", "Pontianak", "Samarinda"], answer: 1 },
-                { q: "Kerajaan Islam tertua di Nusantara?", options: ["Demak", "Mataram", "Samudera Pasai", "Banten"], answer: 2 },
-                { q: "Besar sudut dalam segi enam beraturan?", options: ["90°", "100°", "120°", "180°"], answer: 2 },
-                { q: "Mata uang negara Jepang?", options: ["Won", "Yuan", "Baht", "Yen"], answer: 3 },
-                { q: "Benua terkecil di dunia?", options: ["Eropa", "Australia", "Antartika", "Amerika"], answer: 1 },
-                { q: "Nama asli Ki Hajar Dewantara?", options: ["Dr. Cipto", "R.M. Suwardi", "Setiabudi", "Wahid Hasyim"], answer: 1 },
-                { q: "Kecepatan cahaya di ruang hampa?", options: ["300.000 km/s", "150.000 km/s", "3.000 km/s", "1.000.000 km/s"], answer: 0 },
-                { q: "Bapak proklamator kemerdekaan Kuba?", options: ["Che Guevara", "Fidel Castro", "Hugo Chavez", "Jose Marti"], answer: 1 },
-                { q: "Sungai terpanjang di dunia?", options: ["Amazon", "Nil", "Yangtze", "Mississippi"], answer: 1 },
-                { q: "Zat hijau daun disebut?", options: ["Kloroplas", "Klorofil", "Kromosom", "Kambium"], answer: 1 },
-                { q: "Pencipta lukisan Monalisa?", options: ["Van Gogh", "Picasso", "Leonardo da Vinci", "Michelangelo"], answer: 2 },
-                { q: "Ilmu yang mempelajari tentang gempa bumi?", options: ["Geologi", "Klimatologi", "Seismologi", "Meteorologi"], answer: 2 },
-                { q: "Organisasi kesehatan dunia singkatan dari?", options: ["UNICEF", "WHO", "UNESCO", "FAO"], answer: 1 },
-                { q: "Berapa 15% dari 200?", options: ["15", "20", "30", "40"], answer: 2 },
-                { q: "Zaman batu tua disebut juga?", options: ["Mesozoikum", "Neolitikum", "Paleolitikum", "Megalitikum"], answer: 2 },
-                { q: "Gas terbanyak di atmosfer bumi?", options: ["Oksigen", "Karbondioksida", "Nitrogen", "Hidrogen"], answer: 2 },
-                { q: "Rumus kimia air murni?", options: ["CO2", "H2O", "NaCl", "O2"], answer: 1 },
-                { q: "Tari Kecak berasal dari daerah?", options: ["Jawa Barat", "Bali", "Aceh", "Papua"], answer: 1 },
-                { q: "Peristiwa meleburnya sel sperma dan ovum?", options: ["Polinasi", "Fertilisasi", "Ovulasi", "Menstruasi"], answer: 1 },
-                { q: "Letak astronomis Indonesia berada pada?", options: ["6° LU - 11° LS", "6° LS - 11° LU", "10° LU - 15° LS", "0° - 10° LS"], answer: 0 },
-                { q: "Sel darah putih berfungsi untuk?", options: ["Angkut oksigen", "Bantu pembekuan", "Lawan penyakit", "Edar sari makanan"], answer: 2 },
-                { q: "Berapa hasil dari 5 pangkat 3?", options: ["15", "25", "125", "625"], answer: 2 }
+                { q: "Presiden ketiga RI?", options: ["B.J. Habibie", "Soeharto", "Gus Dur", "Megawati"], answer: 0 },
+                { q: "Kerajaan Islam tertua di Nusantara?", options: ["Samudera Pasai", "Demak", "Mataram", "Banten"], answer: 0 },
+                { q: "Mata uang negara Jepang?", options: ["Yen", "Won", "Yuan", "Baht"], answer: 0 },
+                { q: "Benua terkecil di dunia?", options: ["Australia", "Eropa", "Antartika", "Amerika"], answer: 0 },
+                { q: "Nama asli Ki Hajar Dewantara?", options: ["R.M. Suwardi", "Dr. Cipto", "Setiabudi", "Wahid Hasyim"], answer: 0 },
+                { q: "Sungai terpanjang di dunia?", options: ["Nil", "Amazon", "Yangtze", "Mississippi"], answer: 0 },
+                { q: "Pencipta lukisan Monalisa?", options: ["Leonardo da Vinci", "Van Gogh", "Picasso", "Michelangelo"], answer: 0 },
+                { q: "Ilmu yang mempelajari tentang gempa bumi?", options: ["Seismologi", "Geologi", "Klimatologi", "Meteorologi"], answer: 0 },
+                { q: "Gas terbanyak di atmosfer bumi?", options: ["Nitrogen", "Oksigen", "Karbondioksida", "Hidrogen"], answer: 0 },
+                { q: "Tari Kecak berasal dari daerah?", options: ["Bali", "Jawa Barat", "Aceh", "Papua"], answer: 0 }
             ]
         };
 
-        // --- SISTEM GENERATOR BANK SOAL HINGGA 100 PER LEVEL ---
+        // --- SISTEM GENERATOR BANK SOAL DINAMIS (PENGETAHUAN UMUM TANPA MATEMATIKA) ---
         function populateBankSoal() {
+            // Pembuat Soal Mudah
+            const bendaWarna = [ {n: "Pisang matang", j: "Kuning"}, {n: "Awan cerah", j: "Putih"}, {n: "Darah", j: "Merah"}, {n: "Langit cerah", j: "Biru"}, {n: "Daun segar", j: "Hijau"}, {n: "Arang", j: "Hitam"} ];
+            const warnaSalah = ["Ungu", "Pink", "Coklat", "Abu-abu", "Oranye", "Emas"];
+            const hewanSuara = [ {n: "Kucing", j: "Mengeong"}, {n: "Anjing", j: "Menggonggong"}, {n: "Sapi", j: "Melenguh"}, {n: "Kuda", j: "Meringkik"}, {n: "Burung", j: "Berkicau"} ];
+            const suaraSalah = ["Berbicara", "Menyanyi", "Menangis", "Tertawa", "Bersiul", "Bergumam"];
+            const lawanKata = [ {n: "Besar", j: "Kecil"}, {n: "Panas", j: "Dingin"}, {n: "Tinggi", j: "Pendek"}, {n: "Terang", j: "Gelap"}, {n: "Keras", j: "Lembek"} ];
+            const kataSalah = ["Sedang", "Biasa", "Lumayan", "Sama", "Hancur", "Buruk"];
+
             while(questionsData.easy.length < 100) {
-                let a = Math.floor(Math.random() * 20) + 1; let b = Math.floor(Math.random() * 20) + 1; let ans = a + b;
-                questionsData.easy.push({ q: `Berapakah hasil dari ${a} + ${b}?`, options: [ans.toString(), (ans+1).toString(), (ans-1).toString(), (ans+2).toString()], answer: 0 });
+                let type = Math.floor(Math.random() * 3);
+                warnaSalah.sort(()=>Math.random()-0.5); suaraSalah.sort(()=>Math.random()-0.5); kataSalah.sort(()=>Math.random()-0.5);
+                if(type === 0) {
+                    let i = bendaWarna[Math.floor(Math.random() * bendaWarna.length)];
+                    questionsData.easy.push({ q: `Apa warna umum dari ${i.n}?`, options: [i.j, warnaSalah[0], warnaSalah[1], warnaSalah[2]], answer: 0 });
+                } else if(type === 1) {
+                    let i = hewanSuara[Math.floor(Math.random() * hewanSuara.length)];
+                    questionsData.easy.push({ q: `Suara dari hewan ${i.n} adalah?`, options: [i.j, suaraSalah[0], suaraSalah[1], suaraSalah[2]], answer: 0 });
+                } else {
+                    let i = lawanKata[Math.floor(Math.random() * lawanKata.length)];
+                    questionsData.easy.push({ q: `Lawan kata dari ${i.n} adalah?`, options: [i.j, kataSalah[0], kataSalah[1], kataSalah[2]], answer: 0 });
+                }
             }
+
+            // Pembuat Soal Sedang
+            const provinsi = [ {n: "Jawa Barat", j: "Bandung"}, {n: "Bali", j: "Denpasar"}, {n: "Papua", j: "Jayapura"}, {n: "Sulawesi Selatan", j: "Makassar"}, {n: "Sumatera Utara", j: "Medan"} ];
+            const kotaSalah = ["Jakarta", "Bogor", "Malang", "Solo", "Balikpapan", "Manado"];
+            const inggris = [ {n: "Buku", j: "Book"}, {n: "Meja", j: "Table"}, {n: "Kursi", j: "Chair"}, {n: "Pintu", j: "Door"}, {n: "Rumah", j: "House"} ];
+            const inggrisSalah = ["Car", "Tree", "Water", "Fire", "Sky", "Sun"];
+
             while(questionsData.medium.length < 100) {
-                let a = Math.floor(Math.random() * 15) + 5; let b = Math.floor(Math.random() * 10) + 2; let isMinus = Math.random() > 0.5;
-                if(isMinus) { let ans = a * b - a; questionsData.medium.push({ q: `Hitunglah: (${a} x ${b}) - ${a}`, options: [ans.toString(), (ans+a).toString(), (ans-b).toString(), (ans+10).toString()], answer: 0 }); } 
-                else { let ans = a * b; questionsData.medium.push({ q: `Berapakah hasil dari ${a} x ${b}?`, options: [ans.toString(), (ans+b).toString(), (ans-a).toString(), (ans+10).toString()], answer: 0 }); }
+                let type = Math.floor(Math.random() * 2);
+                kotaSalah.sort(()=>Math.random()-0.5); inggrisSalah.sort(()=>Math.random()-0.5);
+                if(type === 0) {
+                    let i = provinsi[Math.floor(Math.random() * provinsi.length)];
+                    questionsData.medium.push({ q: `Ibukota dari provinsi ${i.n} adalah?`, options: [i.j, kotaSalah[0], kotaSalah[1], kotaSalah[2]], answer: 0 });
+                } else {
+                    let i = inggris[Math.floor(Math.random() * inggris.length)];
+                    questionsData.medium.push({ q: `Bahasa Inggris dari kata '${i.n}' adalah?`, options: [i.j, inggrisSalah[0], inggrisSalah[1], inggrisSalah[2]], answer: 0 });
+                }
             }
+
+            // Pembuat Soal Sulit
+            const negara = [ {n: "Jepang", j: "Tokyo"}, {n: "Inggris", j: "London"}, {n: "Prancis", j: "Paris"}, {n: "Korea Selatan", j: "Seoul"}, {n: "Rusia", j: "Moskow"}, {n: "Mesir", j: "Kairo"} ];
+            const negaraSalah = ["Washington", "Beijing", "Madrid", "Lisbon", "Amsterdam", "Bangkok"];
+            const kimia = [ {n: "Oksigen", j: "O"}, {n: "Karbon", j: "C"}, {n: "Besi", j: "Fe"}, {n: "Emas", j: "Au"}, {n: "Perak", j: "Ag"}, {n: "Air", j: "H2O"} ];
+            const unsurSalah = ["Cu", "Zn", "He", "Mg", "K", "Al"];
+
             while(questionsData.hard.length < 100) {
-                let a = Math.floor(Math.random() * 40) + 10; let b = Math.floor(Math.random() * 30) + 10; let ans = a * b;
-                questionsData.hard.push({ q: `Berapakah hasil dari ${a} x ${b}?`, options: [ans.toString(), (ans+10).toString(), (ans-20).toString(), (ans+100).toString()], answer: 0 });
+                let type = Math.floor(Math.random() * 2);
+                negaraSalah.sort(()=>Math.random()-0.5); unsurSalah.sort(()=>Math.random()-0.5);
+                if(type === 0) {
+                    let i = negara[Math.floor(Math.random() * negara.length)];
+                    questionsData.hard.push({ q: `Ibukota dari negara ${i.n} adalah?`, options: [i.j, negaraSalah[0], negaraSalah[1], negaraSalah[2]], answer: 0 });
+                } else {
+                    let i = kimia[Math.floor(Math.random() * kimia.length)];
+                    questionsData.hard.push({ q: `Simbol kimia untuk ${i.n} adalah?`, options: [i.j, unsurSalah[0], unsurSalah[1], unsurSalah[2]], answer: 0 });
+                }
             }
         }
         
@@ -569,9 +565,8 @@
             audioChooseFighter.pause();
             document.getElementById('selection-screen').style.display = 'none';
             
-            // --- PRELOAD KEDUA VIDEO CINEMATIC ---
             document.getElementById('fatality-video').load();
-            document.getElementById('captured-video').load(); // Preload video captured
+            document.getElementById('captured-video').load(); 
             
             runLoadingScreen([imageHurt, imageBonyok], () => {
                 document.getElementById('game-screen').style.display = 'flex';
@@ -635,6 +630,7 @@
             const optionsContainer = document.getElementById('options-container'); optionsContainer.innerHTML = '';
             const prefixes = ['A', 'B', 'C', 'D'];
             
+            // Mengacak urutan penempatan jawaban A, B, C, D
             let shuffledOptions = qData.options.map((opt, index) => { return { text: opt, isCorrect: index === qData.answer }; });
             shuffledOptions.sort(() => Math.random() - 0.5);
             
@@ -700,7 +696,6 @@
             location.reload();
         }
 
-        // --- SISTEM PEMILIHAN "YA" (FATALITY) ---
         function executeFatality() {
             audioFinishHim.pause();
             document.getElementById('finish-him-modal').style.display = 'none';
@@ -708,17 +703,14 @@
             const fatContainer = document.getElementById('fatality-container');
             const fatVideo = document.getElementById('fatality-video');
             
-            // Sembunyikan video captured, tampilkan video fatality
             document.getElementById('captured-video').style.display = 'none';
-            fatVideo.style.display = 'block';
-            fatContainer.style.display = 'flex';
+            fatVideo.style.display = 'block'; fatContainer.style.display = 'flex';
             
             let playPromise = fatVideo.play();
             if (playPromise !== undefined) { playPromise.catch(error => { triggerCinematicEnding('fatality'); }); }
             fatVideo.onended = () => { triggerCinematicEnding('fatality'); };
         }
 
-        // --- SISTEM PEMILIHAN "TIDAK" (CAPTURED) ---
         function executeCapture() {
             audioFinishHim.pause();
             document.getElementById('finish-him-modal').style.display = 'none';
@@ -726,17 +718,14 @@
             const fatContainer = document.getElementById('fatality-container');
             const capVideo = document.getElementById('captured-video');
             
-            // Sembunyikan video fatality, tampilkan video captured
             document.getElementById('fatality-video').style.display = 'none';
-            capVideo.style.display = 'block';
-            fatContainer.style.display = 'flex';
+            capVideo.style.display = 'block'; fatContainer.style.display = 'flex';
             
             let playPromise = capVideo.play();
             if (playPromise !== undefined) { playPromise.catch(error => { triggerCinematicEnding('captured'); }); }
             capVideo.onended = () => { triggerCinematicEnding('captured'); };
         }
 
-        // --- SISTEM TEKS CINEMATIC GABUNGAN ---
         function triggerCinematicEnding(endingType) {
             const elimText = document.getElementById('eliminated-text');
             const vicText = document.getElementById('victory-text');
@@ -746,7 +735,8 @@
                 elimText.innerText = "TERELIMINASI";
             } else {
                 document.getElementById('captured-video').style.opacity = '0.2';
-                elimText.innerText = "BUSTED";
+                // Teks diubah sesuai permintaan
+                elimText.innerText = "TERKALAHKAN";
             }
             
             audioEliminated.currentTime = 0; audioEliminated.play().catch(e => console.log(e));
