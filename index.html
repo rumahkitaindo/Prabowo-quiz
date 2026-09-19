@@ -8,14 +8,15 @@
     <!-- Favicon menggunakan logo.png -->
     <link rel="icon" type="image/png" href="logo.png">
     
-    <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+    <!-- Memuat Google Fonts: Play -->
+    <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
             --red-flag: #ce1126;
             --white-flag: #ffffff;
             --text-main: #212529;
-            --btn-border: #ced4da;
+            --btn-border: #ce1126; /* Diubah menjadi merah */
             --btn-hover: #f8f9fa;
             --hp-high: #2ed573;
             --hp-med: #ffa502;
@@ -26,7 +27,8 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Russo One', sans-serif; 
+            font-family: 'Play', sans-serif; 
+            font-weight: 700;
             letter-spacing: 0.5px;
         }
 
@@ -75,7 +77,6 @@
         /* --- Layar Login --- */
         #login-screen { padding: 40px 20px; display: flex; flex-direction: column; gap: 20px; align-items: center; }
         
-        /* Style untuk Logo Utama di Halaman Login */
         .login-logo {
             width: 180px;
             height: 180px;
@@ -191,15 +192,36 @@
         }
         
         .option-btn {
-            background: #ffffff; color: #000; padding: 12px 15px; font-size: 0.95em; border-radius: 12px;
-            border: 2px solid var(--btn-border); cursor: pointer; text-align: left;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: all 0.2s ease;
+            background: #ffffff; 
+            color: #000; 
+            padding: 12px 15px; 
+            font-size: 0.95em; 
+            border-radius: 12px;
+            border: 2px solid var(--red-flag); /* Border merah default */
+            cursor: pointer; 
+            text-align: left;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
+            transition: all 0.2s ease;
             min-height: 65px; 
-            display: flex; align-items: center;
+            display: flex; 
+            align-items: center;
             word-break: break-word;
         }
-        .option-btn:hover:not(:disabled) { background: var(--btn-hover); border-color: #adb5bd; transform: translateY(-2px); }
+        .option-btn:hover:not(:disabled) { background: var(--btn-hover); border-color: #a70c1d; transform: translateY(-2px); }
         .option-btn:disabled { cursor: not-allowed; opacity: 0.9; transform: none; }
+
+        /* Animasi Kelap-kelip / Kedip Border untuk Jawaban Benar */
+        @keyframes blinkBorder {
+            0% { border-color: #2ed573; box-shadow: 0 0 5px #2ed573; }
+            50% { border-color: #ffffff; box-shadow: 0 0 20px #2ed573; }
+            100% { border-color: #2ed573; box-shadow: 0 0 5px #2ed573; }
+        }
+
+        .correct-blinking {
+            animation: blinkBorder 0.4s infinite ease-in-out;
+            background: #2ed573 !important;
+            color: white !important;
+        }
 
         .projectile {
             position: absolute; font-size: 80px; z-index: 20; pointer-events: none;
@@ -326,7 +348,6 @@
     <div id="app-container">
         <!-- Halaman Login -->
         <div id="login-screen">
-            <!-- Tulisan Perang Tikus diganti dengan logo.png -->
             <img src="logo.png" alt="Logo Perang Tikus" class="login-logo" onerror="this.src='https://via.placeholder.com/180?text=Logo+Perang+Tikus'">
             <p>Jawab pertanyaan dengan benar untuk mengalahkan Prororo!</p>
             <input type="text" id="player-name" placeholder="Masukkan Nama Anda..." required autocomplete="off">
@@ -373,7 +394,8 @@
 
             <div id="hp-container">
                 <div id="hp-bar"></div>
-                <div id="hp-text">HP Prororo: 100% | Soal: 1/25</div>
+                <!-- Tulisan "Soal:" telah dihapus sesuai permintaan -->
+                <div id="hp-text">HP Prororo: 100% | <span id="current-q-num">1</span>/25</div>
             </div>
 
             <div id="character-area">
@@ -701,7 +723,7 @@
             
             document.getElementById('login-screen').style.display = 'none';
             
-            runLoadingScreen([baseImageLocation = baseImageNormal], () => {
+            runLoadingScreen([baseImageNormal], () => {
                 const selScreen = document.getElementById('selection-screen');
                 selScreen.style.display = 'flex';
                 audioChooseFighter.currentTime = 0;
@@ -739,7 +761,7 @@
 
         function updateHP() {
             if(hp < 0) hp = 0; const hpBar = document.getElementById('hp-bar'); hpBar.style.width = hp + '%';
-            document.getElementById('hp-text').innerText = `HP Prororo: ${Math.round(hp)}% | Soal: ${Math.min(currentQIndex + 1, maxQuestions)}/${maxQuestions}`;
+            document.getElementById('hp-text').innerHTML = `HP Prororo: ${Math.round(hp)}% | <span id="current-q-num">${Math.min(currentQIndex + 1, maxQuestions)}</span>/25`;
             if (hp <= 20) { hpBar.style.backgroundColor = "var(--hp-low)"; currentImageNormal = imageBonyok; } 
             else if (hp <= 50) { hpBar.style.backgroundColor = "var(--hp-med)"; } 
             else { hpBar.style.backgroundColor = "var(--hp-high)"; }
@@ -761,7 +783,7 @@
             audioSalah.currentTime = 0; audioSalah.play().catch(e=>{});
             const buttons = document.querySelectorAll('.option-btn');
             buttons.forEach(btn => btn.disabled = true);
-            buttons.forEach(btn => { if (btn.dataset.correct === 'true') { btn.style.background = '#2ed573'; btn.style.color = 'white'; btn.style.borderColor = '#2ed573'; } });
+            buttons.forEach(btn => { if (btn.dataset.correct === 'true') { btn.classList.add('correct-blinking'); } });
             
             setTimeout(() => { 
                 currentQIndex++; 
@@ -822,14 +844,16 @@
                 hp -= damagePerCorrect; 
                 score += (10 + bonusScore); 
                 updateScore(); updateHP();
-                clickedBtn.style.background = '#2ed573'; clickedBtn.style.color = 'white'; clickedBtn.style.borderColor = '#2ed573';
+                
+                // Berikan efek kelap-kelip saat jawaban benar
+                clickedBtn.classList.add('correct-blinking');
                 triggerCorrectAction();
             } else {
                 streakCount = 0; 
                 document.getElementById('streak-notification').innerText = "Jawaban Salah! Streak Terputus.";
                 audioSalah.currentTime = 0; audioSalah.play().catch(e=>{});
                 clickedBtn.style.background = '#ff4757'; clickedBtn.style.color = 'white'; clickedBtn.style.borderColor = '#ff4757';
-                buttons.forEach(btn => { if (btn.dataset.correct === 'true') { btn.style.background = '#2ed573'; btn.style.color = 'white'; btn.style.borderColor = '#2ed573'; } });
+                buttons.forEach(btn => { if (btn.dataset.correct === 'true') { btn.classList.add('correct-blinking'); } });
                 setTimeout(() => { 
                     currentQIndex++; 
                     if (currentQIndex >= maxQuestions && Math.round(hp) > 0) {
