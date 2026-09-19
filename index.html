@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game Edukasi: Kalahkan Pejabat!</title>
     
-    <!-- MENGAMBIL FONT GAME DARI GOOGLE FONTS -->
     <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
 
     <style>
@@ -176,12 +175,18 @@
             display: flex; justify-content: center; align-items: center; flex-direction: column;
         }
 
+        /* KHUSUS UNTUK GAME OVER (BACKGROUND GAMBAR + OVERLAY HITAM) */
+        #game-over-modal {
+            background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url('game-over.jpg') no-repeat center center;
+            background-size: cover;
+        }
+
         .modal-box {
             background: #111; padding: 40px; border-radius: 15px; text-align: center;
             border: 4px solid var(--red-flag); box-shadow: 0 0 30px rgba(206,17,38,0.5);
         }
         .modal-box h2 { font-size: 4em; margin-bottom: 20px; text-shadow: 2px 2px 5px #000; text-transform: uppercase; font-style: italic; }
-        .modal-text { color: white; font-size: 1.5em; margin-bottom: 25px; }
+        .modal-text { color: white; font-size: 1.5em; margin-bottom: 25px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); }
         .modal-btn-group { display: flex; gap: 20px; justify-content: center; }
         .modal-btn-group button { padding: 15px 40px; font-size: 1.5em; border-radius: 8px; cursor: pointer; border: none; transition: transform 0.2s; text-transform: uppercase; }
         .btn-ya { background: var(--hp-high); color: white; }
@@ -192,7 +197,7 @@
         #game-over-modal h2 { color: var(--red-flag); font-size: 3.5em; }
 
         #fatality-container { background: #000; }
-        #fatality-video { width: 100%; height: 100%; object-fit: cover; transition: opacity 1s; }
+        .cinematic-video { width: 100%; height: 100%; object-fit: cover; transition: opacity 1s; display: none; }
         
         .cinematic-text {
             position: absolute; font-size: 5em; text-shadow: 0px 5px 20px rgba(0,0,0,1); text-align: center;
@@ -300,7 +305,8 @@
             <h2 style="color: var(--red-flag);">FINISH HIM!</h2>
             <div class="modal-btn-group">
                 <button class="btn-ya" onclick="executeFatality()">Ya</button>
-                <button class="btn-tidak" onclick="normalWin()">Tidak</button>
+                <!-- Tombol TIDAK sekarang akan memanggil executeCapture -->
+                <button class="btn-tidak" onclick="executeCapture()">Tidak</button>
             </div>
         </div>
     </div>
@@ -318,18 +324,23 @@
         </div>
     </div>
 
-    <!-- FATALITY VIDEO & CINEMATIC SCREEN -->
+    <!-- FATALITY & CAPTURED VIDEO SCREEN -->
     <div id="fatality-container" class="fullscreen-overlay" style="display:none;">
-        <video id="fatality-video" playsinline preload="auto">
+        <!-- Video Pilihan YA (Fatality) -->
+        <video id="fatality-video" class="cinematic-video" playsinline preload="auto">
             <source src="pejabat-kalah.mp4" type="video/mp4">
         </video>
+        <!-- Video Pilihan TIDAK (Captured) -->
+        <video id="captured-video" class="cinematic-video" playsinline preload="auto">
+            <source src="captured.mp4" type="video/mp4">
+        </video>
         
-        <div id="eliminated-text" class="cinematic-text">Tereliminasi</div>
+        <div id="eliminated-text" class="cinematic-text">TERELIMINASI</div>
         <div id="victory-text" class="cinematic-text"><span id="vic-name">Nama</span>,<br>Kamu Menang!</div>
     </div>
 
     <script>
-        // Data Soal
+        // Data Soal Awal (Statik)
         const questionsData = {
             easy: [
                 { q: "Berapakah hasil dari 5 + 7?", options: ["10", "11", "12", "13"], answer: 2 },
@@ -414,20 +425,35 @@
             ]
         };
 
+        // --- SISTEM GENERATOR BANK SOAL HINGGA 100 PER LEVEL ---
+        function populateBankSoal() {
+            while(questionsData.easy.length < 100) {
+                let a = Math.floor(Math.random() * 20) + 1; let b = Math.floor(Math.random() * 20) + 1; let ans = a + b;
+                questionsData.easy.push({ q: `Berapakah hasil dari ${a} + ${b}?`, options: [ans.toString(), (ans+1).toString(), (ans-1).toString(), (ans+2).toString()], answer: 0 });
+            }
+            while(questionsData.medium.length < 100) {
+                let a = Math.floor(Math.random() * 15) + 5; let b = Math.floor(Math.random() * 10) + 2; let isMinus = Math.random() > 0.5;
+                if(isMinus) { let ans = a * b - a; questionsData.medium.push({ q: `Hitunglah: (${a} x ${b}) - ${a}`, options: [ans.toString(), (ans+a).toString(), (ans-b).toString(), (ans+10).toString()], answer: 0 }); } 
+                else { let ans = a * b; questionsData.medium.push({ q: `Berapakah hasil dari ${a} x ${b}?`, options: [ans.toString(), (ans+b).toString(), (ans-a).toString(), (ans+10).toString()], answer: 0 }); }
+            }
+            while(questionsData.hard.length < 100) {
+                let a = Math.floor(Math.random() * 40) + 10; let b = Math.floor(Math.random() * 30) + 10; let ans = a * b;
+                questionsData.hard.push({ q: `Berapakah hasil dari ${a} x ${b}?`, options: [ans.toString(), (ans+10).toString(), (ans-20).toString(), (ans+100).toString()], answer: 0 });
+            }
+        }
+        
+        populateBankSoal();
+
         const throwItems = [
-            { emoji: '🥚', type: 'egg' }, 
-            { emoji: '🍌', type: 'banana' }, 
-            { emoji: '💣', type: 'bomb' }, 
-            { emoji: '🔪', type: 'knife' },
-            { emoji: '💩', type: 'poop' },
-            { emoji: '🐍', type: 'snake' }
+            { emoji: '🥚', type: 'egg' }, { emoji: '🍌', type: 'banana' }, { emoji: '💣', type: 'bomb' }, 
+            { emoji: '🔪', type: 'knife' }, { emoji: '💩', type: 'poop' }, { emoji: '🐍', type: 'snake' }
         ];
 
         const baseImageNormal = 'pejabat-normal.jpg';
         const imageHurt = 'pejabat-sakit.jpg';
         const imageBonyok = 'pejabat-bonyok.jpg';
         
-        // --- ASSET AUDIO UTAMA ---
+        // --- ASSET AUDIO ---
         const audioSalah = new Audio("reaksi-salah.mp3");
         const audioFinishHim = new Audio("finish-him.mp3"); 
         const audioGameOver = new Audio("game-over.mp3"); 
@@ -442,17 +468,15 @@
         let timeLeft = 15, timerInterval, goTimerInterval;
         
         const maxQuestions = 25;
-        const damagePerCorrect = 5; 
+        const damagePerCorrect = 100 / 20;
 
         // Sistem Audio SFX Bawaan
         let audioCtx, noiseBuffer;
         function initAudio() {
             if(!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const bufferSize = audioCtx.sampleRate * 2;
-                noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-                const output = noiseBuffer.getChannelData(0);
-                for (let i = 0; i < bufferSize; i++) output[i] = Math.random() * 2 - 1;
+                const bufferSize = audioCtx.sampleRate * 2; noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const output = noiseBuffer.getChannelData(0); for (let i = 0; i < bufferSize; i++) output[i] = Math.random() * 2 - 1;
             }
             if (audioCtx.state === 'suspended') audioCtx.resume();
         }
@@ -463,18 +487,16 @@
             osc.type = type; osc.connect(gain); gain.connect(audioCtx.destination);
             osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
             if (slideFreq) osc.frequency.exponentialRampToValueAtTime(slideFreq, audioCtx.currentTime + duration);
-            gain.gain.setValueAtTime(1, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+            gain.gain.setValueAtTime(1, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
             osc.start(); osc.stop(audioCtx.currentTime + duration);
         }
 
         function playNoise(filterType, freq, duration, gainVolume = 1) {
             if (!noiseBuffer || !audioCtx) return;
-            const source = audioCtx.createBufferSource(); source.buffer = noiseBuffer;
-            const filter = audioCtx.createBiquadFilter(); filter.type = filterType; filter.frequency.value = freq;
-            const gain = audioCtx.createGain(); source.connect(filter); filter.connect(gain); gain.connect(audioCtx.destination);
-            gain.gain.setValueAtTime(gainVolume, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+            const source = audioCtx.createBufferSource(); source.buffer = noiseBuffer; const filter = audioCtx.createBiquadFilter(); 
+            filter.type = filterType; filter.frequency.value = freq; const gain = audioCtx.createGain(); 
+            source.connect(filter); filter.connect(gain); gain.connect(audioCtx.destination);
+            gain.gain.setValueAtTime(gainVolume, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
             source.start(); source.stop(audioCtx.currentTime + duration);
         }
 
@@ -499,56 +521,28 @@
             const fillBar = document.getElementById('loading-bar-fill');
             const pctText = document.getElementById('loading-pct');
             
-            loadingScreen.style.display = 'flex';
-            fillBar.style.width = '0%';
-            pctText.innerText = '0%';
+            loadingScreen.style.display = 'flex'; fillBar.style.width = '0%'; pctText.innerText = '0%';
 
-            // Preload gambar ke memori browser
-            if(assetsToLoad && assetsToLoad.length > 0) {
-                assetsToLoad.forEach(src => {
-                    const img = new Image();
-                    img.src = src;
-                });
-            }
+            if(assetsToLoad && assetsToLoad.length > 0) { assetsToLoad.forEach(src => { const img = new Image(); img.src = src; }); }
 
             let progress = 0;
-            // Simulasi loading berjalan
             const loadInterval = setInterval(() => {
-                progress += Math.floor(Math.random() * 15) + 5; 
-                if (progress >= 100) progress = 100;
-                
-                fillBar.style.width = progress + '%';
-                pctText.innerText = progress + '%';
-
-                if (progress === 100) {
-                    clearInterval(loadInterval);
-                    setTimeout(() => {
-                        loadingScreen.style.display = 'none';
-                        onCompleteCallback(); 
-                    }, 400); 
-                }
+                progress += Math.floor(Math.random() * 15) + 5; if (progress >= 100) progress = 100;
+                fillBar.style.width = progress + '%'; pctText.innerText = progress + '%';
+                if (progress === 100) { clearInterval(loadInterval); setTimeout(() => { loadingScreen.style.display = 'none'; onCompleteCallback(); }, 400); }
             }, 120);
         }
 
         function selectCharacter(isActive) {
             if (!audioCtx || audioCtx.state === 'suspended') initAudio();
-            
-            if (isActive) {
-                playSfx('select');
-                alert('Karakter ini sudah terpilih!');
-            } else {
-                playSfx('locked');
-                alert('Karakter belum terbuka!');
-            }
+            if (isActive) { playSfx('select'); alert('Karakter ini sudah terpilih!'); } else { playSfx('locked'); alert('Karakter belum terbuka!'); }
         }
 
-        // --- Alur Transisi Layar yang Diperbarui dengan Loading ---
         function goToSelection() {
             const nameInput = document.getElementById('player-name').value;
             if (!nameInput) { alert("Silakan masukkan nama Anda terlebih dahulu!"); return; }
             
             initAudio(); 
-            // Unlock audio browser
             audioSalah.play().then(() => { audioSalah.pause(); audioSalah.currentTime = 0; }).catch(e=>{});
             audioFinishHim.play().then(() => { audioFinishHim.pause(); audioFinishHim.currentTime = 0; }).catch(e=>{});
             audioGameOver.play().then(() => { audioGameOver.pause(); audioGameOver.currentTime = 0; }).catch(e=>{});
@@ -559,11 +553,11 @@
             playerName = nameInput;
             const difficultySelect = document.getElementById('difficulty');
             diffText = difficultySelect.options[difficultySelect.selectedIndex].text.split(' ')[1]; 
-            currentQuestions = [...questionsData[difficultySelect.value]].sort(() => Math.random() - 0.5); 
+            
+            currentQuestions = [...questionsData[difficultySelect.value]].sort(() => Math.random() - 0.5).slice(0, maxQuestions);         
             
             document.getElementById('login-screen').style.display = 'none';
             
-            // JALANKAN LOADING SCREEN sebelum masuk ke Pilih Karakter
             runLoadingScreen([baseImageNormal], () => {
                 document.getElementById('selection-screen').style.display = 'flex';
                 audioChooseFighter.currentTime = 0;
@@ -575,22 +569,18 @@
             audioChooseFighter.pause();
             document.getElementById('selection-screen').style.display = 'none';
             
-            // --- PRELOAD VIDEO FATALITY ---
-            // Memerintahkan browser untuk memuat video MP4 ke memori saat loading screen berjalan
-            const fatVideo = document.getElementById('fatality-video');
-            fatVideo.load();
+            // --- PRELOAD KEDUA VIDEO CINEMATIC ---
+            document.getElementById('fatality-video').load();
+            document.getElementById('captured-video').load(); // Preload video captured
             
-            // JALANKAN LOADING SCREEN sebelum masuk ke Arena Pertarungan
             runLoadingScreen([imageHurt, imageBonyok], () => {
                 document.getElementById('game-screen').style.display = 'flex';
-                
                 document.getElementById('display-name').innerText = `Pemain: ${playerName}`;
                 document.getElementById('display-level').innerText = `Level: ${diffText}`;
                 
                 score = 0; hp = 100; currentQIndex = 0; currentImageNormal = baseImageNormal;
                 document.getElementById('pejabat-img').src = currentImageNormal;
                 
-                // Putar lagu pertarungan saat arena terbuka
                 audioBattle.currentTime = 0;
                 audioBattle.play().catch(e => console.log("Audio battle error", e));
 
@@ -601,12 +591,8 @@
         function updateScore() { document.getElementById('display-score').innerText = `Skor: ${score}`; }
 
         function updateHP() {
-            if(hp < 0) hp = 0; 
-            const hpBar = document.getElementById('hp-bar');
-            hpBar.style.width = hp + '%';
-            
+            if(hp < 0) hp = 0; const hpBar = document.getElementById('hp-bar'); hpBar.style.width = hp + '%';
             document.getElementById('hp-text').innerText = `HP Pejabat: ${Math.round(hp)}% | Soal: ${Math.min(currentQIndex + 1, maxQuestions)}/${maxQuestions}`;
-
             if (hp <= 20) { hpBar.style.backgroundColor = "var(--hp-low)"; currentImageNormal = imageBonyok; } 
             else if (hp <= 50) { hpBar.style.backgroundColor = "var(--hp-med)"; } 
             else { hpBar.style.backgroundColor = "var(--hp-high)"; }
@@ -627,70 +613,58 @@
             audioSalah.currentTime = 0; audioSalah.play().catch(e=>{});
             const buttons = document.querySelectorAll('.option-btn');
             buttons.forEach(btn => btn.disabled = true);
-            const correctIndex = currentQuestions[currentQIndex].answer;
-            buttons[correctIndex].style.background = '#2ed573'; buttons[correctIndex].style.color = 'white'; buttons[correctIndex].style.borderColor = '#2ed573';
+            buttons.forEach(btn => { if (btn.dataset.correct === 'true') { btn.style.background = '#2ed573'; btn.style.color = 'white'; btn.style.borderColor = '#2ed573'; } });
             setTimeout(() => { currentQIndex++; loadQuestion(); }, 1500);
         }
 
         function loadQuestion() {
             if (Math.round(hp) <= 0) {
-                clearInterval(timerInterval);
-                audioBattle.pause(); // Matikan lagu saat musuh kalah
-                
+                clearInterval(timerInterval); audioBattle.pause(); 
                 document.getElementById('finish-him-modal').style.display = 'flex';
-                audioFinishHim.currentTime = 0;
-                audioFinishHim.play().catch(e => console.log(e));
+                audioFinishHim.currentTime = 0; audioFinishHim.play().catch(e => console.log(e));
                 return;
             } 
             
             if (currentQIndex >= maxQuestions) { 
-                clearInterval(timerInterval);
-                showGameOverModal();
-                return;
+                clearInterval(timerInterval); showGameOverModal(); return;
             }
 
-            document.getElementById('pejabat-img').src = currentImageNormal;
-            updateHP();
-
-            const qData = currentQuestions[currentQIndex];
-            document.getElementById('question-text').innerText = qData.q;
+            document.getElementById('pejabat-img').src = currentImageNormal; updateHP();
+            const qData = currentQuestions[currentQIndex]; document.getElementById('question-text').innerText = qData.q;
             
-            const optionsContainer = document.getElementById('options-container');
-            optionsContainer.innerHTML = '';
+            const optionsContainer = document.getElementById('options-container'); optionsContainer.innerHTML = '';
             const prefixes = ['A', 'B', 'C', 'D'];
             
-            qData.options.forEach((opt, index) => {
-                const btn = document.createElement('button');
-                btn.className = 'option-btn';
-                btn.innerText = `${prefixes[index]}. ${opt}`;
-                btn.onclick = () => checkAnswer(index, qData.answer, btn);
-                optionsContainer.appendChild(btn);
+            let shuffledOptions = qData.options.map((opt, index) => { return { text: opt, isCorrect: index === qData.answer }; });
+            shuffledOptions.sort(() => Math.random() - 0.5);
+            
+            shuffledOptions.forEach((optObj, index) => {
+                const btn = document.createElement('button'); btn.className = 'option-btn';
+                btn.innerText = `${prefixes[index]}. ${optObj.text}`; btn.dataset.correct = optObj.isCorrect; 
+                btn.onclick = () => checkAnswer(optObj.isCorrect, btn); optionsContainer.appendChild(btn);
             });
             startTimer(); 
         }
 
-        function checkAnswer(selectedIndex, correctIndex, clickedBtn) {
+        function checkAnswer(isCorrect, clickedBtn) {
             clearInterval(timerInterval); 
-            const buttons = document.querySelectorAll('.option-btn');
-            buttons.forEach(btn => btn.disabled = true);
+            const buttons = document.querySelectorAll('.option-btn'); buttons.forEach(btn => btn.disabled = true);
 
-            if (selectedIndex === correctIndex) {
-                hp -= damagePerCorrect; score += 10;
-                updateScore(); updateHP();
+            if (isCorrect) {
+                hp -= damagePerCorrect; score += 10; updateScore(); updateHP();
                 clickedBtn.style.background = '#2ed573'; clickedBtn.style.color = 'white'; clickedBtn.style.borderColor = '#2ed573';
                 triggerCorrectAction();
             } else {
                 audioSalah.currentTime = 0; audioSalah.play().catch(e=>{});
                 clickedBtn.style.background = '#ff4757'; clickedBtn.style.color = 'white'; clickedBtn.style.borderColor = '#ff4757';
-                buttons[correctIndex].style.background = '#2ed573'; buttons[correctIndex].style.color = 'white'; buttons[correctIndex].style.borderColor = '#2ed573';
+                buttons.forEach(btn => { if (btn.dataset.correct === 'true') { btn.style.background = '#2ed573'; btn.style.color = 'white'; btn.style.borderColor = '#2ed573'; } });
                 setTimeout(() => { currentQIndex++; loadQuestion(); }, 1500);
             }
         }
 
         function triggerCorrectAction() {
             playSfx('throw'); 
-            const charArea = document.getElementById('character-area');
-            const imgPejabat = document.getElementById('pejabat-img');
+            const charArea = document.getElementById('character-area'); const imgPejabat = document.getElementById('pejabat-img');
             const selectedItemObj = throwItems[Math.floor(Math.random() * throwItems.length)];
             
             const projectile = document.createElement('div');
@@ -703,90 +677,86 @@
             setTimeout(() => {
                 projectile.remove(); playSfx(selectedItemObj.type); 
                 imgPejabat.src = imageHurt; imgPejabat.classList.add('pain-effect');
-                
-                setTimeout(() => {
-                    imgPejabat.classList.remove('pain-effect');
-                    currentQIndex++; loadQuestion(); 
-                }, 1300);
+                setTimeout(() => { imgPejabat.classList.remove('pain-effect'); currentQIndex++; loadQuestion(); }, 1300);
             }, 450); 
         }
 
         function showGameOverModal() {
-            audioBattle.pause(); // Matikan lagu saat game over
-
-            audioGameOver.currentTime = 0;
-            audioGameOver.play().catch(e => console.log(e));
-
+            audioBattle.pause(); audioGameOver.currentTime = 0; audioGameOver.play().catch(e => console.log(e));
             document.getElementById('go-hp').innerText = Math.round(hp);
             document.getElementById('game-over-modal').style.display = 'flex';
             
-            let goTimeLeft = 10;
-            document.getElementById('go-timer').innerText = goTimeLeft;
-
+            let goTimeLeft = 10; document.getElementById('go-timer').innerText = goTimeLeft;
             goTimerInterval = setInterval(() => {
-                goTimeLeft--;
-                document.getElementById('go-timer').innerText = goTimeLeft;
-                if (goTimeLeft <= 0) {
-                    clearInterval(goTimerInterval);
-                    retryGameNo(); 
-                }
+                goTimeLeft--; document.getElementById('go-timer').innerText = goTimeLeft;
+                if (goTimeLeft <= 0) { clearInterval(goTimerInterval); retryGameNo(); }
             }, 1000);
         }
 
-        function retryGameYes() {
-            clearInterval(goTimerInterval);
-            location.reload(); 
-        }
-
+        function retryGameYes() { clearInterval(goTimerInterval); location.reload(); }
         function retryGameNo() {
-            clearInterval(goTimerInterval);
-            document.getElementById('game-over-modal').style.display = 'none';
+            clearInterval(goTimerInterval); document.getElementById('game-over-modal').style.display = 'none';
             alert(`Sayang sekali, ${playerName}. Silakan coba lagi lain waktu.\nSkor Akhir: ${score}`);
             location.reload();
         }
 
-        function normalWin() {
-            audioFinishHim.pause();
-            document.getElementById('finish-him-modal').style.display = 'none';
-            alert(`SELAMAT! ${playerName}, Anda melepaskan pejabat dengan skor ${score}!`);
-            location.reload();
-        }
-
+        // --- SISTEM PEMILIHAN "YA" (FATALITY) ---
         function executeFatality() {
             audioFinishHim.pause();
             document.getElementById('finish-him-modal').style.display = 'none';
+            
             const fatContainer = document.getElementById('fatality-container');
             const fatVideo = document.getElementById('fatality-video');
+            
+            // Sembunyikan video captured, tampilkan video fatality
+            document.getElementById('captured-video').style.display = 'none';
+            fatVideo.style.display = 'block';
             fatContainer.style.display = 'flex';
             
             let playPromise = fatVideo.play();
-            if (playPromise !== undefined) {
-                playPromise.catch(error => {
-                    console.log("Video gagal putar:", error);
-                    triggerCinematicEnding();
-                });
-            }
-            fatVideo.onended = () => { triggerCinematicEnding(); };
+            if (playPromise !== undefined) { playPromise.catch(error => { triggerCinematicEnding('fatality'); }); }
+            fatVideo.onended = () => { triggerCinematicEnding('fatality'); };
         }
 
-        function triggerCinematicEnding() {
-            document.getElementById('fatality-video').style.opacity = '0.2'; 
+        // --- SISTEM PEMILIHAN "TIDAK" (CAPTURED) ---
+        function executeCapture() {
+            audioFinishHim.pause();
+            document.getElementById('finish-him-modal').style.display = 'none';
+            
+            const fatContainer = document.getElementById('fatality-container');
+            const capVideo = document.getElementById('captured-video');
+            
+            // Sembunyikan video fatality, tampilkan video captured
+            document.getElementById('fatality-video').style.display = 'none';
+            capVideo.style.display = 'block';
+            fatContainer.style.display = 'flex';
+            
+            let playPromise = capVideo.play();
+            if (playPromise !== undefined) { playPromise.catch(error => { triggerCinematicEnding('captured'); }); }
+            capVideo.onended = () => { triggerCinematicEnding('captured'); };
+        }
+
+        // --- SISTEM TEKS CINEMATIC GABUNGAN ---
+        function triggerCinematicEnding(endingType) {
             const elimText = document.getElementById('eliminated-text');
             const vicText = document.getElementById('victory-text');
             
-            audioEliminated.currentTime = 0;
-            audioEliminated.play().catch(e => console.log(e));
-
+            if (endingType === 'fatality') {
+                document.getElementById('fatality-video').style.opacity = '0.2';
+                elimText.innerText = "TERELIMINASI";
+            } else {
+                document.getElementById('captured-video').style.opacity = '0.2';
+                elimText.innerText = "BUSTED";
+            }
+            
+            audioEliminated.currentTime = 0; audioEliminated.play().catch(e => console.log(e));
             elimText.classList.add('show-text');
 
             setTimeout(() => {
                 elimText.classList.remove('show-text');
                 setTimeout(() => {
                     document.getElementById('vic-name').innerText = playerName;
-
-                    audioMenang.currentTime = 0;
-                    audioMenang.play().catch(e => console.log(e));
-
+                    audioMenang.currentTime = 0; audioMenang.play().catch(e => console.log(e));
                     vicText.classList.add('show-text');
                     setTimeout(() => { location.reload(); }, 4000);
                 }, 1000); 
