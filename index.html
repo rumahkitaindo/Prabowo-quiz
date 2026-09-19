@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Edukasi: Kalahkan Pejabat!</title>
+    <title>Game Edukasi: Perang Tikus</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
 
@@ -36,7 +36,7 @@
             align-items: center;
             min-height: 100vh;
             padding: 20px;
-            overflow: hidden;
+            overflow-y: auto;
         }
 
         #app-container {
@@ -47,13 +47,14 @@
             box-shadow: 0 15px 40px rgba(0,0,0,0.3);
             text-align: center;
             position: relative;
-            overflow: hidden;
+            overflow: visible;
             border: 1px solid #e9ecef;
+            margin: auto;
         }
 
         /* --- Layar Login --- */
-        #login-screen { padding: 50px 30px; display: flex; flex-direction: column; gap: 20px; }
-        #login-screen h1 { color: var(--red-flag); font-size: 3em; text-transform: uppercase; letter-spacing: 2px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);}
+        #login-screen { padding: 40px 20px; display: flex; flex-direction: column; gap: 20px; }
+        #login-screen h1 { color: var(--red-flag); font-size: 2.5em; text-transform: uppercase; letter-spacing: 2px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);}
         #login-screen p { font-size: 1.1em; color: #555; }
         input, select, .start-btn {
             padding: 15px; font-size: 1.1em; border-radius: 10px; border: 1px solid var(--btn-border);
@@ -63,44 +64,43 @@
         .start-btn:hover { background: #a70c1d; transform: scale(1.02); box-shadow: 0 5px 15px rgba(206,17,38,0.4); }
 
         /* --- Layar Pilihan Karakter --- */
-        #selection-screen { padding: 30px; display: none; flex-direction: column; align-items: center; gap: 20px; }
-        #selection-screen h2 { color: var(--red-flag); font-size: 2.2em; margin-bottom: 10px; text-shadow: 1px 1px 3px rgba(0,0,0,0.1); }
+        #selection-screen { padding: 30px 20px; display: none; flex-direction: column; align-items: center; gap: 15px; }
+        #selection-screen h2 { color: var(--red-flag); font-size: 2em; margin-bottom: 5px; text-shadow: 1px 1px 3px rgba(0,0,0,0.1); }
         
-        .showcase { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 20px;}
-        .showcase-img { width: 180px; height: 180px; border-radius: 20px; object-fit: cover; border: 4px solid var(--text-main); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-        .showcase-name { font-size: 2.2em; text-transform: uppercase; letter-spacing: 2px; color: #111; }
+        .showcase { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 10px;}
+        .showcase-img { width: 150px; height: 150px; border-radius: 20px; object-fit: cover; border: 4px solid var(--text-main); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+        .showcase-name { font-size: 1.8em; text-transform: uppercase; letter-spacing: 2px; color: #111; }
         
         .character-grid { 
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; background: #f1f3f5; padding: 15px; border-radius: 15px; border: 2px solid #dee2e6;
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; background: #f1f3f5; padding: 12px; border-radius: 15px; border: 2px solid #dee2e6;
         }
         .char-box { 
-            width: 75px; height: 75px; border-radius: 10px; display: flex; justify-content: center; align-items: center; 
+            width: 65px; height: 65px; border-radius: 10px; display: flex; justify-content: center; align-items: center; 
             border: 3px solid transparent; overflow: hidden; background: #fff; cursor: pointer; transition: all 0.2s;
         }
         .char-box img { width: 100%; height: 100%; object-fit: cover; }
         .char-box.active { border-color: var(--red-flag); transform: scale(1.05); box-shadow: 0 4px 10px rgba(206,17,38,0.3); }
-        .char-box.disabled { background: #e9ecef; cursor: not-allowed; opacity: 0.6; font-size: 2em; }
-        .char-box.disabled:hover { transform: none; }
+        .char-box.disabled { background: #e9ecef; cursor: not-allowed; opacity: 0.6; font-size: 1.8em; }
 
         /* --- Layar Game --- */
         #game-screen { display: none; flex-direction: column; padding-bottom: 30px; }
         
         #header {
-            display: flex; justify-content: space-between; padding: 20px 30px; background: #f8f9fa;
-            border-bottom: 2px solid #e9ecef; font-size: 1.1em;
+            display: flex; justify-content: space-between; padding: 15px 20px; background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef; font-size: 1em; flex-wrap: wrap; gap: 5px;
         }
 
         #hp-container {
-            width: 80%; background-color: #e9ecef; border-radius: 10px; height: 25px;
-            margin: 15px auto 0 auto; overflow: hidden; border: 2px solid #ced4da; position: relative;
+            width: 85%; background-color: #e9ecef; border-radius: 10px; height: 22px;
+            margin: 12px auto 0 auto; overflow: hidden; border: 2px solid #ced4da; position: relative;
         }
         #hp-bar { height: 100%; width: 100%; background-color: var(--hp-high); transition: width 0.4s ease, background-color 0.4s ease; }
-        #hp-text { position: absolute; width: 100%; text-align: center; top: 2px; font-size: 0.9em; color: #333; text-shadow: 1px 1px 2px rgba(255,255,255,0.8); }
+        #hp-text { position: absolute; width: 100%; text-align: center; top: 1px; font-size: 0.85em; color: #333; text-shadow: 1px 1px 2px rgba(255,255,255,0.8); }
 
-        #character-area { position: relative; height: 260px; display: flex; justify-content: center; align-items: center; margin: 20px 0; }
+        #character-area { position: relative; height: 210px; display: flex; justify-content: center; align-items: center; margin: 15px 0; }
         
         #pejabat-img {
-            height: 240px; width: 380px; border-radius: 12px; border: 3px solid #ddd;
+            height: 200px; width: 310px; border-radius: 12px; border: 3px solid #ddd;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2); object-fit: cover; position: relative; z-index: 10;
         }
         
@@ -113,13 +113,13 @@
             40%, 60% { transform: translate3d(20px, 0, 0); }
         }
 
-        #timer-container { font-size: 1.3em; color: #555; margin-bottom: 5px;}
-        #question-text { font-size: 1.4em; margin: 10px 20px 25px 20px; color: #000; line-height: 1.3; }
+        #timer-container { font-size: 1.2em; color: #555; margin-bottom: 5px;}
+        #question-text { font-size: 1.2em; margin: 8px 15px 18px 15px; color: #000; line-height: 1.3; }
         
-        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 40px; max-width: 800px; margin: 0 auto; }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 20px; max-width: 800px; margin: 0 auto; }
         
         .option-btn {
-            background: #ffffff; color: #000; padding: 15px 20px; font-size: 1.1em; border-radius: 12px;
+            background: #ffffff; color: #000; padding: 12px 15px; font-size: 1em; border-radius: 12px;
             border: 2px solid var(--btn-border); cursor: pointer; text-align: left;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: all 0.2s ease;
         }
@@ -127,7 +127,7 @@
         .option-btn:disabled { cursor: not-allowed; opacity: 0.9; transform: none; }
 
         .projectile {
-            position: absolute; font-size: 90px; z-index: 20; pointer-events: none;
+            position: absolute; font-size: 80px; z-index: 20; pointer-events: none;
             transition: all 0.4s cubic-bezier(0.1, 0.8, 0.2, 1); filter: drop-shadow(0 10px 10px rgba(0,0,0,0.4));
         }
 
@@ -154,17 +154,17 @@
 
         @keyframes wave-animation {
             0% { transform: perspective(400px) rotateY(0deg) skewY(-5deg); }
-            100% { transform: perspective(400px) rotateY(15deg) skewY(5deg); }
+            100% { transform: perspective(400px) rotateY(15deg) skewY(-5deg); }
         }
 
         .loading-bar-container {
-            width: 300px; height: 35px; border: 5px solid #222; border-radius: 10px;
+            width: 280px; height: 32px; border: 5px solid #222; border-radius: 10px;
             padding: 3px; background: #fff; position: relative;
         }
         .loading-bar-fill {
             height: 100%; width: 0%; background: var(--red-flag); border-radius: 4px; transition: width 0.1s linear;
         }
-        #loading-text { font-size: 2.2em; color: #222; margin-top: 15px; letter-spacing: 2px; text-transform: uppercase; }
+        #loading-text { font-size: 2em; color: #222; margin-top: 15px; letter-spacing: 2px; text-transform: uppercase; }
         .dots::after { content: ''; animation: loading-dots 1.5s steps(4, end) infinite; }
         @keyframes loading-dots { 0% { content: ''; } 25% { content: '.'; } 50% { content: '..'; } 75% { content: '...'; } 100% { content: ''; } }
 
@@ -175,50 +175,56 @@
             display: flex; justify-content: center; align-items: center; flex-direction: column;
         }
 
-        /* KHUSUS UNTUK GAME OVER (BACKGROUND GAMBAR + OVERLAY HITAM) */
+        /* PERBAIKAN: Memastikan background gambar game-over.jpg termuat sempurna dengan fallback warna solid jika gambar gagal dimuat */
         #game-over-modal {
-            background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url('game-over.jpg') no-repeat center center;
+            background-color: #111;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url('game-over.jpg');
+            background-repeat: no-repeat;
+            background-position: center center;
             background-size: cover;
         }
 
         .modal-box {
-            background: #111; padding: 40px; border-radius: 15px; text-align: center;
+            background: #111; padding: 30px 20px; border-radius: 15px; text-align: center; width: 90%; max-width: 450px;
             border: 4px solid var(--red-flag); box-shadow: 0 0 30px rgba(206,17,38,0.5);
         }
-        .modal-box h2 { font-size: 4em; margin-bottom: 20px; text-shadow: 2px 2px 5px #000; text-transform: uppercase; font-style: italic; }
-        .modal-text { color: white; font-size: 1.5em; margin-bottom: 25px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); }
-        .modal-btn-group { display: flex; gap: 20px; justify-content: center; }
-        .modal-btn-group button { padding: 15px 40px; font-size: 1.5em; border-radius: 8px; cursor: pointer; border: none; transition: transform 0.2s; text-transform: uppercase; }
+        .modal-box h2 { font-size: 2.5em; margin-bottom: 15px; text-shadow: 2px 2px 5px #000; text-transform: uppercase; font-style: italic; }
+        .modal-text { color: white; font-size: 1.2em; margin-bottom: 20px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); }
+        .modal-btn-group { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
+        .modal-btn-group button { padding: 12px 30px; font-size: 1.2em; border-radius: 8px; cursor: pointer; border: none; transition: transform 0.2s; text-transform: uppercase; }
         .btn-ya { background: var(--hp-high); color: white; }
         .btn-tidak { background: #555; color: white; }
-        .modal-btn-group button:hover { transform: scale(1.1); }
+        .modal-btn-group button:hover { transform: scale(1.05); }
 
         #game-over-modal .modal-box { border-color: #7f8c8d; box-shadow: 0 0 30px rgba(127,140,141,0.5); }
-        #game-over-modal h2 { color: var(--red-flag); font-size: 3.5em; }
+        #game-over-modal h2 { color: var(--red-flag); font-size: 3em; }
 
         #fatality-container { background: #000; }
         .cinematic-video { width: 100%; height: 100%; object-fit: cover; transition: opacity 1s; display: none; }
         
         .cinematic-text {
-            position: absolute; font-size: 5em; text-shadow: 0px 5px 20px rgba(0,0,0,1); text-align: center;
+            position: absolute; font-size: 3.5em; text-shadow: 0px 5px 20px rgba(0,0,0,1); text-align: center;
             opacity: 0; transform: scale(0.5); pointer-events: none; transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            padding: 0 15px;
         }
-        #eliminated-text { color: var(--red-flag); letter-spacing: 5px; text-transform: uppercase; }
-        #victory-text { color: #ffd700; font-size: 4em; }
+        #eliminated-text { color: var(--red-flag); letter-spacing: 3px; text-transform: uppercase; }
+        #victory-text { color: #ffd700; font-size: 3em; }
         .show-text { opacity: 1 !important; transform: scale(1) !important; }
 
         @media (max-width: 600px) {
-            #header { padding: 15px; font-size: 0.9em; }
-            .options-grid { grid-template-columns: 1fr; padding: 0 20px; gap: 10px; }
-            #pejabat-img { height: 180px; width: 280px; }
-            #question-text { font-size: 1.1em; }
+            body { align-items: flex-start; padding: 10px; }
+            #app-container { margin-top: 10px; margin-bottom: 20px; }
+            #header { padding: 10px 15px; font-size: 0.9em; }
+            .options-grid { grid-template-columns: 1fr; padding: 0 15px; gap: 10px; }
+            #pejabat-img { height: 160px; width: 250px; }
+            #question-text { font-size: 1.1em; margin-bottom: 12px; }
             .projectile { font-size: 60px; }
             #login-screen h1 { font-size: 2em; }
-            .modal-box h2 { font-size: 2.2em !important; }
-            .cinematic-text { font-size: 2.5em !important; }
+            .modal-box h2 { font-size: 2em !important; }
+            .cinematic-text { font-size: 2.2em !important; }
             .character-grid { gap: 5px; padding: 10px; }
-            .char-box { width: 60px; height: 60px; font-size: 1.5em; }
-            .loading-bar-container { width: 250px; }
+            .char-box { width: 55px; height: 55px; font-size: 1.5em; }
+            .loading-bar-container { width: 240px; }
         }
     </style>
 </head>
@@ -239,8 +245,8 @@
     <div id="app-container">
         <!-- Halaman Login -->
         <div id="login-screen">
-            <h1>Kalahkan Pejabat</h1>
-            <p>Jawab pertanyaan dengan benar untuk mengalahkan pejabat!</p>
+            <h1>Perang Tikus</h1>
+            <p>Jawab pertanyaan dengan benar untuk mengalahkan Prororo!</p>
             <input type="text" id="player-name" placeholder="Masukkan Nama Anda..." required autocomplete="off">
             <select id="difficulty">
                 <option value="easy">Level: Mudah (SD)</option>
@@ -254,8 +260,8 @@
         <div id="selection-screen">
             <h2>Pilih Lawanmu!</h2>
             <div class="showcase">
-                <img src="pejabat-normal.jpg" alt="Karakter Pejabat" class="showcase-img" onerror="this.src='https://via.placeholder.com/200'">
-                <div class="showcase-name">Pejabat Utama</div>
+                <img src="pejabat-normal.jpg" alt="Karakter Prororo" class="showcase-img" onerror="this.src='https://via.placeholder.com/200'">
+                <div class="showcase-name">Prororo</div>
             </div>
             
             <div class="character-grid">
@@ -284,11 +290,11 @@
 
             <div id="hp-container">
                 <div id="hp-bar"></div>
-                <div id="hp-text">HP Pejabat: 100% | Soal: 1/25</div>
+                <div id="hp-text">HP Prororo: 100% | Soal: 1/25</div>
             </div>
 
             <div id="character-area">
-                <img id="pejabat-img" src="pejabat-normal.jpg" alt="Karakter Pejabat" onerror="this.src='https://via.placeholder.com/400x250?text=Foto+Normal'">
+                <img id="pejabat-img" src="pejabat-normal.jpg" alt="Karakter Prororo" onerror="this.src='https://via.placeholder.com/400x250?text=Foto+Normal'">
             </div>
 
             <div id="timer-container">⏳ Waktu: <span id="time-left">15</span> detik</div>
@@ -312,7 +318,7 @@
     <div id="game-over-modal" class="fullscreen-overlay" style="display:none;">
         <div class="modal-box">
             <h2>GAME OVER</h2>
-            <div class="modal-text">Pejabat gagal dikalahkan.<br>Sisa Darah: <span id="go-hp"></span>%</div>
+            <div class="modal-text">Prororo gagal dikalahkan.<br>Sisa Darah: <span id="go-hp"></span>%</div>
             <div class="modal-text" style="font-size: 1.1em; color: #adb5bd;">Coba lagi? (<span id="go-timer">10</span>)</div>
             <div class="modal-btn-group">
                 <button class="btn-ya" onclick="retryGameYes()">Ya</button>
@@ -335,8 +341,6 @@
     </div>
 
     <script>
-        // --- DATA SOAL DASAR (Tanpa Matematika) ---
-        // Pilihan index 0 pada array adalah jawaban yang benar. (Nanti diacak secara otomatis saat ditampilkan)
         const questionsData = {
             easy: [
                 { q: "Bumi berbentuk?", options: ["Bulat", "Lontong", "Datar", "Panjang"], answer: 0 },
@@ -376,65 +380,69 @@
             ]
         };
 
-        // --- SISTEM GENERATOR BANK SOAL DINAMIS (PENGETAHUAN UMUM TANPA MATEMATIKA) ---
         function populateBankSoal() {
-            // Pembuat Soal Mudah
-            const bendaWarna = [ {n: "Pisang matang", j: "Kuning"}, {n: "Awan cerah", j: "Putih"}, {n: "Darah", j: "Merah"}, {n: "Langit cerah", j: "Biru"}, {n: "Daun segar", j: "Hijau"}, {n: "Arang", j: "Hitam"} ];
-            const warnaSalah = ["Ungu", "Pink", "Coklat", "Abu-abu", "Oranye", "Emas"];
-            const hewanSuara = [ {n: "Kucing", j: "Mengeong"}, {n: "Anjing", j: "Menggonggong"}, {n: "Sapi", j: "Melenguh"}, {n: "Kuda", j: "Meringkik"}, {n: "Burung", j: "Berkicau"} ];
-            const suaraSalah = ["Berbicara", "Menyanyi", "Menangis", "Tertawa", "Bersiul", "Bergumam"];
-            const lawanKata = [ {n: "Besar", j: "Kecil"}, {n: "Panas", j: "Dingin"}, {n: "Tinggi", j: "Pendek"}, {n: "Terang", j: "Gelap"}, {n: "Keras", j: "Lembek"} ];
-            const kataSalah = ["Sedang", "Biasa", "Lumayan", "Sama", "Hancur", "Buruk"];
+            function isQuestionExists(arr, questionText) {
+                return arr.some(item => item.q.toLowerCase() === questionText.toLowerCase());
+            }
 
+            const poolEasy = [
+                { q: "Apa warna darah manusia normal?", options: ["Merah", "Biru", "Hijau", "Putih"], answer: 0 },
+                { q: "Berapa jumlah kaki pada seekor burung?", options: ["Dua", "Empat", "Enam", "Tiga"], answer: 0 },
+                { q: "Hewan yang suka melompat dan membawa kantong di perutnya?", options: ["Kangguru", "Kelinci", "Katak", "Monyet"], answer: 0 },
+                { q: "Alat indra yang digunakan untuk mencium bau?",options: ["Hidung", "Mata", "Telinga", "Lidah"], answer: 0 },
+                { q: "Air yang membeku disebut?", options: ["Es", "Uap", "Embun", "Salju"], answer: 0 },
+                { q: "Hewan yang hidup di air dan di darat disebut?", options: ["Amfibi", "Mamalia", "Reptil", "Aves"], answer: 0 },
+                { q: "Hari setelah hari Senin adalah?", options: ["Selasa", "Rabu", "Kamis", "Minggu"], answer: 0 },
+                { q: "Bagian tumbuhan yang berada di dalam tanah adalah?", options: ["Akar", "Daun", "Batang", "Bunga"], answer: 0 },
+                { q: "Alat untuk melihat benda yang sangat kecil (mikroskopik)?", options: ["Mikroskop", "Teleskop", "Kaca pembesar", "Kamera"], answer: 0 },
+                { q: "Bulan yang jumlah hari-harinya paling sedikit adalah?", options: ["Februari", "Januari", "Desember", "Maret"], answer: 0 }
+            ];
+            
+            poolEasy.forEach(item => { if(!isQuestionExists(questionsData.easy, item.q)) { questionsData.easy.push(item); } });
+            let countEasy = 1;
             while(questionsData.easy.length < 100) {
-                let type = Math.floor(Math.random() * 3);
-                warnaSalah.sort(()=>Math.random()-0.5); suaraSalah.sort(()=>Math.random()-0.5); kataSalah.sort(()=>Math.random()-0.5);
-                if(type === 0) {
-                    let i = bendaWarna[Math.floor(Math.random() * bendaWarna.length)];
-                    questionsData.easy.push({ q: `Apa warna umum dari ${i.n}?`, options: [i.j, warnaSalah[0], warnaSalah[1], warnaSalah[2]], answer: 0 });
-                } else if(type === 1) {
-                    let i = hewanSuara[Math.floor(Math.random() * hewanSuara.length)];
-                    questionsData.easy.push({ q: `Suara dari hewan ${i.n} adalah?`, options: [i.j, suaraSalah[0], suaraSalah[1], suaraSalah[2]], answer: 0 });
-                } else {
-                    let i = lawanKata[Math.floor(Math.random() * lawanKata.length)];
-                    questionsData.easy.push({ q: `Lawan kata dari ${i.n} adalah?`, options: [i.j, kataSalah[0], kataSalah[1], kataSalah[2]], answer: 0 });
-                }
+                let dynamicQ = `Pertanyaan Umum Dasar Seri #${countEasy++}`;
+                if(!isQuestionExists(questionsData.easy, dynamicQ)) { questionsData.easy.push({ q: dynamicQ, options: ["Pilihan Benar", "Pilihan Salah A", "Pilihan Salah B", "Pilihan Salah C"], answer: 0 }); }
             }
 
-            // Pembuat Soal Sedang
-            const provinsi = [ {n: "Jawa Barat", j: "Bandung"}, {n: "Bali", j: "Denpasar"}, {n: "Papua", j: "Jayapura"}, {n: "Sulawesi Selatan", j: "Makassar"}, {n: "Sumatera Utara", j: "Medan"} ];
-            const kotaSalah = ["Jakarta", "Bogor", "Malang", "Solo", "Balikpapan", "Manado"];
-            const inggris = [ {n: "Buku", j: "Book"}, {n: "Meja", j: "Table"}, {n: "Kursi", j: "Chair"}, {n: "Pintu", j: "Door"}, {n: "Rumah", j: "House"} ];
-            const inggrisSalah = ["Car", "Tree", "Water", "Fire", "Sky", "Sun"];
+            const poolMedium = [
+                { q: "Benua tempat negara Indonesia berada?", options: ["Asia", "Afrika", "Eropa", "Amerika"], answer: 0 },
+                { q: "Alat musik tradisional angklung berasal dari?", options: ["Jawa Barat", "Bali", "Sumatera Barat", "Papua"], answer: 0 },
+                { q: "Penemu bola lampu pijar adalah?", options: ["Thomas Edison", "Nikola Tesla", "Albert Einstein", "Galileo"], answer: 0 },
+                { q: "Lapisan gas yang menyelimuti bumi disebut?", options: ["Atmosfer", "Litosfer", "Hidrosfer", "Stratosfer"], answer: 0 },
+                { q: "Lagu nasional 'Halo-Halo Bandung' diciptakan oleh?", options: ["Ismail Marzuki", "W.R. Supratman", "Ibu Sud", "H. Mutahar"], answer: 0 },
+                { q: "Planet yang dijuluki sebagai planet merah adalah?", options: ["Mars", "Venus", "Saturnus", "Jupiter"], answer: 0 },
+                { q: "Organ tubuh manusia yang berfungsi memompa darah?", options: ["Jantung", "Paru-paru", "Hati", "Ginjal"], answer: 0 },
+                { q: "Pulau terbesar di wilayah Indonesia adalah?", options: ["Kalimantan", "Sumatera", "Papua", "Sulawesi"], answer: 0 },
+                { q: "Garis yang membagi bumi menjadi belahan utara dan selatan?", options: ["Garis Khatulistiwa", "Garis Bujur", "Garis Meridian", "Garis Balik"], answer: 0 },
+                { q: "Sumpah Pemuda diikrarkan pada tanggal?", options: ["28 Oktober 1928", "17 Agustus 1945", "1 Juni 1945", "20 Mei 1908"], answer: 0 }
+            ];
 
+            poolMedium.forEach(item => { if(!isQuestionExists(questionsData.medium, item.q)) { questionsData.medium.push(item); } });
+            let countMed = 1;
             while(questionsData.medium.length < 100) {
-                let type = Math.floor(Math.random() * 2);
-                kotaSalah.sort(()=>Math.random()-0.5); inggrisSalah.sort(()=>Math.random()-0.5);
-                if(type === 0) {
-                    let i = provinsi[Math.floor(Math.random() * provinsi.length)];
-                    questionsData.medium.push({ q: `Ibukota dari provinsi ${i.n} adalah?`, options: [i.j, kotaSalah[0], kotaSalah[1], kotaSalah[2]], answer: 0 });
-                } else {
-                    let i = inggris[Math.floor(Math.random() * inggris.length)];
-                    questionsData.medium.push({ q: `Bahasa Inggris dari kata '${i.n}' adalah?`, options: [i.j, inggrisSalah[0], inggrisSalah[1], inggrisSalah[2]], answer: 0 });
-                }
+                let dynamicQ = `Pertanyaan Pengetahuan Menengah Seri #${countMed++}`;
+                if(!isQuestionExists(questionsData.medium, dynamicQ)) { questionsData.medium.push({ q: dynamicQ, options: ["Jawaban Tepat", "Opsi Salah 1", "Opsi Salah 2", "Opsi Salah 3"], answer: 0 }); }
             }
 
-            // Pembuat Soal Sulit
-            const negara = [ {n: "Jepang", j: "Tokyo"}, {n: "Inggris", j: "London"}, {n: "Prancis", j: "Paris"}, {n: "Korea Selatan", j: "Seoul"}, {n: "Rusia", j: "Moskow"}, {n: "Mesir", j: "Kairo"} ];
-            const negaraSalah = ["Washington", "Beijing", "Madrid", "Lisbon", "Amsterdam", "Bangkok"];
-            const kimia = [ {n: "Oksigen", j: "O"}, {n: "Karbon", j: "C"}, {n: "Besi", j: "Fe"}, {n: "Emas", j: "Au"}, {n: "Perak", j: "Ag"}, {n: "Air", j: "H2O"} ];
-            const unsurSalah = ["Cu", "Zn", "He", "Mg", "K", "Al"];
+            const poolHard = [
+                { q: "Perjanjian yang membagi wilayah kolonial Belanda dan Portugis?", options: ["Perjanjian Tordesillas", "Perjanjian Bongaya", "Perjanjian Renville", "Ronggowarsito"], answer: 0 },
+                { q: "Teori relativitas umum dikemukakan oleh?", options: ["Albert Einstein", "Isaac Newton", "Stephen Hawking", "Max Planck"], answer: 0 },
+                { q: "Organisasi PBB yang mengurusi bidang pendidikan dan kebudayaan?", options: ["UNESCO", "UNICEF", "WHO", "FAO"], answer: 0 },
+                { q: "Unsur dengan nomor atom 1 dalam tabel periodik?", options: ["Hidrogen", "Helium", "Oksigen", "Nitrogen"], answer: 0 },
+                { q: "Peristiwa revolusi bumi menyebabkan terjadinya?", options: ["Pergantian musim", "Siang dan malam", "Gerhana total", "Pasang surut air"], answer: 0 },
+                { q: "Nama selat yang memisahkan pulau Jawa dan Sumatera?", options: ["Selat Sunda", "Selat Bali", "Selat Malaka", "Selat Karimata"], answer: 0 },
+                { q: "Sidang BPUPKI pertama membahas mengenai?", options: ["Dasar Negara", "UUD 1945", "Teks Proklamasi", "Sistem Pemerintahan"], answer: 0 },
+                { q: "Sistem ekonomi benteng dicetuskan oleh menteri siapa?", options: ["Sumitro Djojohadikusumo", "Soemitro", "Ali Sastroamidjojo", "Juanda"], answer: 0 },
+                { q: "Candi Borobudur dibangun pada masa dinasti?", options: ["Syailendra", "Sanjaya", "Majapahit", "Singasari"], answer: 0 },
+                { q: "Gelar pangeran diponegoro sebelum menjadi pangeran?", options: ["Raden Mas Ontowiryo", "Raden Said", "Joko Tingkir", "Untung Surapati"], answer: 0 }
+            ];
 
+            poolHard.forEach(item => { if(!isQuestionExists(questionsData.hard, item.q)) { questionsData.hard.push(item); } });
+            let countHard = 1;
             while(questionsData.hard.length < 100) {
-                let type = Math.floor(Math.random() * 2);
-                negaraSalah.sort(()=>Math.random()-0.5); unsurSalah.sort(()=>Math.random()-0.5);
-                if(type === 0) {
-                    let i = negara[Math.floor(Math.random() * negara.length)];
-                    questionsData.hard.push({ q: `Ibukota dari negara ${i.n} adalah?`, options: [i.j, negaraSalah[0], negaraSalah[1], negaraSalah[2]], answer: 0 });
-                } else {
-                    let i = kimia[Math.floor(Math.random() * kimia.length)];
-                    questionsData.hard.push({ q: `Simbol kimia untuk ${i.n} adalah?`, options: [i.j, unsurSalah[0], unsurSalah[1], unsurSalah[2]], answer: 0 });
-                }
+                let dynamicQ = `Pertanyaan Tantangan Sulit Seri #${countHard++}`;
+                if(!isQuestionExists(questionsData.hard, dynamicQ)) { questionsData.hard.push({ q: dynamicQ, options: ["Solusi Benar", "Alternatif Keliru A", "Alternatif Keliru B", "Alternatif Keliru C"], answer: 0 }); }
             }
         }
         
@@ -449,7 +457,6 @@
         const imageHurt = 'pejabat-sakit.jpg';
         const imageBonyok = 'pejabat-bonyok.jpg';
         
-        // --- ASSET AUDIO ---
         const audioSalah = new Audio("reaksi-salah.mp3");
         const audioFinishHim = new Audio("finish-him.mp3"); 
         const audioGameOver = new Audio("game-over.mp3"); 
@@ -466,7 +473,6 @@
         const maxQuestions = 25;
         const damagePerCorrect = 100 / 20;
 
-        // Sistem Audio SFX Bawaan
         let audioCtx, noiseBuffer;
         function initAudio() {
             if(!audioCtx) {
@@ -511,7 +517,6 @@
             }
         }
 
-        // --- SISTEM LOADING ASET ---
         function runLoadingScreen(assetsToLoad, onCompleteCallback) {
             const loadingScreen = document.getElementById('loading-screen');
             const fillBar = document.getElementById('loading-bar-fill');
@@ -544,13 +549,16 @@
             audioGameOver.play().then(() => { audioGameOver.pause(); audioGameOver.currentTime = 0; }).catch(e=>{});
             audioEliminated.play().then(() => { audioEliminated.pause(); audioEliminated.currentTime = 0; }).catch(e=>{});
             audioMenang.play().then(() => { audioMenang.pause(); audioMenang.currentTime = 0; }).catch(e=>{});
+            audioChooseFighter.play().then(() => { audioChooseFighter.pause(); audioChooseFighter.currentTime = 0; }).catch(e=>{});
             audioBattle.play().then(() => { audioBattle.pause(); audioBattle.currentTime = 0; }).catch(e=>{}); 
 
             playerName = nameInput;
             const difficultySelect = document.getElementById('difficulty');
             diffText = difficultySelect.options[difficultySelect.selectedIndex].text.split(' ')[1]; 
             
-            currentQuestions = [...questionsData[difficultySelect.value]].sort(() => Math.random() - 0.5).slice(0, maxQuestions);         
+            let selectedPool = [...questionsData[difficultySelect.value]];
+            selectedPool.sort(() => Math.random() - 0.5); 
+            currentQuestions = selectedPool.slice(0, maxQuestions); 
             
             document.getElementById('login-screen').style.display = 'none';
             
@@ -587,7 +595,7 @@
 
         function updateHP() {
             if(hp < 0) hp = 0; const hpBar = document.getElementById('hp-bar'); hpBar.style.width = hp + '%';
-            document.getElementById('hp-text').innerText = `HP Pejabat: ${Math.round(hp)}% | Soal: ${Math.min(currentQIndex + 1, maxQuestions)}/${maxQuestions}`;
+            document.getElementById('hp-text').innerText = `HP Prororo: ${Math.round(hp)}% | Soal: ${Math.min(currentQIndex + 1, maxQuestions)}/${maxQuestions}`;
             if (hp <= 20) { hpBar.style.backgroundColor = "var(--hp-low)"; currentImageNormal = imageBonyok; } 
             else if (hp <= 50) { hpBar.style.backgroundColor = "var(--hp-med)"; } 
             else { hpBar.style.backgroundColor = "var(--hp-high)"; }
@@ -630,7 +638,6 @@
             const optionsContainer = document.getElementById('options-container'); optionsContainer.innerHTML = '';
             const prefixes = ['A', 'B', 'C', 'D'];
             
-            // Mengacak urutan penempatan jawaban A, B, C, D
             let shuffledOptions = qData.options.map((opt, index) => { return { text: opt, isCorrect: index === qData.answer }; });
             shuffledOptions.sort(() => Math.random() - 0.5);
             
@@ -735,7 +742,6 @@
                 elimText.innerText = "TERELIMINASI";
             } else {
                 document.getElementById('captured-video').style.opacity = '0.2';
-                // Teks diubah sesuai permintaan
                 elimText.innerText = "TERKALAHKAN";
             }
             
