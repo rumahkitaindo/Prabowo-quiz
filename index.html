@@ -176,7 +176,7 @@
         }
 
         .modal-box {
-            background: #111; padding: 30px 20px; border-radius: 15px; text-align: center; width: 90%; max-width: 450px;
+            background: #111; padding: 25px 20px; border-radius: 15px; text-align: center; width: 90%; max-width: 450px;
             border: 4px solid var(--red-flag); box-shadow: 0 0 30px rgba(206,17,38,0.5);
         }
         .modal-box h2 { font-size: 2.5em; margin-bottom: 15px; text-shadow: 2px 2px 5px #000; text-transform: uppercase; font-style: italic; }
@@ -187,17 +187,21 @@
         .btn-tidak { background: #555; color: white; }
         .modal-btn-group button:hover { transform: scale(1.05); }
 
-        /* PERBAIKAN: Gambar game over dipasang sebagai background DI DALAM MODAL-BOX */
+        /* PERBAIKAN: Gambar Game Over ditaruh di atas teks modal */
+        .game-over-img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border: 2px solid var(--red-flag);
+        }
+
         #game-over-modal .modal-box {
-            background-color: #111;
-            background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url('game-over.jpg');
-            background-repeat: no-repeat;
-            background-position: center center;
-            background-size: cover;
             border-color: #7f8c8d; 
             box-shadow: 0 0 30px rgba(127,140,141,0.5);
         }
-        #game-over-modal h2 { color: var(--red-flag); font-size: 3em; }
+        #game-over-modal h2 { color: var(--red-flag); font-size: 2.8em; }
 
         #fatality-container { background: #000; }
         .cinematic-video { width: 100%; height: 100%; object-fit: cover; transition: opacity 1s; display: none; }
@@ -314,9 +318,10 @@
         </div>
     </div>
 
-    <!-- MODAL GAME OVER -->
+    <!-- MODAL GAME OVER (GAMBAR DI ATAS TEKS) -->
     <div id="game-over-modal" class="fullscreen-overlay" style="display:none;">
         <div class="modal-box">
+            <img src="game-over.jpg" alt="Game Over" class="game-over-img" onerror="this.style.display='none'">
             <h2>GAME OVER</h2>
             <div class="modal-text">Prororo gagal dikalahkan.<br>Sisa Darah: <span id="go-hp"></span>%</div>
             <div class="modal-text" style="font-size: 1.1em; color: #adb5bd;">Coba lagi? (<span id="go-timer">10</span>)</div>
@@ -341,7 +346,6 @@
     </div>
 
     <script>
-        // --- BANK SOAL PENGETAHUAN NYATA (TANPA PLACEHOLDER / TANPA MATEMATIKA) ---
         const questionsData = {
             easy: [
                 { q: "Bumi berbentuk?", options: ["Bulat", "Lontong", "Datar", "Panjang"], answer: 0 },
@@ -449,6 +453,9 @@
         const baseImageNormal = 'pejabat-normal.jpg';
         const imageHurt = 'pejabat-sakit.jpg';
         const imageBonyok = 'pejabat-bonyok.jpg';
+        const gameOverImgSrc = 'game-over.jpg';
+        const videoFatalitySrc = 'pejabat-kalah.mp4';
+        const videoCapturedSrc = 'captured.mp4';
         
         const audioSalah = new Audio("reaksi-salah.mp3");
         const audioFinishHim = new Audio("finish-him.mp3"); 
@@ -510,6 +517,7 @@
             }
         }
 
+        // --- SISTEM LOADING ASET BERDASARKAN PROMISE (MENGUNCI HINGGA BENAR-BENAR SELESAI) ---
         function runLoadingScreen(assetsToLoad, onCompleteCallback) {
             const loadingScreen = document.getElementById('loading-screen');
             const fillBar = document.getElementById('loading-bar-fill');
@@ -517,14 +525,44 @@
             
             loadingScreen.style.display = 'flex'; fillBar.style.width = '0%'; pctText.innerText = '0%';
 
-            if(assetsToLoad && assetsToLoad.length > 0) { assetsToLoad.forEach(src => { const img = new Image(); img.src = src; }); }
+            let loadedCount = 0;
+            const totalAssets = assetsToLoad.length;
 
-            let progress = 0;
-            const loadInterval = setInterval(() => {
-                progress += Math.floor(Math.random() * 15) + 5; if (progress >= 100) progress = 100;
-                fillBar.style.width = progress + '%'; pctText.innerText = progress + '%';
-                if (progress === 100) { clearInterval(loadInterval); setTimeout(() => { loadingScreen.style.display = 'none'; onCompleteCallback(); }, 400); }
-            }, 120);
+            if (totalAssets === 0) {
+                fillBar.style.width = '100%'; pctText.innerText = '100%';
+                setTimeout(() => { loadingScreen.style.display = 'none'; onCompleteCallback(); }, 300);
+                return;
+            }
+
+            function updateProgress() {
+                loadedCount++;
+                let progress = Math.floor((loadedCount / totalAssets) * 100);
+                fillBar.style.width = progress + '%';
+                pctText.innerText = progress + '%';
+
+                if (loadedCount >= totalAssets) {
+                    setTimeout(() => {
+                        loadingScreen.style.display = 'none';
+                        onCompleteCallback();
+                    }, 400);
+                }
+            }
+
+            assetsToLoad.forEach(src => {
+                if (src.endsWith('.mp4')) {
+                    const video = document.createElement('video');
+                    video.src = src;
+                    video.preload = 'auto';
+                    video.onloadeddata = updateProgress;
+                    video.onerror = updateProgress; // Tetap lanjut jika file video terlewat agar tidak macet
+                    video.load();
+                } else {
+                    const img = new Image();
+                    img.src = src;
+                    img.onload = updateProgress;
+                    img.onerror = updateProgress;
+                }
+            });
         }
 
         function selectCharacter(isActive) {
@@ -555,6 +593,7 @@
             
             document.getElementById('login-screen').style.display = 'none';
             
+            // Loading aset gambar utama sebelum masuk menu pemilihan karakter
             runLoadingScreen([baseImageNormal], () => {
                 document.getElementById('selection-screen').style.display = 'flex';
                 audioChooseFighter.currentTime = 0;
@@ -566,10 +605,8 @@
             audioChooseFighter.pause();
             document.getElementById('selection-screen').style.display = 'none';
             
-            document.getElementById('fatality-video').load();
-            document.getElementById('captured-video').load(); 
-            
-            runLoadingScreen([imageHurt, imageBonyok], () => {
+            // Loading menyeluruh mencakup gambar luka, game over, dan video sinematik sebelum permainan dimulai
+            runLoadingScreen([imageHurt, imageBonyok, gameOverImgSrc, videoFatalitySrc, videoCapturedSrc], () => {
                 document.getElementById('game-screen').style.display = 'flex';
                 document.getElementById('display-name').innerText = `Pemain: ${playerName}`;
                 document.getElementById('display-level').innerText = `Level: ${diffText}`;
