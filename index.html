@@ -175,15 +175,6 @@
             display: flex; justify-content: center; align-items: center; flex-direction: column;
         }
 
-        /* PERBAIKAN: Memastikan background gambar game-over.jpg termuat sempurna dengan fallback warna solid jika gambar gagal dimuat */
-        #game-over-modal {
-            background-color: #111;
-            background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url('game-over.jpg');
-            background-repeat: no-repeat;
-            background-position: center center;
-            background-size: cover;
-        }
-
         .modal-box {
             background: #111; padding: 30px 20px; border-radius: 15px; text-align: center; width: 90%; max-width: 450px;
             border: 4px solid var(--red-flag); box-shadow: 0 0 30px rgba(206,17,38,0.5);
@@ -196,7 +187,16 @@
         .btn-tidak { background: #555; color: white; }
         .modal-btn-group button:hover { transform: scale(1.05); }
 
-        #game-over-modal .modal-box { border-color: #7f8c8d; box-shadow: 0 0 30px rgba(127,140,141,0.5); }
+        /* PERBAIKAN: Gambar game over dipasang sebagai background DI DALAM MODAL-BOX */
+        #game-over-modal .modal-box {
+            background-color: #111;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url('game-over.jpg');
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: cover;
+            border-color: #7f8c8d; 
+            box-shadow: 0 0 30px rgba(127,140,141,0.5);
+        }
         #game-over-modal h2 { color: var(--red-flag); font-size: 3em; }
 
         #fatality-container { background: #000; }
@@ -341,6 +341,7 @@
     </div>
 
     <script>
+        // --- BANK SOAL PENGETAHUAN NYATA (TANPA PLACEHOLDER / TANPA MATEMATIKA) ---
         const questionsData = {
             easy: [
                 { q: "Bumi berbentuk?", options: ["Bulat", "Lontong", "Datar", "Panjang"], answer: 0 },
@@ -352,7 +353,27 @@
                 { q: "Benda yang digunakan untuk menulis di papan tulis hitam?", options: ["Kapur", "Spidol", "Pena", "Pensil"], answer: 0 },
                 { q: "Bintang yang terlihat di siang hari adalah?", options: ["Matahari", "Bulan", "Meteor", "Komet"], answer: 0 },
                 { q: "Tempat pesawat terbang lepas landas disebut?", options: ["Bandara", "Terminal", "Stasiun", "Pelabuhan"], answer: 0 },
-                { q: "Ikan bernapas menggunakan?", options: ["Insang", "Paru-paru", "Hidung", "Kulit"], answer: 0 }
+                { q: "Ikan bernapas menggunakan?", options: ["Insang", "Paru-paru", "Hidung", "Kulit"], answer: 0 },
+                { q: "Apa warna darah manusia normal?", options: ["Merah", "Biru", "Hijau", "Putih"], answer: 0 },
+                { q: "Berapa jumlah kaki pada seekor burung?", options: ["Dua", "Empat", "Enam", "Tiga"], answer: 0 },
+                { q: "Hewan yang suka melompat dan membawa kantong di perutnya?", options: ["Kangguru", "Kelinci", "Katak", "Monyet"], answer: 0 },
+                { q: "Alat indra yang digunakan untuk mencium bau?", options: ["Hidung", "Mata", "Telinga", "Lidah"], answer: 0 },
+                { q: "Air yang membeku disebut?", options: ["Es", "Uap", "Embun", "Salju"], answer: 0 },
+                { q: "Hewan yang hidup di air dan di darat disebut?", options: ["Amfibi", "Mamalia", "Reptil", "Aves"], answer: 0 },
+                { q: "Hari setelah hari Senin adalah?", options: ["Selasa", "Rabu", "Kamis", "Minggu"], answer: 0 },
+                { q: "Bagian tumbuhan yang berada di dalam tanah adalah?", options: ["Akar", "Daun", "Batang", "Bunga"], answer: 0 },
+                { q: "Alat untuk melihat benda yang sangat kecil?", options: ["Mikroskop", "Teleskop", "Kaca pembesar", "Kamera"], answer: 0 },
+                { q: "Bulan yang jumlah hari-harinya paling sedikit adalah?", options: ["Februari", "Januari", "Desember", "Maret"], answer: 0 },
+                { q: "Buah apel yang masih segar umumnya berwarna?", options: ["Merah", "Ungu", "Hitam", "Biru"], answer: 0 },
+                { q: "Kendaraan roda dua yang dikayuh kaki disebut?", options: ["Sepeda", "Motor", "Becak", "Mobil"], answer: 0 },
+                { q: "Hewan yang menghasilkan madu adalah?", options: ["Lebah", "Nyamuk", "Lalat", "Kupu-kupu"], answer: 0 },
+                { q: "Matahari terbit dari arah?", options: ["Timur", "Barat", "Utara", "Selatan"], answer: 0 },
+                { q: "Indra penglihat pada manusia adalah?", options: ["Mata", "Telinga", "Hidung", "Kulit"], answer: 0 },
+                { q: "Kucing adalah hewan yang bernapas dengan?", options: ["Paru-paru", "Insang", "Kulit", "Trakea"], answer: 0 },
+                { q: "Rumah tempat tinggal Eskimo disebut?", options: ["Igloo", "Gedung", "Tenda", "Gubuk"], answer: 0 },
+                { q: "Benda langit yang memantulkan cahaya matahari pada malam hari?", options: ["Bulan", "Bintang", "Meteor", "Komet"], answer: 0 },
+                { q: "Alat untuk memotong kertas adalah?", options: ["Gunting", "Pisau", "Palu", "Obeng"], answer: 0 },
+                { q: "Kelinci bergerak dengan cara?", options: ["Melompat", "Merayap", "Berenang", "Terbang"], answer: 0 }
             ],
             medium: [
                 { q: "Tahun berapakah Indonesia merdeka?", options: ["1945", "1942", "1928", "1998"], answer: 0 },
@@ -364,7 +385,27 @@
                 { q: "Danau vulkanik terbesar di Indonesia?", options: ["Danau Toba", "Danau Poso", "Danau Singkarak", "Danau Batur"], answer: 0 },
                 { q: "Hewan mamalia yang bisa terbang?", options: ["Kelelawar", "Burung Hantu", "Elang", "Kupu-kupu"], answer: 0 },
                 { q: "Tokoh yang memproklamasikan kemerdekaan RI?", options: ["Soekarno-Hatta", "Soeharto", "Jenderal Sudirman", "B.J. Habibie"], answer: 0 },
-                { q: "Mata uang negara Malaysia?", options: ["Ringgit", "Peso", "Baht", "Dong"], answer: 0 }
+                { q: "Mata uang negara Malaysia?", options: ["Ringgit", "Peso", "Baht", "Dong"], answer: 0 },
+                { q: "Benua tempat negara Indonesia berada?", options: ["Asia", "Afrika", "Eropa", "Amerika"], answer: 0 },
+                { q: "Alat musik tradisional angklung berasal dari?", options: ["Jawa Barat", "Bali", "Sumatera Barat", "Papua"], answer: 0 },
+                { q: "Penemu bola lampu pijar adalah?", options: ["Thomas Edison", "Nikola Tesla", "Albert Einstein", "Galileo"], answer: 0 },
+                { q: "Lapisan gas yang menyelimuti bumi disebut?", options: ["Atmosfer", "Litosfer", "Hidrosfer", "Stratosfer"], answer: 0 },
+                { q: "Lagu nasional 'Halo-Halo Bandung' diciptakan oleh?", options: ["Ismail Marzuki", "W.R. Supratman", "Ibu Sud", "H. Mutahar"], answer: 0 },
+                { q: "Planet yang dijuluki sebagai planet merah adalah?", options: ["Mars", "Venus", "Saturnus", "Jupiter"], answer: 0 },
+                { q: "Organ tubuh manusia yang berfungsi memompa darah?", options: ["Jantung", "Paru-paru", "Hati", "Ginjal"], answer: 0 },
+                { q: "Pulau terbesar di wilayah Indonesia adalah?", options: ["Kalimantan", "Sumatera", "Papua", "Sulawesi"], answer: 0 },
+                { q: "Garis yang membagi bumi menjadi belahan utara dan selatan?", options: ["Garis Khatulistiwa", "Garis Bujur", "Garis Meridian", "Garis Balik"], answer: 0 },
+                { q: "Sumpah Pemuda diikrarkan pada tanggal?", options: ["28 Oktober 1928", "17 Agustus 1945", "1 Juni 1945", "20 Mei 1908"], answer: 0 },
+                { q: "Ibukota negara Jepang adalah?", options: ["Tokyo", "Osaka", "Kyoto", "Hiroshima"], answer: 0 },
+                { q: "Alat pengukur suhu tubuh disebut?", options: ["Termometer", "Barometer", "Meteran", "Anemometer"], answer: 0 },
+                { q: "Pencipta tokoh detektif Sherlock Holmes?", options: ["Arthur Conan Doyle", "Agatha Christie", "J.K. Rowling", "Dan Brown"], answer: 0 },
+                { q: "Gunung tertinggi di Pulau Jawa?", options: ["Semeru", "Merapi", "Bromo", "Rinjani"], answer: 0 },
+                { q: "Bahasa Inggris dari kata 'Kuda' adalah?", options: ["Horse", "Cow", "Dog", "Cat"], answer: 0 },
+                { q: "Negara terkecil di dunia?", options: ["Vatikan", "Monako", "San Marino", "Liechtenstein"], answer: 0 },
+                { q: "Pusat tata surya kita adalah?", options: ["Matahari", "Bumi", "Bulan", "Mars"], answer: 0 },
+                { q: "Penulis novel Laskar Pelangi?", options: ["Andrea Hirata", "Tere Liye", "Raditya Dika", "Pramoedya"], answer: 0 },
+                { q: "Alat musik gitar dimainkan dengan cara?", options: ["Dipetik", "Digesek", "Ditiup", "Dipukul"], answer: 0 },
+                { q: "Zat hijau pada daun tumbuhan disebut?", options: ["Klorofil", "Kambium", "Stomata", "Protein"], answer: 0 }
             ],
             hard: [
                 { q: "Presiden ketiga RI?", options: ["B.J. Habibie", "Soeharto", "Gus Dur", "Megawati"], answer: 0 },
@@ -376,56 +417,7 @@
                 { q: "Pencipta lukisan Monalisa?", options: ["Leonardo da Vinci", "Van Gogh", "Picasso", "Michelangelo"], answer: 0 },
                 { q: "Ilmu yang mempelajari tentang gempa bumi?", options: ["Seismologi", "Geologi", "Klimatologi", "Meteorologi"], answer: 0 },
                 { q: "Gas terbanyak di atmosfer bumi?", options: ["Nitrogen", "Oksigen", "Karbondioksida", "Hidrogen"], answer: 0 },
-                { q: "Tari Kecak berasal dari daerah?", options: ["Bali", "Jawa Barat", "Aceh", "Papua"], answer: 0 }
-            ]
-        };
-
-        function populateBankSoal() {
-            function isQuestionExists(arr, questionText) {
-                return arr.some(item => item.q.toLowerCase() === questionText.toLowerCase());
-            }
-
-            const poolEasy = [
-                { q: "Apa warna darah manusia normal?", options: ["Merah", "Biru", "Hijau", "Putih"], answer: 0 },
-                { q: "Berapa jumlah kaki pada seekor burung?", options: ["Dua", "Empat", "Enam", "Tiga"], answer: 0 },
-                { q: "Hewan yang suka melompat dan membawa kantong di perutnya?", options: ["Kangguru", "Kelinci", "Katak", "Monyet"], answer: 0 },
-                { q: "Alat indra yang digunakan untuk mencium bau?",options: ["Hidung", "Mata", "Telinga", "Lidah"], answer: 0 },
-                { q: "Air yang membeku disebut?", options: ["Es", "Uap", "Embun", "Salju"], answer: 0 },
-                { q: "Hewan yang hidup di air dan di darat disebut?", options: ["Amfibi", "Mamalia", "Reptil", "Aves"], answer: 0 },
-                { q: "Hari setelah hari Senin adalah?", options: ["Selasa", "Rabu", "Kamis", "Minggu"], answer: 0 },
-                { q: "Bagian tumbuhan yang berada di dalam tanah adalah?", options: ["Akar", "Daun", "Batang", "Bunga"], answer: 0 },
-                { q: "Alat untuk melihat benda yang sangat kecil (mikroskopik)?", options: ["Mikroskop", "Teleskop", "Kaca pembesar", "Kamera"], answer: 0 },
-                { q: "Bulan yang jumlah hari-harinya paling sedikit adalah?", options: ["Februari", "Januari", "Desember", "Maret"], answer: 0 }
-            ];
-            
-            poolEasy.forEach(item => { if(!isQuestionExists(questionsData.easy, item.q)) { questionsData.easy.push(item); } });
-            let countEasy = 1;
-            while(questionsData.easy.length < 100) {
-                let dynamicQ = `Pertanyaan Umum Dasar Seri #${countEasy++}`;
-                if(!isQuestionExists(questionsData.easy, dynamicQ)) { questionsData.easy.push({ q: dynamicQ, options: ["Pilihan Benar", "Pilihan Salah A", "Pilihan Salah B", "Pilihan Salah C"], answer: 0 }); }
-            }
-
-            const poolMedium = [
-                { q: "Benua tempat negara Indonesia berada?", options: ["Asia", "Afrika", "Eropa", "Amerika"], answer: 0 },
-                { q: "Alat musik tradisional angklung berasal dari?", options: ["Jawa Barat", "Bali", "Sumatera Barat", "Papua"], answer: 0 },
-                { q: "Penemu bola lampu pijar adalah?", options: ["Thomas Edison", "Nikola Tesla", "Albert Einstein", "Galileo"], answer: 0 },
-                { q: "Lapisan gas yang menyelimuti bumi disebut?", options: ["Atmosfer", "Litosfer", "Hidrosfer", "Stratosfer"], answer: 0 },
-                { q: "Lagu nasional 'Halo-Halo Bandung' diciptakan oleh?", options: ["Ismail Marzuki", "W.R. Supratman", "Ibu Sud", "H. Mutahar"], answer: 0 },
-                { q: "Planet yang dijuluki sebagai planet merah adalah?", options: ["Mars", "Venus", "Saturnus", "Jupiter"], answer: 0 },
-                { q: "Organ tubuh manusia yang berfungsi memompa darah?", options: ["Jantung", "Paru-paru", "Hati", "Ginjal"], answer: 0 },
-                { q: "Pulau terbesar di wilayah Indonesia adalah?", options: ["Kalimantan", "Sumatera", "Papua", "Sulawesi"], answer: 0 },
-                { q: "Garis yang membagi bumi menjadi belahan utara dan selatan?", options: ["Garis Khatulistiwa", "Garis Bujur", "Garis Meridian", "Garis Balik"], answer: 0 },
-                { q: "Sumpah Pemuda diikrarkan pada tanggal?", options: ["28 Oktober 1928", "17 Agustus 1945", "1 Juni 1945", "20 Mei 1908"], answer: 0 }
-            ];
-
-            poolMedium.forEach(item => { if(!isQuestionExists(questionsData.medium, item.q)) { questionsData.medium.push(item); } });
-            let countMed = 1;
-            while(questionsData.medium.length < 100) {
-                let dynamicQ = `Pertanyaan Pengetahuan Menengah Seri #${countMed++}`;
-                if(!isQuestionExists(questionsData.medium, dynamicQ)) { questionsData.medium.push({ q: dynamicQ, options: ["Jawaban Tepat", "Opsi Salah 1", "Opsi Salah 2", "Opsi Salah 3"], answer: 0 }); }
-            }
-
-            const poolHard = [
+                { q: "Tari Kecak berasal dari daerah?", options: ["Bali", "Jawa Barat", "Aceh", "Papua"], answer: 0 },
                 { q: "Perjanjian yang membagi wilayah kolonial Belanda dan Portugis?", options: ["Perjanjian Tordesillas", "Perjanjian Bongaya", "Perjanjian Renville", "Ronggowarsito"], answer: 0 },
                 { q: "Teori relativitas umum dikemukakan oleh?", options: ["Albert Einstein", "Isaac Newton", "Stephen Hawking", "Max Planck"], answer: 0 },
                 { q: "Organisasi PBB yang mengurusi bidang pendidikan dan kebudayaan?", options: ["UNESCO", "UNICEF", "WHO", "FAO"], answer: 0 },
@@ -435,18 +427,19 @@
                 { q: "Sidang BPUPKI pertama membahas mengenai?", options: ["Dasar Negara", "UUD 1945", "Teks Proklamasi", "Sistem Pemerintahan"], answer: 0 },
                 { q: "Sistem ekonomi benteng dicetuskan oleh menteri siapa?", options: ["Sumitro Djojohadikusumo", "Soemitro", "Ali Sastroamidjojo", "Juanda"], answer: 0 },
                 { q: "Candi Borobudur dibangun pada masa dinasti?", options: ["Syailendra", "Sanjaya", "Majapahit", "Singasari"], answer: 0 },
-                { q: "Gelar pangeran diponegoro sebelum menjadi pangeran?", options: ["Raden Mas Ontowiryo", "Raden Said", "Joko Tingkir", "Untung Surapati"], answer: 0 }
-            ];
-
-            poolHard.forEach(item => { if(!isQuestionExists(questionsData.hard, item.q)) { questionsData.hard.push(item); } });
-            let countHard = 1;
-            while(questionsData.hard.length < 100) {
-                let dynamicQ = `Pertanyaan Tantangan Sulit Seri #${countHard++}`;
-                if(!isQuestionExists(questionsData.hard, dynamicQ)) { questionsData.hard.push({ q: dynamicQ, options: ["Solusi Benar", "Alternatif Keliru A", "Alternatif Keliru B", "Alternatif Keliru C"], answer: 0 }); }
-            }
-        }
-        
-        populateBankSoal();
+                { q: "Gelar Pangeran Diponegoro sebelum menjadi pangeran?", options: ["Raden Mas Ontowiryo", "Raden Said", "Joko Tingkir", "Untung Surapati"], answer: 0 },
+                { q: "Ibukota negara Australia adalah?", options: ["Canberra", "Sydney", "Melbourne", "Perth"], answer: 0 },
+                { q: "Unsur kimia dengan simbol 'Au' adalah?", options: ["Emas", "Perak", "Tembaga", "Besi"], answer: 0 },
+                { q: "Organisasi kesehatan dunia di bawah PBB disebut?", options: ["WHO", "UNESCO", "UNICEF", "NATO"], answer: 0 },
+                { q: "Penemu hukum gaya gravitasi bumi?", options: ["Isaac Newton", "Albert Einstein", "Galileo Galilei", "Thomas Edison"], answer: 0 },
+                { q: "Kerajaan Hindu pertama di nusantara berdasarkan Yupa?", options: ["Kutai", "Tarumanegara", "Sriwijaya", "Singasari"], answer: 0 },
+                { q: "Perjanjian yang mengakhiri Perang Dunia I?", options: ["Perjanjian Versailles", "Perjanjian Linggarjati", "Perjanjian Renville", "Perjanjian Bongaya"], answer: 0 },
+                { q: "Garis bujur 0 derajat melewati kota?", options: ["Greenwich", "Paris", "Berlin", "Roma"], answer: 0 },
+                { q: "Lapisan ozon di atmosfer bumi terletak pada lapisan?", options: ["Stratosfer", "Troposfer", "Mesosfer", "Termosfer"], answer: 0 },
+                { q: "Pencipta teori heliosentris tata surya?", options: ["Nicolaus Copernicus", "Ptolemeus", "Aristoteles", "Galileo"], answer: 0 },
+                { q: "Nama samaran multatuli penulis buku Max Havelaar?", options: ["Eduard Douwes Dekker", "C.T. van Deventer", "H.W. Daendels", "J.P. Coen"], answer: 0 }
+            ]
+        };
 
         const throwItems = [
             { emoji: '🥚', type: 'egg' }, { emoji: '🍌', type: 'banana' }, { emoji: '💣', type: 'bomb' }, 
