@@ -50,6 +50,44 @@
             overflow: visible;
             border: 1px solid #e9ecef;
             margin: auto;
+            /* Efek Animasi Transisi Halus */
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Tombol Audio Mute di Pojok --- */
+        #audio-toggle-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #fff;
+            border: 2px solid var(--red-flag);
+            color: var(--red-flag);
+            font-size: 1.2em;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 999999;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+        #audio-toggle-btn:hover { transform: scale(1.1); }
+
+        /* --- High Score di Login --- */
+        #high-score-display {
+            font-size: 1em;
+            color: #444;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px dashed #ced4da;
+            max-width: 400px;
+            margin: 0 auto;
         }
 
         /* --- Layar Login --- */
@@ -113,17 +151,55 @@
             40%, 60% { transform: translate3d(20px, 0, 0); }
         }
 
-        #timer-container { font-size: 1.2em; color: #555; margin-bottom: 5px;}
-        #question-text { font-size: 1.2em; margin: 8px 15px 18px 15px; color: #000; line-height: 1.3; }
+        #timer-container { font-size: 1.2em; color: #555; margin-bottom: 2px;}
         
+        /* Notifikasi Streak */
+        #streak-notification {
+            font-size: 1.1em;
+            color: #ff9f43;
+            height: 25px;
+            font-style: italic;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        #question-text { 
+            font-size: 1.2em; 
+            margin: 8px 15px 15px 15px; 
+            color: #000; 
+            line-height: 1.3; 
+            min-height: 50px; 
+        }
+        
+        /* Tombol Bantuan (Lifeline) */
+        .lifeline-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .lifeline-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: transform 0.2s;
+        }
+        .lifeline-btn:hover:not(:disabled) { transform: scale(1.05); background: #2980b9; }
+        .lifeline-btn:disabled { background: #bdc3c7; cursor: not-allowed; }
+
         .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 20px; max-width: 800px; margin: 0 auto; }
         
         .option-btn {
             background: #ffffff; color: #000; padding: 12px 15px; font-size: 1em; border-radius: 12px;
             border: 2px solid var(--btn-border); cursor: pointer; text-align: left;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: all 0.2s ease;
+            min-height: 60px; /* Menjamin tombol tidak terpotong */
+            display: flex; align-items: center;
         }
-        .option-btn:hover { background: var(--btn-hover); border-color: #adb5bd; transform: translateY(-2px); }
+        .option-btn:hover:not(:disabled) { background: var(--btn-hover); border-color: #adb5bd; transform: translateY(-2px); }
         .option-btn:disabled { cursor: not-allowed; opacity: 0.9; transform: none; }
 
         .projectile {
@@ -233,6 +309,9 @@
 </head>
 <body>
 
+    <!-- TOMBOL MUTE / UNMUTE AUDIO -->
+    <button id="audio-toggle-btn" onclick="toggleAudioMute()" title="Matikan/Nyalakan Suara">🔊</button>
+
     <!-- KOMPONEN LAYAR LOADING -->
     <div id="loading-screen">
         <div class="flag-wrapper">
@@ -256,11 +335,12 @@
                 <option value="medium">Level: Sedang (SMP)</option>
                 <option value="hard">Level: Sulit (SMA/Umum)</option>
             </select>
+            <div id="high-score-display">🏆 High Score: 0</div>
             <button class="start-btn" onclick="goToSelection()">Lanjut</button>
         </div>
 
         <!-- Halaman Pemilihan Karakter -->
-        <div id="selection-screen">
+        <div id="selection-screen" style="display: none;">
             <h2>Pilih Lawanmu!</h2>
             <div class="showcase">
                 <img src="pejabat-normal.jpg" alt="Karakter Prororo" class="showcase-img" onerror="this.src='https://via.placeholder.com/200'">
@@ -284,7 +364,7 @@
         </div>
 
         <!-- Halaman Game -->
-        <div id="game-screen">
+        <div id="game-screen" style="display: none;">
             <div id="header">
                 <span id="display-name">Pemain: -</span>
                 <span id="display-level">Level: Mudah</span>
@@ -301,6 +381,14 @@
             </div>
 
             <div id="timer-container">⏳ Waktu: <span id="time-left">15</span> detik</div>
+            <div id="streak-notification"></div>
+            
+            <!-- TOMBOL BANTUAN (LIFELINE) -->
+            <div class="lifeline-container">
+                <button id="lifeline-5050" class="lifeline-btn" onclick="useLifeline5050()">💡 50:50</button>
+                <button id="lifeline-skip" class="lifeline-btn" onclick="useLifelineSkip()">⏭️ Lewati Soal</button>
+            </div>
+
             <div id="question-text">Pertanyaan akan muncul di sini...</div>
             <div class="options-grid" id="options-container"></div>
         </div>
@@ -345,6 +433,37 @@
     </div>
 
     <script>
+        // --- LOCAL STORAGE HIGH SCORE MANAGEMENT ---
+        function checkHighScoreOnInit() {
+            let savedHighScore = localStorage.getItem('perang_tikus_highscore') || 0;
+            document.getElementById('high-score-display').innerText = `🏆 High Score: ${savedHighScore}`;
+        }
+        window.onload = checkHighScoreOnInit;
+
+        function saveHighScore(finalScore) {
+            let savedHighScore = parseInt(localStorage.getItem('perang_tikus_highscore') || 0);
+            if (finalScore > savedHighScore) {
+                localStorage.setItem('perang_tikus_highscore', finalScore);
+            }
+        }
+
+        // --- AUDIO MUTE SYSTEM ---
+        let isMuted = false;
+        function toggleAudioMute() {
+            isMuted = !isMuted;
+            const btn = document.getElementById('audio-toggle-btn');
+            btn.innerText = isMuted ? "🔇" : "🔊";
+
+            // Matikan/Nyalakan seluruh objek audio aktif
+            audioBattle.muted = isMuted;
+            audioSalah.muted = isMuted;
+            audioFinishHim.muted = isMuted;
+            audioGameOver.muted = isMuted;
+            audioEliminated.muted = isMuted;
+            audioMenang.muted = isMuted;
+            audioChooseFighter.muted = isMuted;
+        }
+
         const questionsData = {
             easy: [
                 { q: "Bumi berbentuk?", options: ["Bulat", "Lontong", "Datar", "Panjang"], answer: 0 },
@@ -468,6 +587,9 @@
         let currentImageNormal = baseImageNormal; 
         let currentQuestions = [], currentQIndex = 0, score = 0, hp = 100, playerName = "", diffText = "";
         let timeLeft = 15, timerInterval, goTimerInterval;
+        let streakCount = 0; // Pelacak combo benar beruntun
+        let lifeline5050Used = false;
+        let lifelineSkipUsed = false;
         
         const maxQuestions = 25;
         const damagePerCorrect = 100 / 20;
@@ -483,7 +605,7 @@
         }
 
         function playTone(freq, type, duration, slideFreq = null) {
-            if(!audioCtx) return;
+            if(!audioCtx || isMuted) return;
             const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
             osc.type = type; osc.connect(gain); gain.connect(audioCtx.destination);
             osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
@@ -493,7 +615,7 @@
         }
 
         function playNoise(filterType, freq, duration, gainVolume = 1) {
-            if (!noiseBuffer || !audioCtx) return;
+            if (!noiseBuffer || !audioCtx || isMuted) return;
             const source = audioCtx.createBufferSource(); source.buffer = noiseBuffer; const filter = audioCtx.createBiquadFilter(); 
             filter.type = filterType; filter.frequency.value = freq; const gain = audioCtx.createGain(); 
             source.connect(filter); filter.connect(gain); gain.connect(audioCtx.destination);
@@ -502,7 +624,7 @@
         }
 
         function playSfx(type) {
-            if (!audioCtx) return;
+            if (isMuted) return;
             switch(type) {
                 case 'throw': playTone(600, 'sine', 0.3, 100); break;
                 case 'egg': playNoise('highpass', 1500, 0.3, 1.5); break;
@@ -516,7 +638,6 @@
             }
         }
 
-        // --- SISTEM LOADING ASET BERDASARKAN PROMISE (MENGUNCI HINGGA BENAR-BENAR SELESAI) ---
         function runLoadingScreen(assetsToLoad, onCompleteCallback) {
             const loadingScreen = document.getElementById('loading-screen');
             const fillBar = document.getElementById('loading-bar-fill');
@@ -593,7 +714,8 @@
             document.getElementById('login-screen').style.display = 'none';
             
             runLoadingScreen([baseImageNormal], () => {
-                document.getElementById('selection-screen').style.display = 'flex';
+                const selScreen = document.getElementById('selection-screen');
+                selScreen.style.display = 'flex';
                 audioChooseFighter.currentTime = 0;
                 audioChooseFighter.play().catch(e => console.log("Audio play error", e));
             });
@@ -604,11 +726,18 @@
             document.getElementById('selection-screen').style.display = 'none';
             
             runLoadingScreen([imageHurt, imageBonyok, gameOverImgSrc, videoFatalitySrc, videoCapturedSrc], () => {
-                document.getElementById('game-screen').style.display = 'flex';
+                const gameScreen = document.getElementById('game-screen');
+                gameScreen.style.display = 'flex';
                 document.getElementById('display-name').innerText = `Pemain: ${playerName}`;
                 document.getElementById('display-level').innerText = `Level: ${diffText}`;
                 
-                score = 0; hp = 100; currentQIndex = 0; currentImageNormal = baseImageNormal;
+                score = 0; hp = 100; currentQIndex = 0; streakCount = 0;
+                lifeline5050Used = false; lifelineSkipUsed = false;
+                document.getElementById('lifeline-5050').disabled = false;
+                document.getElementById('lifeline-skip').disabled = false;
+                document.getElementById('streak-notification').innerText = "";
+
+                currentImageNormal = baseImageNormal;
                 document.getElementById('pejabat-img').src = currentImageNormal;
                 
                 audioBattle.currentTime = 0;
@@ -640,6 +769,8 @@
         }
 
         function handleTimeOut() {
+            streakCount = 0; // Reset streak
+            document.getElementById('streak-notification').innerText = "Waktu Habis! Streak Terputus.";
             audioSalah.currentTime = 0; audioSalah.play().catch(e=>{});
             const buttons = document.querySelectorAll('.option-btn');
             buttons.forEach(btn => btn.disabled = true);
@@ -650,13 +781,14 @@
         function loadQuestion() {
             if (Math.round(hp) <= 0) {
                 clearInterval(timerInterval); audioBattle.pause(); 
+                saveHighScore(score);
                 document.getElementById('finish-him-modal').style.display = 'flex';
                 audioFinishHim.currentTime = 0; audioFinishHim.play().catch(e => console.log(e));
                 return;
             } 
             
             if (currentQIndex >= maxQuestions) { 
-                clearInterval(timerInterval); showGameOverModal(); return;
+                clearInterval(timerInterval); saveHighScore(score); showGameOverModal(); return;
             }
 
             document.getElementById('pejabat-img').src = currentImageNormal; updateHP();
@@ -681,15 +813,59 @@
             const buttons = document.querySelectorAll('.option-btn'); buttons.forEach(btn => btn.disabled = true);
 
             if (isCorrect) {
-                hp -= damagePerCorrect; score += 10; updateScore(); updateHP();
+                streakCount++;
+                let bonusScore = 0;
+                let streakText = "";
+                if (streakCount >= 3) {
+                    bonusScore = 5; // Bonus combo benar beruntun
+                    streakText = `🔥 STREAK x${streakCount}! (+5 Bonus Skor)`;
+                } else {
+                    streakText = `Benar!`;
+                }
+                document.getElementById('streak-notification').innerText = streakText;
+
+                hp -= damagePerCorrect; 
+                score += (10 + bonusScore); 
+                updateScore(); updateHP();
                 clickedBtn.style.background = '#2ed573'; clickedBtn.style.color = 'white'; clickedBtn.style.borderColor = '#2ed573';
                 triggerCorrectAction();
             } else {
+                streakCount = 0; // Reset streak
+                document.getElementById('streak-notification').innerText = "Jawaban Salah! Streak Terputus.";
                 audioSalah.currentTime = 0; audioSalah.play().catch(e=>{});
                 clickedBtn.style.background = '#ff4757'; clickedBtn.style.color = 'white'; clickedBtn.style.borderColor = '#ff4757';
                 buttons.forEach(btn => { if (btn.dataset.correct === 'true') { btn.style.background = '#2ed573'; btn.style.color = 'white'; btn.style.borderColor = '#2ed573'; } });
                 setTimeout(() => { currentQIndex++; loadQuestion(); }, 1500);
             }
+        }
+
+        // --- FITUR BANTUAN (LIFELINES) ---
+        function useLifeline5050() {
+            if (lifeline5050Used) return;
+            lifeline5050Used = true;
+            document.getElementById('lifeline-5050').disabled = true;
+
+            const buttons = Array.from(document.querySelectorAll('.option-btn'));
+            let incorrectButtons = buttons.filter(btn => btn.dataset.correct !== 'true');
+            // Acak dan sembunyikan 2 tombol salah
+            incorrectButtons.sort(() => Math.random() - 0.5);
+            for (let i = 0; i < 2; i++) {
+                if (incorrectButtons[i]) {
+                    incorrectButtons[i].style.visibility = 'hidden';
+                }
+            }
+        }
+
+        function useLifelineSkip() {
+            if (lifelineSkipUsed) return;
+            lifelineSkipUsed = true;
+            document.getElementById('lifeline-skip').disabled = true;
+            clearInterval(timerInterval);
+            document.getElementById('streak-notification').innerText = "Soal Dilewati!";
+            setTimeout(() => {
+                currentQIndex++;
+                loadQuestion();
+            }, 800);
         }
 
         function triggerCorrectAction() {
@@ -713,6 +889,7 @@
 
         function showGameOverModal() {
             audioBattle.pause(); audioGameOver.currentTime = 0; audioGameOver.play().catch(e => console.log(e));
+            saveHighScore(score);
             document.getElementById('go-hp').innerText = Math.round(hp);
             document.getElementById('game-over-modal').style.display = 'flex';
             
