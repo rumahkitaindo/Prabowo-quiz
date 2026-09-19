@@ -132,6 +132,82 @@
             transition: all 0.4s cubic-bezier(0.1, 0.8, 0.2, 1); filter: drop-shadow(0 10px 10px rgba(0,0,0,0.4));
         }
 
+        /* --- LAYAR LOADING ASET (BARU) --- */
+        #loading-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #ffffff; z-index: 99999;
+            display: none; justify-content: center; align-items: center; flex-direction: column;
+        }
+
+        /* Desain Animasi Bendera ala Sketsa */
+        .flag-wrapper {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 40px;
+            height: 140px;
+        }
+        .flag-pole {
+            width: 10px;
+            height: 160px;
+            background: #222; /* Tiang Hitam */
+            border-radius: 5px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+        }
+        .flag-cloth {
+            width: 150px;
+            height: 100px;
+            background: linear-gradient(to bottom, var(--red-flag) 50%, var(--white-flag) 50%);
+            border: 5px solid #222; /* Outline Hitam tebal */
+            border-left: none; /* Menyatu dengan tiang */
+            border-radius: 0 10px 10px 0;
+            transform-origin: left top;
+            animation: wave-animation 1s infinite alternate ease-in-out;
+            box-shadow: 5px 5px 0px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        /* Garis pemisah merah dan putih */
+        .flag-cloth::after {
+            content: '';
+            position: absolute; top: 50%; left: 0; width: 100%; height: 5px;
+            background: #222; transform: translateY(-50%);
+        }
+
+        @keyframes wave-animation {
+            0% { transform: perspective(400px) rotateY(0deg) skewY(-5deg); }
+            100% { transform: perspective(400px) rotateY(15deg) skewY(5deg); }
+        }
+
+        /* Progress Bar */
+        .loading-bar-container {
+            width: 300px;
+            height: 35px;
+            border: 5px solid #222; /* Outline Hitam tebal */
+            border-radius: 10px;
+            padding: 3px;
+            background: #fff;
+            position: relative;
+        }
+        .loading-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--red-flag);
+            border-radius: 4px;
+            transition: width 0.1s linear;
+        }
+        #loading-text {
+            font-size: 2.2em;
+            color: #222;
+            margin-top: 15px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        /* Efek titik loading animasi */
+        .dots::after {
+            content: '';
+            animation: loading-dots 1.5s steps(4, end) infinite;
+        }
+        @keyframes loading-dots { 0% { content: ''; } 25% { content: '.'; } 50% { content: '..'; } 75% { content: '...'; } 100% { content: ''; } }
+
         /* --- OVERLAYS (Modals & Fatality) --- */
         .fullscreen-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -143,16 +219,10 @@
             background: #111; padding: 40px; border-radius: 15px; text-align: center;
             border: 4px solid var(--red-flag); box-shadow: 0 0 30px rgba(206,17,38,0.5);
         }
-        .modal-box h2 {
-            font-size: 4em; margin-bottom: 20px; 
-            text-shadow: 2px 2px 5px #000; text-transform: uppercase; font-style: italic;
-        }
+        .modal-box h2 { font-size: 4em; margin-bottom: 20px; text-shadow: 2px 2px 5px #000; text-transform: uppercase; font-style: italic; }
         .modal-text { color: white; font-size: 1.5em; margin-bottom: 25px; }
         .modal-btn-group { display: flex; gap: 20px; justify-content: center; }
-        .modal-btn-group button {
-            padding: 15px 40px; font-size: 1.5em; border-radius: 8px; cursor: pointer;
-            border: none; transition: transform 0.2s; text-transform: uppercase;
-        }
+        .modal-btn-group button { padding: 15px 40px; font-size: 1.5em; border-radius: 8px; cursor: pointer; border: none; transition: transform 0.2s; text-transform: uppercase; }
         .btn-ya { background: var(--hp-high); color: white; }
         .btn-tidak { background: #555; color: white; }
         .modal-btn-group button:hover { transform: scale(1.1); }
@@ -164,10 +234,8 @@
         #fatality-video { width: 100%; height: 100%; object-fit: cover; transition: opacity 1s; }
         
         .cinematic-text {
-            position: absolute; font-size: 5em;
-            text-shadow: 0px 5px 20px rgba(0,0,0,1); text-align: center;
-            opacity: 0; transform: scale(0.5); pointer-events: none;
-            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: absolute; font-size: 5em; text-shadow: 0px 5px 20px rgba(0,0,0,1); text-align: center;
+            opacity: 0; transform: scale(0.5); pointer-events: none; transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         #eliminated-text { color: var(--red-flag); letter-spacing: 5px; text-transform: uppercase; }
         #victory-text { color: #ffd700; font-size: 4em; }
@@ -184,10 +252,23 @@
             .cinematic-text { font-size: 2.5em !important; }
             .character-grid { gap: 5px; padding: 10px; }
             .char-box { width: 60px; height: 60px; font-size: 1.5em; }
+            .loading-bar-container { width: 250px; }
         }
     </style>
 </head>
 <body>
+
+    <!-- KOMPONEN LAYAR LOADING -->
+    <div id="loading-screen">
+        <div class="flag-wrapper">
+            <div class="flag-pole"></div>
+            <div class="flag-cloth"></div>
+        </div>
+        <div class="loading-bar-container">
+            <div id="loading-bar-fill" class="loading-bar-fill"></div>
+        </div>
+        <div id="loading-text">Loading<span class="dots"></span> <span id="loading-pct">0%</span></div>
+    </div>
 
     <div id="app-container">
         <!-- Halaman Login -->
@@ -392,10 +473,8 @@
         const audioEliminated = new Audio("eliminated.mp3"); 
         const audioMenang = new Audio("menang.mp3"); 
         const audioChooseFighter = new Audio("choose-your-fighter.mp3");
-        
-        // --- AUDIO MUSIK PERTARUNGAN ---
         const audioBattle = new Audio("battle.mp3");
-        audioBattle.loop = true; // Set lagu untuk diulang terus selama pertarungan
+        audioBattle.loop = true; 
 
         let currentImageNormal = baseImageNormal; 
         let currentQuestions = [], currentQIndex = 0, score = 0, hp = 100, playerName = "", diffText = "";
@@ -404,7 +483,7 @@
         const maxQuestions = 25;
         const damagePerCorrect = 5; 
 
-        // Sistem Audio SFX Bawaan (Web Audio API)
+        // Sistem Audio SFX Bawaan
         let audioCtx, noiseBuffer;
         function initAudio() {
             if(!audioCtx) {
@@ -453,7 +532,44 @@
             }
         }
 
-        // --- Logika Pilih Lawan ---
+        // --- SISTEM LOADING ASET ---
+        // Fungsi ini akan menampilkan layar loading, memuat gambar di belakang layar, dan menjalankan progress bar
+        function runLoadingScreen(assetsToLoad, onCompleteCallback) {
+            const loadingScreen = document.getElementById('loading-screen');
+            const fillBar = document.getElementById('loading-bar-fill');
+            const pctText = document.getElementById('loading-pct');
+            
+            loadingScreen.style.display = 'flex';
+            fillBar.style.width = '0%';
+            pctText.innerText = '0%';
+
+            // Preload gambar ke memori browser
+            if(assetsToLoad && assetsToLoad.length > 0) {
+                assetsToLoad.forEach(src => {
+                    const img = new Image();
+                    img.src = src;
+                });
+            }
+
+            let progress = 0;
+            // Simulasi loading berjalan
+            const loadInterval = setInterval(() => {
+                progress += Math.floor(Math.random() * 15) + 5; 
+                if (progress >= 100) progress = 100;
+                
+                fillBar.style.width = progress + '%';
+                pctText.innerText = progress + '%';
+
+                if (progress === 100) {
+                    clearInterval(loadInterval);
+                    setTimeout(() => {
+                        loadingScreen.style.display = 'none';
+                        onCompleteCallback(); // Pindah ke fungsi selanjutnya setelah selesai
+                    }, 400); // Tahan sebentar di 100% agar efek selesai terlihat
+                }
+            }, 120);
+        }
+
         function selectCharacter(isActive) {
             if (!audioCtx || audioCtx.state === 'suspended') initAudio();
             
@@ -466,19 +582,19 @@
             }
         }
 
-        // --- Alur Transisi Layar ---
+        // --- Alur Transisi Layar yang Diperbarui dengan Loading ---
         function goToSelection() {
             const nameInput = document.getElementById('player-name').value;
             if (!nameInput) { alert("Silakan masukkan nama Anda terlebih dahulu!"); return; }
             
             initAudio(); 
-            // Unlock audio browser agar tidak diblokir
+            // Unlock audio browser
             audioSalah.play().then(() => { audioSalah.pause(); audioSalah.currentTime = 0; }).catch(e=>{});
             audioFinishHim.play().then(() => { audioFinishHim.pause(); audioFinishHim.currentTime = 0; }).catch(e=>{});
             audioGameOver.play().then(() => { audioGameOver.pause(); audioGameOver.currentTime = 0; }).catch(e=>{});
             audioEliminated.play().then(() => { audioEliminated.pause(); audioEliminated.currentTime = 0; }).catch(e=>{});
             audioMenang.play().then(() => { audioMenang.pause(); audioMenang.currentTime = 0; }).catch(e=>{});
-            audioBattle.play().then(() => { audioBattle.pause(); audioBattle.currentTime = 0; }).catch(e=>{}); // Unlock battle music
+            audioBattle.play().then(() => { audioBattle.pause(); audioBattle.currentTime = 0; }).catch(e=>{}); 
 
             playerName = nameInput;
             const difficultySelect = document.getElementById('difficulty');
@@ -486,31 +602,37 @@
             currentQuestions = [...questionsData[difficultySelect.value]].sort(() => Math.random() - 0.5); 
             
             document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('selection-screen').style.display = 'flex';
             
-            // PUTAR SUARA CHOOSE YOUR FIGHTER
-            audioChooseFighter.currentTime = 0;
-            audioChooseFighter.play().catch(e => console.log("Gagal memutar audio choose fighter:", e));
+            // JALANKAN LOADING SCREEN sebelum masuk ke Pilih Karakter
+            runLoadingScreen([baseImageNormal], () => {
+                document.getElementById('selection-screen').style.display = 'flex';
+                // Putar suara choose your fighter
+                audioChooseFighter.currentTime = 0;
+                audioChooseFighter.play().catch(e => console.log("Audio play error", e));
+            });
         }
 
         function startGame() {
-            // Matikan suara choose your fighter jika masih berbunyi
             audioChooseFighter.pause();
-            
             document.getElementById('selection-screen').style.display = 'none';
-            document.getElementById('game-screen').style.display = 'flex';
             
-            document.getElementById('display-name').innerText = `Pemain: ${playerName}`;
-            document.getElementById('display-level').innerText = `Level: ${diffText}`;
-            
-            score = 0; hp = 100; currentQIndex = 0; currentImageNormal = baseImageNormal;
-            document.getElementById('pejabat-img').src = currentImageNormal;
-            
-            // PUTAR MUSIK PERTARUNGAN
-            audioBattle.currentTime = 0;
-            audioBattle.play().catch(e => console.log("Gagal memutar lagu pertarungan:", e));
+            // JALANKAN LOADING SCREEN sebelum masuk ke Arena Pertarungan
+            // (Memuat aset gambar damage & bonyok agar mulus)
+            runLoadingScreen([imageHurt, imageBonyok], () => {
+                document.getElementById('game-screen').style.display = 'flex';
+                
+                document.getElementById('display-name').innerText = `Pemain: ${playerName}`;
+                document.getElementById('display-level').innerText = `Level: ${diffText}`;
+                
+                score = 0; hp = 100; currentQIndex = 0; currentImageNormal = baseImageNormal;
+                document.getElementById('pejabat-img').src = currentImageNormal;
+                
+                // Putar lagu pertarungan saat arena terbuka
+                audioBattle.currentTime = 0;
+                audioBattle.play().catch(e => console.log("Audio battle error", e));
 
-            updateScore(); updateHP(); loadQuestion();
+                updateScore(); updateHP(); loadQuestion();
+            });
         }
 
         function updateScore() { document.getElementById('display-score').innerText = `Skor: ${score}`; }
@@ -550,7 +672,7 @@
         function loadQuestion() {
             if (Math.round(hp) <= 0) {
                 clearInterval(timerInterval);
-                audioBattle.pause(); // MATIKAN MUSIK PERTARUNGAN
+                audioBattle.pause(); // Matikan lagu saat musuh kalah
                 
                 document.getElementById('finish-him-modal').style.display = 'flex';
                 audioFinishHim.currentTime = 0;
@@ -626,9 +748,8 @@
             }, 450); 
         }
 
-        // --- SISTEM GAME OVER MODAL ---
         function showGameOverModal() {
-            audioBattle.pause(); // MATIKAN MUSIK PERTARUNGAN
+            audioBattle.pause(); // Matikan lagu saat game over
 
             audioGameOver.currentTime = 0;
             audioGameOver.play().catch(e => console.log(e));
@@ -661,7 +782,6 @@
             location.reload();
         }
 
-        // --- SISTEM FATALITY ---
         function normalWin() {
             audioFinishHim.pause();
             document.getElementById('finish-him-modal').style.display = 'none';
