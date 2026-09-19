@@ -187,7 +187,6 @@
         .btn-tidak { background: #555; color: white; }
         .modal-btn-group button:hover { transform: scale(1.05); }
 
-        /* PERBAIKAN: Gambar Game Over ditaruh di atas teks modal */
         .game-over-img {
             width: 100%;
             height: 160px;
@@ -318,7 +317,7 @@
         </div>
     </div>
 
-    <!-- MODAL GAME OVER (GAMBAR DI ATAS TEKS) -->
+    <!-- MODAL GAME OVER -->
     <div id="game-over-modal" class="fullscreen-overlay" style="display:none;">
         <div class="modal-box">
             <img src="game-over.jpg" alt="Game Over" class="game-over-img" onerror="this.style.display='none'">
@@ -554,7 +553,7 @@
                     video.src = src;
                     video.preload = 'auto';
                     video.onloadeddata = updateProgress;
-                    video.onerror = updateProgress; // Tetap lanjut jika file video terlewat agar tidak macet
+                    video.onerror = updateProgress;
                     video.load();
                 } else {
                     const img = new Image();
@@ -593,7 +592,6 @@
             
             document.getElementById('login-screen').style.display = 'none';
             
-            // Loading aset gambar utama sebelum masuk menu pemilihan karakter
             runLoadingScreen([baseImageNormal], () => {
                 document.getElementById('selection-screen').style.display = 'flex';
                 audioChooseFighter.currentTime = 0;
@@ -605,7 +603,6 @@
             audioChooseFighter.pause();
             document.getElementById('selection-screen').style.display = 'none';
             
-            // Loading menyeluruh mencakup gambar luka, game over, dan video sinematik sebelum permainan dimulai
             runLoadingScreen([imageHurt, imageBonyok, gameOverImgSrc, videoFatalitySrc, videoCapturedSrc], () => {
                 document.getElementById('game-screen').style.display = 'flex';
                 document.getElementById('display-name').innerText = `Pemain: ${playerName}`;
