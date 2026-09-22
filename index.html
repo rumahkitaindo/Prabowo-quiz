@@ -13,14 +13,15 @@
 
     <style>
         :root {
-            --red-flag: #ce1126;
-            --white-flag: #ffffff;
-            --text-main: #212529;
-            --btn-border: #ce1126;
-            --btn-hover: #f8f9fa;
-            --hp-high: #2ed573;
-            --hp-med: #ffa502;
-            --hp-low: #ff4757;
+            --primary-red: #e63946;
+            --dark-red: #b7094c;
+            --accent-blue: #3a86ff;
+            --bg-glass: rgba(255, 255, 255, 0.95);
+            --text-main: #1d3557;
+            --border-color: #f1faee;
+            --hp-high: #2ec4b6;
+            --hp-med: #ffb703;
+            --hp-low: #e71d36;
         }
 
         * {
@@ -33,7 +34,7 @@
         }
 
         body {
-            background: linear-gradient(135deg, rgba(206, 17, 38, 0.85) 0%, rgba(206, 17, 38, 0.7) 40%, rgba(255, 255, 255, 0.9) 60%, rgba(255, 255, 255, 1) 100%);
+            background: linear-gradient(135deg, #b7094c 0%, #e63946 40%, #1d3557 100%);
             background-attachment: fixed;
             color: var(--text-main);
             display: flex;
@@ -46,100 +47,117 @@
 
         #app-container {
             width: 100%;
-            max-width: 900px;
-            background: #ffffff;
-            border-radius: 20px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            max-width: 850px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(12px);
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
             text-align: center;
             position: relative;
-            overflow: visible;
-            border: 1px solid #e9ecef;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.4);
             margin: auto;
             animation: fadeIn 0.4s ease-in-out;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: scale(0.97) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
         }
 
         #high-score-display {
             font-size: 1em;
-            color: #444;
-            background: #f8f9fa;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px dashed #ced4da;
+            color: #457b9d;
+            background: #f1faee;
+            padding: 12px;
+            border-radius: 12px;
+            border: 2px dashed #a8dadc;
             max-width: 400px;
             margin: 0 auto;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);
         }
 
-        /* --- Layar Login --- */
-        #login-screen { padding: 40px 20px; display: flex; flex-direction: column; gap: 15px; align-items: center; }
+        /* --- Layar Login Modern --- */
+        #login-screen { padding: 40px 25px; display: flex; flex-direction: column; gap: 16px; align-items: center; }
         
         .login-logo {
-            width: 160px;
-            height: 160px;
+            width: 150px;
+            height: 150px;
             object-fit: cover;
             border-radius: 50%;
-            border: 4px solid var(--red-flag);
-            box-shadow: 0 5px 20px rgba(206, 17, 38, 0.4);
+            border: 5px solid white;
+            box-shadow: 0 10px 25px rgba(230, 57, 70, 0.3);
             margin-bottom: 5px;
         }
 
-        #login-screen p { font-size: 1.1em; color: #555; }
-        input, select, .start-btn, .tutorial-btn {
-            padding: 14px; font-size: 1.1em; border-radius: 10px; border: 1px solid var(--btn-border);
-            outline: none; width: 100%; max-width: 400px; margin: 0 auto;
+        #login-screen p { font-size: 1.1em; color: #457b9d; font-weight: 400; }
+        
+        input, select {
+            padding: 15px; font-size: 1.1em; border-radius: 14px; border: 2px solid #e2e8f0;
+            outline: none; width: 100%; max-width: 400px; margin: 0 auto; background: #fff;
+            transition: all 0.3s ease; box-shadow: 0 4px 6px rgba(0,0,0,0.02);
         }
-        .start-btn { background: var(--red-flag); color: white; border: none; font-size: 1.3em; cursor: pointer; transition: all 0.2s ease; text-transform: uppercase; letter-spacing: 1px; }
-        .start-btn:hover { background: #a70c1d; transform: scale(1.02); box-shadow: 0 5px 15px rgba(206,17,38,0.4); }
+        input:focus, select:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 4px rgba(58, 134, 255, 0.15);
+        }
 
-        .tutorial-btn { background: #3498db; color: white; border: none; cursor: pointer; transition: all 0.2s ease; text-transform: uppercase; letter-spacing: 1px; }
-        .tutorial-btn:hover { background: #2980b9; transform: scale(1.02); }
+        .btn-modern {
+            padding: 15px; font-size: 1.2em; border-radius: 14px; border: none; cursor: pointer;
+            width: 100%; max-width: 400px; margin: 0 auto; text-transform: uppercase; letter-spacing: 1.5px;
+            transition: all 0.25s ease; box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        .start-btn { background: linear-gradient(135deg, var(--primary-red), var(--dark-red)); color: white; }
+        .start-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(230, 57, 70, 0.4); }
+
+        .tutorial-btn { background: linear-gradient(135deg, #4ea8de, var(--accent-blue)); color: white; }
+        .tutorial-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(58, 134, 255, 0.4); }
 
         /* --- Layar Pilihan Karakter --- */
-        #selection-screen { padding: 30px 20px; display: none; flex-direction: column; align-items: center; gap: 15px; }
-        #selection-screen h2 { color: var(--red-flag); font-size: 2em; margin-bottom: 5px; text-shadow: 1px 1px 3px rgba(0,0,0,0.1); }
+        #selection-screen { padding: 35px 25px; display: none; flex-direction: column; align-items: center; gap: 20px; }
+        #selection-screen h2 { color: var(--text-main); font-size: 2.2em; text-shadow: 1px 1px 2px rgba(0,0,0,0.05); }
         
-        .showcase { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 10px;}
-        .showcase-img { width: 150px; height: 150px; border-radius: 20px; object-fit: cover; border: 4px solid var(--text-main); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-        .showcase-name { font-size: 1.8em; text-transform: uppercase; letter-spacing: 2px; color: #111; }
+        .showcase { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        .showcase-img { width: 140px; height: 140px; border-radius: 20px; object-fit: cover; border: 4px solid white; box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
+        .showcase-name { font-size: 1.6em; text-transform: uppercase; letter-spacing: 2px; color: var(--text-main); }
         
         .character-grid { 
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; background: #f1f3f5; padding: 12px; border-radius: 15px; border: 2px solid #dee2e6;
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; background: rgba(255,255,255,0.7); 
+            padding: 15px; border-radius: 18px; border: 2px solid #e2e8f0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
         }
         .char-box { 
-            width: 65px; height: 65px; border-radius: 10px; display: flex; justify-content: center; align-items: center; 
+            width: 68px; height: 68px; border-radius: 12px; display: flex; justify-content: center; align-items: center; 
             border: 3px solid transparent; overflow: hidden; background: #fff; cursor: pointer; transition: all 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.04);
         }
         .char-box img { width: 100%; height: 100%; object-fit: cover; }
-        .char-box.active { border-color: var(--red-flag); transform: scale(1.05); box-shadow: 0 4px 10px rgba(206,17,38,0.3); }
-        .char-box.disabled { background: #e9ecef; cursor: not-allowed; opacity: 0.6; font-size: 1.8em; }
+        .char-box.active { border-color: var(--primary-red); transform: scale(1.06); box-shadow: 0 6px 15px rgba(230,57,70,0.3); }
+        .char-box.disabled { background: #e2e8f0; cursor: not-allowed; opacity: 0.7; font-size: 1.6em; }
 
-        /* --- Layar Game --- */
+        /* --- Layar Game Modern --- */
         #game-screen { display: none; flex-direction: column; padding-bottom: 30px; }
         
         #header {
-            display: flex; justify-content: space-between; padding: 15px 20px; background: #f8f9fa;
-            border-bottom: 2px solid #e9ecef; font-size: 1em; flex-wrap: wrap; gap: 5px;
+            display: flex; justify-content: space-between; padding: 18px 25px; background: rgba(255,255,255,0.8);
+            border-bottom: 2px solid #e2e8f0; font-size: 1.05em; flex-wrap: wrap; gap: 10px; color: var(--text-main);
         }
 
         #hp-container {
-            width: 85%; background-color: #e9ecef; border-radius: 10px; height: 22px;
-            margin: 12px auto 0 auto; overflow: hidden; border: 2px solid #ced4da; position: relative;
+            width: 85%; background-color: #e2e8f0; border-radius: 12px; height: 26px;
+            margin: 15px auto 0 auto; overflow: hidden; border: 2px solid #cbd5e1; position: relative;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
         }
         #hp-bar { height: 100%; width: 100%; background-color: var(--hp-high); transition: width 0.4s ease, background-color 0.4s ease; }
-        #hp-text { position: absolute; width: 100%; text-align: center; top: 1px; font-size: 0.85em; color: #333; text-shadow: 1px 1px 2px rgba(255,255,255,0.8); }
+        #hp-text { position: absolute; width: 100%; text-align: center; top: 2px; font-size: 0.9em; color: #1e293b; text-shadow: 0 1px 2px rgba(255,255,255,0.8); }
 
-        #character-area { position: relative; height: 210px; display: flex; justify-content: center; align-items: center; margin: 15px 0; }
+        #character-area { position: relative; height: 200px; display: flex; justify-content: center; align-items: center; margin: 15px 0; }
         
         #pejabat-img {
-            height: 200px; width: 310px; border-radius: 12px; border: 3px solid #ddd;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2); object-fit: cover; position: relative; z-index: 10;
+            height: 190px; width: 300px; border-radius: 16px; border: 4px solid white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); object-fit: cover; position: relative; z-index: 10;
         }
         
-        .pain-effect { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both !important; filter: drop-shadow(0 0 20px var(--red-flag)) saturate(1.5); }
+        .pain-effect { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both !important; filter: drop-shadow(0 0 20px var(--primary-red)) saturate(1.5); }
         
         @keyframes shake {
             10%, 90% { transform: translate3d(-5px, 0, 0); }
@@ -148,22 +166,27 @@
             40%, 60% { transform: translate3d(20px, 0, 0); }
         }
 
-        #timer-container { font-size: 1.2em; color: #555; margin-bottom: 2px;}
+        #timer-container { font-size: 1.25em; color: #457b9d; margin-bottom: 4px; }
         
         #streak-notification {
-            font-size: 1.1em;
-            color: #ff9f43;
+            font-size: 1.15em;
+            color: #f77f00;
             height: 25px;
             font-style: italic;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
 
         #question-text { 
-            font-size: 1.2em; 
-            margin: 8px 15px 15px 15px; 
-            color: #000; 
-            line-height: 1.3; 
-            min-height: 50px; 
+            font-size: 1.25em; 
+            margin: 10px 20px 18px 20px; 
+            color: var(--text-main); 
+            line-height: 1.4; 
+            min-height: 60px;
+            background: white;
+            padding: 15px;
+            border-radius: 14px;
+            border: 2px solid #e2e8f0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
         }
         
         .lifeline-container {
@@ -173,22 +196,23 @@
             margin-bottom: 15px;
         }
         .lifeline-btn {
-            background: #3498db;
+            background: var(--accent-blue);
             color: white;
             border: none;
-            padding: 8px 15px;
-            border-radius: 8px;
+            padding: 9px 18px;
+            border-radius: 10px;
             cursor: pointer;
-            font-size: 0.9em;
-            transition: transform 0.2s;
+            font-size: 0.95em;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 10px rgba(58, 134, 255, 0.3);
         }
-        .lifeline-btn:hover:not(:disabled) { transform: scale(1.05); background: #2980b9; }
-        .lifeline-btn:disabled { background: #bdc3c7; cursor: not-allowed; }
+        .lifeline-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(58, 134, 255, 0.4); }
+        .lifeline-btn:disabled { background: #cbd5e1; cursor: not-allowed; box-shadow: none; }
 
         .options-grid { 
             display: grid; 
             grid-template-columns: repeat(2, 1fr); 
-            gap: 12px; 
+            gap: 14px; 
             padding: 0 20px; 
             max-width: 800px; 
             margin: 0 auto; 
@@ -196,32 +220,32 @@
         
         .option-btn {
             background: #ffffff; 
-            color: #000; 
-            padding: 12px 15px; 
-            font-size: 0.95em; 
-            border-radius: 12px;
-            border: 2px solid var(--red-flag);
+            color: var(--text-main); 
+            padding: 14px 18px; 
+            font-size: 1em; 
+            border-radius: 14px;
+            border: 2px solid var(--primary-red);
             cursor: pointer; 
             text-align: left;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
+            box-shadow: 0 6px 12px rgba(0,0,0,0.04); 
             transition: all 0.2s ease;
-            min-height: 65px; 
+            min-height: 70px; 
             display: flex; 
             align-items: center;
             word-break: break-word;
         }
-        .option-btn:hover:not(:disabled) { background: var(--btn-hover); border-color: #a70c1d; transform: translateY(-2px); }
+        .option-btn:hover:not(:disabled) { background: #fff5f5; border-color: var(--dark-red); transform: translateY(-2px); box-shadow: 0 8px 15px rgba(230,57,70,0.15); }
         .option-btn:disabled { cursor: not-allowed; opacity: 0.9; transform: none; }
 
         @keyframes blinkBorder {
-            0% { border-color: #2ed573; box-shadow: 0 0 5px #2ed573; }
-            50% { border-color: #ffffff; box-shadow: 0 0 20px #2ed573; }
-            100% { border-color: #2ed573; box-shadow: 0 0 5px #2ed573; }
+            0% { border-color: var(--hp-high); box-shadow: 0 0 10px var(--hp-high); }
+            50% { border-color: #ffffff; box-shadow: 0 0 25px var(--hp-high); }
+            100% { border-color: var(--hp-high); box-shadow: 0 0 10px var(--hp-high); }
         }
 
         .correct-blinking {
             animation: blinkBorder 0.4s infinite ease-in-out;
-            background: #2ed573 !important;
+            background: var(--hp-high) !important;
             color: white !important;
         }
 
@@ -241,7 +265,7 @@
         .flag-pole { width: 10px; height: 160px; background: #222; border-radius: 5px; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); }
         .flag-cloth {
             width: 150px; height: 100px;
-            background: linear-gradient(to bottom, var(--red-flag) 50%, var(--white-flag) 50%);
+            background: linear-gradient(to bottom, var(--primary-red) 50%, white 50%);
             border: 5px solid #222; border-left: none; border-radius: 0 10px 10px 0;
             transform-origin: left top; animation: wave-animation 1s infinite alternate ease-in-out;
             box-shadow: 5px 5px 0px rgba(0,0,0,0.1); position: relative;
@@ -261,46 +285,46 @@
             padding: 3px; background: #fff; position: relative;
         }
         .loading-bar-fill {
-            height: 100%; width: 0%; background: var(--red-flag); border-radius: 4px; transition: width 0.1s linear;
+            height: 100%; width: 0%; background: var(--primary-red); border-radius: 4px; transition: width 0.1s linear;
         }
         #loading-text { font-size: 2em; color: #222; margin-top: 15px; letter-spacing: 2px; text-transform: uppercase; }
         .dots::after { content: ''; animation: loading-dots 1.5s steps(4, end) infinite; }
         @keyframes loading-dots { 0% { content: ''; } 25% { content: '.'; } 50% { content: '..'; } 75% { content: '...'; } 100% { content: ''; } }
 
-        /* --- OVERLAYS (Modals & Fatality) --- */
+        /* --- OVERLAYS & MODALS MODERN --- */
         .fullscreen-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 9999;
+            background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px); z-index: 9999;
             display: flex; justify-content: center; align-items: center; flex-direction: column;
         }
 
         .modal-box {
-            background: #111; padding: 25px 20px; border-radius: 15px; text-align: center; width: 90%; max-width: 450px;
-            border: 4px solid var(--red-flag); box-shadow: 0 0 30px rgba(206,17,38,0.5);
+            background: #ffffff; padding: 30px 25px; border-radius: 20px; text-align: center; width: 90%; max-width: 460px;
+            border: 3px solid var(--primary-red); box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            color: var(--text-main);
         }
-        .modal-box h2 { font-size: 2.5em; margin-bottom: 15px; text-shadow: 2px 2px 5px #000; text-transform: uppercase; font-style: italic; }
-        .modal-text { color: white; font-size: 1.1em; margin-bottom: 15px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); line-height: 1.4; text-align: left; }
+        .modal-box h2 { font-size: 2.2em; margin-bottom: 15px; text-transform: uppercase; font-style: italic; }
+        .modal-text { color: #475569; font-size: 1.05em; margin-bottom: 20px; line-height: 1.5; text-align: left; }
         .modal-btn-group { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 15px; }
-        .modal-btn-group button { padding: 12px 30px; font-size: 1.2em; border-radius: 8px; cursor: pointer; border: none; transition: transform 0.2s; text-transform: uppercase; }
-        .btn-ya { background: var(--hp-high); color: white; }
-        .btn-tidak { background: #555; color: white; }
-        .btn-tutup { background: var(--red-flag); color: white; width: 100%; }
-        .modal-btn-group button:hover { transform: scale(1.05); }
+        .modal-btn-group button { padding: 12px 28px; font-size: 1.15em; border-radius: 12px; cursor: pointer; border: none; transition: transform 0.2s, box-shadow 0.2s; text-transform: uppercase; }
+        .btn-ya { background: var(--hp-high); color: white; box-shadow: 0 4px 12px rgba(46, 196, 182, 0.3); }
+        .btn-tidak { background: #64748b; color: white; box-shadow: 0 4px 12px rgba(100, 116, 139, 0.3); }
+        .btn-tutup { background: var(--primary-red); color: white; width: 100%; box-shadow: 0 4px 12px rgba(230,57,70,0.3); }
+        .modal-btn-group button:hover { transform: translateY(-2px); }
 
         .game-over-img {
             width: 100%;
             height: 150px;
             object-fit: cover;
-            border-radius: 10px;
-            margin-bottom: 12px;
-            border: 2px solid var(--red-flag);
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border: 2px solid var(--primary-red);
         }
 
         #game-over-modal .modal-box {
-            border-color: #7f8c8d; 
-            box-shadow: 0 0 30px rgba(127,140,141,0.5);
+            border-color: #64748b; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         }
-        #game-over-modal h2 { color: var(--red-flag); font-size: 2.8em; }
 
         #fatality-container { background: #000; }
         .cinematic-video { width: 100%; height: 100%; object-fit: cover; transition: opacity 1s; display: none; }
@@ -310,26 +334,26 @@
             opacity: 0; transform: scale(0.5); pointer-events: none; transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             padding: 0 15px;
         }
-        #eliminated-text { color: var(--red-flag); letter-spacing: 3px; text-transform: uppercase; }
+        #eliminated-text { color: var(--primary-red); letter-spacing: 3px; text-transform: uppercase; }
         #victory-text { color: #ffd700; font-size: 3em; }
         .show-text { opacity: 1 !important; transform: scale(1) !important; }
 
         @media (max-width: 600px) {
             body { align-items: flex-start; padding: 10px; }
-            #app-container { margin-top: 10px; margin-bottom: 20px; }
-            #header { padding: 10px 15px; font-size: 0.9em; }
+            #app-container { margin-top: 10px; margin-bottom: 20px; border-radius: 18px; }
+            #header { padding: 12px 15px; font-size: 0.95em; }
             
-            .options-grid { padding: 0 10px; gap: 8px; }
-            .option-btn { font-size: 0.85em; padding: 8px 10px; min-height: 60px; }
+            .options-grid { padding: 0 12px; gap: 10px; }
+            .option-btn { font-size: 0.9em; padding: 10px 12px; min-height: 65px; }
 
             #pejabat-img { height: 160px; width: 250px; }
-            #question-text { font-size: 1.1em; margin-bottom: 10px; }
+            #question-text { font-size: 1.1em; margin-bottom: 12px; padding: 12px; }
             .projectile { font-size: 60px; }
-            .login-logo { width: 130px; height: 130px; }
-            .modal-box h2 { font-size: 2em !important; }
+            .login-logo { width: 120px; height: 120px; }
+            .modal-box h2 { font-size: 1.8em !important; }
             .cinematic-text { font-size: 2.2em !important; }
-            .character-grid { gap: 5px; padding: 10px; }
-            .char-box { width: 55px; height: 55px; font-size: 1.5em; }
+            .character-grid { gap: 6px; padding: 10px; }
+            .char-box { width: 54px; height: 54px; font-size: 1.4em; }
             .loading-bar-container { width: 240px; }
         }
     </style>
@@ -368,8 +392,8 @@
 
             <div id="high-score-display">🏆 High Score: 0</div>
             
-            <button class="start-btn" onclick="goToSelection()">Mulai Bermain</button>
-            <button class="tutorial-btn" onclick="openTutorial()">📖 Cara Main / Tutorial</button>
+            <button class="btn-modern start-btn" onclick="goToSelection()">Mulai Bermain</button>
+            <button class="btn-modern tutorial-btn" onclick="openTutorial()">📖 Cara Main / Tutorial</button>
         </div>
 
         <!-- Halaman Pemilihan Karakter -->
@@ -393,7 +417,7 @@
                 <div class="char-box disabled" onclick="selectCharacter(false)">🔒</div>
             </div>
             
-            <button class="start-btn" style="margin-top: 10px;" onclick="startGame()">MULAI PERTARUNGAN</button>
+            <button class="btn-modern start-btn" style="margin-top: 10px;" onclick="startGame()">MULAI PERTARUNGAN</button>
         </div>
 
         <!-- Halaman Game -->
@@ -429,16 +453,16 @@
     <!-- MODAL TUTORIAL / CARA MAIN -->
     <div id="tutorial-modal" class="fullscreen-overlay" style="display:none;">
         <div class="modal-box" style="max-width: 500px;">
-            <h2 style="color: #3498db; font-size: 2em; margin-bottom: 10px;">Panduan & Tutorial</h2>
+            <h2 style="color: var(--accent-blue); font-size: 1.8em; margin-bottom: 12px;">Panduan & Tutorial</h2>
             <div class="modal-text" style="font-size: 0.95em; max-height: 60vh; overflow-y: auto; padding-right: 5px;">
-                <p style="margin-bottom: 8px;">🎯 <b>Tujuan Game:</b> Habiskan HP bos Prororo dengan menjawab serangkaian soal pengetahuan dengan benar!</p>
-                <p style="margin-bottom: 8px;">🎮 <b>Pilihan Mode:</b></p>
-                <ul style="margin-left: 20px; margin-bottom: 8px;">
+                <p style="margin-bottom: 10px;">🎯 <b>Tujuan Game:</b> Habiskan HP bos Prororo dengan menjawab serangkaian soal pengetahuan dengan benar!</p>
+                <p style="margin-bottom: 10px;">🎮 <b>Pilihan Mode:</b></p>
+                <ul style="margin-left: 20px; margin-bottom: 10px;">
                     <li><b>Time Attack:</b> Tantangan cepat dengan batas waktu 15 detik per soal.</li>
                     <li><b>Relaxed Mode:</b> Bebas tanpa timer, cocok untuk santai.</li>
                 </ul>
-                <p style="margin-bottom: 8px;">⚔️ <b>Mekanik Serangan & Combo:</b></p>
-                <ul style="margin-left: 20px; margin-bottom: 8px;">
+                <p style="margin-bottom: 10px;">⚔️ <b>Mekanik Serangan & Combo:</b></p>
+                <ul style="margin-left: 20px; margin-bottom: 10px;">
                     <li>Setiap jawaban benar meluncurkan serangan tematik ke Prororo.</li>
                     <li><b>Rage Mode:</b> Jawab benar 3 kali berturut-turut untuk mengaktifkan combo dan bonus skor ekstra!</li>
                 </ul>
@@ -453,7 +477,7 @@
     <!-- MODAL FINISH HIM -->
     <div id="finish-him-modal" class="fullscreen-overlay" style="display:none;">
         <div class="modal-box">
-            <h2 style="color: var(--red-flag);">FINISH HIM!</h2>
+            <h2 style="color: var(--primary-red);">FINISH HIM!</h2>
             <div class="modal-btn-group">
                 <button class="btn-ya" onclick="executeFatality()">Ya</button>
                 <button class="btn-tidak" onclick="executeCapture()">Tidak</button>
@@ -465,13 +489,13 @@
     <div id="game-over-modal" class="fullscreen-overlay" style="display:none;">
         <div class="modal-box">
             <img src="game-over.jpg" alt="Game Over" class="game-over-img" onerror="this.style.display='none'">
-            <h2 id="go-title" style="color: var(--red-flag);">KAMU KALAH</h2>
+            <h2 id="go-title" style="color: var(--primary-red);">KAMU KALAH</h2>
             <div class="modal-text" style="text-align: center;" id="go-stats-text">
                 Skor Akhir: <span id="go-score">0</span><br>
                 Sisa Darah Prororo: <span id="go-hp">0</span>%
             </div>
-            <div class="modal-text" style="font-size: 1em; color: #adb5bd; margin-bottom: 0; text-align: center;">
-                Kembali ke menu login dalam <span id="go-timer" style="color: #fff; font-weight: bold;">5</span> detik...
+            <div class="modal-text" style="font-size: 0.95em; color: #64748b; margin-bottom: 0; text-align: center;">
+                Kembali ke menu login dalam <span id="go-timer" style="color: var(--text-main); font-weight: bold;">5</span> detik...
             </div>
         </div>
     </div>
@@ -878,7 +902,7 @@
             document.getElementById('time-left').style.color = "var(--text-main)";
             timerInterval = setInterval(() => {
                 timeLeft--; document.getElementById('time-left').innerText = timeLeft;
-                if (timeLeft <= 5) document.getElementById('time-left').style.color = "var(--red-flag)"; 
+                if (timeLeft <= 5) document.getElementById('time-left').style.color = "var(--primary-red)"; 
                 if (timeLeft <= 0) { clearInterval(timerInterval); handleTimeOut(); }
             }, 1000);
         }
@@ -957,7 +981,7 @@
                 streakCount = 0; 
                 document.getElementById('streak-notification').innerText = "Jawaban Salah! Streak Terputus.";
                 audioSalah.currentTime = 0; audioSalah.play().catch(e=>{});
-                clickedBtn.style.background = '#ff4757'; clickedBtn.style.color = 'white'; clickedBtn.style.borderColor = '#ff4757';
+                clickedBtn.style.background = '#e71d36'; clickedBtn.style.color = 'white'; clickedBtn.style.borderColor = '#e71d36';
                 buttons.forEach(btn => { if (btn.dataset.correct === 'true') { btn.classList.add('correct-blinking'); } });
                 setTimeout(() => { 
                     currentQIndex++; 
