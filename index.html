@@ -16,7 +16,7 @@
             --red-flag: #ce1126;
             --white-flag: #ffffff;
             --text-main: #212529;
-            --btn-border: #ce1126; /* Diubah menjadi merah */
+            --btn-border: #ce1126;
             --btn-hover: #f8f9fa;
             --hp-high: #2ed573;
             --hp-med: #ffa502;
@@ -75,11 +75,11 @@
         }
 
         /* --- Layar Login --- */
-        #login-screen { padding: 40px 20px; display: flex; flex-direction: column; gap: 20px; align-items: center; }
+        #login-screen { padding: 40px 20px; display: flex; flex-direction: column; gap: 15px; align-items: center; }
         
         .login-logo {
-            width: 180px;
-            height: 180px;
+            width: 160px;
+            height: 160px;
             object-fit: cover;
             border-radius: 50%;
             border: 4px solid var(--red-flag);
@@ -88,12 +88,15 @@
         }
 
         #login-screen p { font-size: 1.1em; color: #555; }
-        input, select, .start-btn {
-            padding: 15px; font-size: 1.1em; border-radius: 10px; border: 1px solid var(--btn-border);
+        input, select, .start-btn, .tutorial-btn {
+            padding: 14px; font-size: 1.1em; border-radius: 10px; border: 1px solid var(--btn-border);
             outline: none; width: 100%; max-width: 400px; margin: 0 auto;
         }
         .start-btn { background: var(--red-flag); color: white; border: none; font-size: 1.3em; cursor: pointer; transition: all 0.2s ease; text-transform: uppercase; letter-spacing: 1px; }
         .start-btn:hover { background: #a70c1d; transform: scale(1.02); box-shadow: 0 5px 15px rgba(206,17,38,0.4); }
+
+        .tutorial-btn { background: #3498db; color: white; border: none; cursor: pointer; transition: all 0.2s ease; text-transform: uppercase; letter-spacing: 1px; }
+        .tutorial-btn:hover { background: #2980b9; transform: scale(1.02); }
 
         /* --- Layar Pilihan Karakter --- */
         #selection-screen { padding: 30px 20px; display: none; flex-direction: column; align-items: center; gap: 15px; }
@@ -197,7 +200,7 @@
             padding: 12px 15px; 
             font-size: 0.95em; 
             border-radius: 12px;
-            border: 2px solid var(--red-flag); /* Border merah default */
+            border: 2px solid var(--red-flag);
             cursor: pointer; 
             text-align: left;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
@@ -210,7 +213,6 @@
         .option-btn:hover:not(:disabled) { background: var(--btn-hover); border-color: #a70c1d; transform: translateY(-2px); }
         .option-btn:disabled { cursor: not-allowed; opacity: 0.9; transform: none; }
 
-        /* Animasi Kelap-kelip / Kedip Border untuk Jawaban Benar */
         @keyframes blinkBorder {
             0% { border-color: #2ed573; box-shadow: 0 0 5px #2ed573; }
             50% { border-color: #ffffff; box-shadow: 0 0 20px #2ed573; }
@@ -277,11 +279,12 @@
             border: 4px solid var(--red-flag); box-shadow: 0 0 30px rgba(206,17,38,0.5);
         }
         .modal-box h2 { font-size: 2.5em; margin-bottom: 15px; text-shadow: 2px 2px 5px #000; text-transform: uppercase; font-style: italic; }
-        .modal-text { color: white; font-size: 1.1em; margin-bottom: 15px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); line-height: 1.4; }
-        .modal-btn-group { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
+        .modal-text { color: white; font-size: 1.1em; margin-bottom: 15px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); line-height: 1.4; text-align: left; }
+        .modal-btn-group { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 15px; }
         .modal-btn-group button { padding: 12px 30px; font-size: 1.2em; border-radius: 8px; cursor: pointer; border: none; transition: transform 0.2s; text-transform: uppercase; }
         .btn-ya { background: var(--hp-high); color: white; }
         .btn-tidak { background: #555; color: white; }
+        .btn-tutup { background: var(--red-flag); color: white; width: 100%; }
         .modal-btn-group button:hover { transform: scale(1.05); }
 
         .game-over-img {
@@ -322,7 +325,7 @@
             #pejabat-img { height: 160px; width: 250px; }
             #question-text { font-size: 1.1em; margin-bottom: 10px; }
             .projectile { font-size: 60px; }
-            .login-logo { width: 140px; height: 140px; }
+            .login-logo { width: 130px; height: 130px; }
             .modal-box h2 { font-size: 2em !important; }
             .cinematic-text { font-size: 2.2em !important; }
             .character-grid { gap: 5px; padding: 10px; }
@@ -349,15 +352,24 @@
         <!-- Halaman Login -->
         <div id="login-screen">
             <img src="logo.png" alt="Logo Perang Tikus" class="login-logo" onerror="this.src='https://via.placeholder.com/180?text=Logo+Perang+Tikus'">
-            <p>Jawab pertanyaan dengan benar untuk mengalahkan Prororo!</p>
+            <p>Jawab pertanyaan untuk mengalahkan Prororo!</p>
             <input type="text" id="player-name" placeholder="Masukkan Nama Anda..." required autocomplete="off">
+            
             <select id="difficulty">
                 <option value="easy">Level: Mudah (SD)</option>
                 <option value="medium">Level: Sedang (SMP)</option>
                 <option value="hard">Level: Sulit (SMA/Umum)</option>
             </select>
+
+            <select id="game-mode">
+                <option value="time-attack">Mode: Time Attack (Dengan Timer)</option>
+                <option value="relaxed">Mode: Relaxed (Tanpa Timer / Santai)</option>
+            </select>
+
             <div id="high-score-display">🏆 High Score: 0</div>
-            <button class="start-btn" onclick="goToSelection()">Lanjut</button>
+            
+            <button class="start-btn" onclick="goToSelection()">Mulai Bermain</button>
+            <button class="tutorial-btn" onclick="openTutorial()">📖 Cara Main / Tutorial</button>
         </div>
 
         <!-- Halaman Pemilihan Karakter -->
@@ -376,7 +388,7 @@
                 <div class="char-box disabled" onclick="selectCharacter(false)">🔒</div>
                 <div class="char-box disabled" onclick="selectCharacter(false)">🔒</div>
                 <div class="char-box disabled" onclick="selectCharacter(false)">🔒</div>
-                <div class="char-box disabled" onclick="selectCharacter(false)">🔒</div>
+                <div class="char-box disabled" onclick="sinematicError()">🔒</div>
                 <div class="char-box disabled" onclick="selectCharacter(false)">🔒</div>
                 <div class="char-box disabled" onclick="selectCharacter(false)">🔒</div>
             </div>
@@ -394,7 +406,6 @@
 
             <div id="hp-container">
                 <div id="hp-bar"></div>
-                <!-- Tulisan "Soal:" telah dihapus sesuai permintaan -->
                 <div id="hp-text">HP Prororo: 100% | <span id="current-q-num">1</span>/25</div>
             </div>
 
@@ -415,6 +426,30 @@
         </div>
     </div>
 
+    <!-- MODAL TUTORIAL / CARA MAIN -->
+    <div id="tutorial-modal" class="fullscreen-overlay" style="display:none;">
+        <div class="modal-box" style="max-width: 500px;">
+            <h2 style="color: #3498db; font-size: 2em; margin-bottom: 10px;">Panduan & Tutorial</h2>
+            <div class="modal-text" style="font-size: 0.95em; max-height: 60vh; overflow-y: auto; padding-right: 5px;">
+                <p style="margin-bottom: 8px;">🎯 <b>Tujuan Game:</b> Habiskan HP bos Prororo dengan menjawab serangkaian soal pengetahuan dengan benar!</p>
+                <p style="margin-bottom: 8px;">🎮 <b>Pilihan Mode:</b></p>
+                <ul style="margin-left: 20px; margin-bottom: 8px;">
+                    <li><b>Time Attack:</b> Tantangan cepat dengan batas waktu 15 detik per soal.</li>
+                    <li><b>Relaxed Mode:</b> Bebas tanpa timer, cocok untuk santai.</li>
+                </ul>
+                <p style="margin-bottom: 8px;">⚔️ <b>Mekanik Serangan & Combo:</b></p>
+                <ul style="margin-left: 20px; margin-bottom: 8px;">
+                    <li>Setiap jawaban benar meluncurkan serangan tematik ke Prororo.</li>
+                    <li><b>Rage Mode:</b> Jawab benar 3 kali berturut-turut untuk mengaktifkan combo dan bonus skor ekstra!</li>
+                </ul>
+                <p style="margin-bottom: 0;">💡 <b>Fitur Bantuan:</b> Gunakan tombol 50:50 (membuang 2 jawaban salah) atau tombol Skip (lewati soal) jika kesulitan.</p>
+            </div>
+            <div class="modal-btn-group">
+                <button class="btn-tutup" onclick="closeTutorial()">Mengerti & Tutup</button>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL FINISH HIM -->
     <div id="finish-him-modal" class="fullscreen-overlay" style="display:none;">
         <div class="modal-box">
@@ -431,11 +466,11 @@
         <div class="modal-box">
             <img src="game-over.jpg" alt="Game Over" class="game-over-img" onerror="this.style.display='none'">
             <h2 id="go-title" style="color: var(--red-flag);">KAMU KALAH</h2>
-            <div class="modal-text" id="go-stats-text">
+            <div class="modal-text" style="text-align: center;" id="go-stats-text">
                 Skor Akhir: <span id="go-score">0</span><br>
                 Sisa Darah Prororo: <span id="go-hp">0</span>%
             </div>
-            <div class="modal-text" style="font-size: 1em; color: #adb5bd; margin-bottom: 0;">
+            <div class="modal-text" style="font-size: 1em; color: #adb5bd; margin-bottom: 0; text-align: center;">
                 Kembali ke menu login dalam <span id="go-timer" style="color: #fff; font-weight: bold;">5</span> detik...
             </div>
         </div>
@@ -465,6 +500,14 @@
             }
         }
         window.onload = checkHighScoreOnInit;
+
+        function openTutorial() {
+            document.getElementById('tutorial-modal').style.display = 'flex';
+        }
+
+        function closeTutorial() {
+            document.getElementById('tutorial-modal').style.display = 'none';
+        }
 
         function saveHighScore(finalScore) {
             let savedHighScore = parseInt(localStorage.getItem('perang_tikus_highscore') || 0);
@@ -568,14 +611,25 @@
                 { q: "Garis bujur 0 derajat melewati kota?", options: ["Greenwich", "Paris", "Berlin", "Roma"], answer: 0 },
                 { q: "Lapisan ozon di atmosfer bumi terletak pada lapisan?", options: ["Stratosfer", "Troposfer", "Mesosfer", "Termosfer"], answer: 0 },
                 { q: "Pencipta teori heliosentris tata surya?", options: ["Nicolaus Copernicus", "Ptolemeus", "Aristoteles", "Galileo"], answer: 0 },
-                { q: "Nama samaran multatuli penulis buku Max Havelaar?", options: ["Eduard Douwes Dekker", "C.T. van Deventer", "H.W. Daendels", "J.P. Coen"], answer: 0 }
+                { q: "Nama samaran multatuli penulis buku Max Havelaar?", options: ["Eduard Douwes Dekker", "C.T. van Deventer", "H.W. Daendels", "J.P. Coen"]
             ]
         };
 
-        const throwItems = [
-            { emoji: '🥚', type: 'egg' }, { emoji: '🍌', type: 'banana' }, { emoji: '💣', type: 'bomb' }, 
-            { emoji: '🔪', type: 'knife' }, { emoji: '💩', type: 'poop' }, { emoji: '🐍', type: 'snake' }
-        ];
+        const thematicItems = {
+            easy: [
+                { emoji: '🥚', type: 'egg' }, 
+                { emoji: '🍌', type: 'banana' }
+            ],
+            medium: [
+                { emoji: '💣', type: 'bomb' }, 
+                { emoji: '💩', type: 'poop' }
+            ],
+            hard: [
+                { emoji: '🚀', type: 'bomb' }, 
+                { emoji: '🔥', type: 'knife' }, 
+                { emoji: '🐍', type: 'snake' }
+            ]
+        };
 
         const baseImageNormal = 'pejabat-normal.jpg';
         const imageHurt = 'pejabat-sakit.jpg';
@@ -594,7 +648,7 @@
         audioBattle.loop = true; 
 
         let currentImageNormal = baseImageNormal; 
-        let currentQuestions = [], currentQIndex = 0, score = 0, hp = 100, playerName = "", diffText = "";
+        let currentQuestions = [], currentQIndex = 0, score = 0, hp = 100, playerName = "", diffKey = "", diffText = "", gameMode = "time-attack";
         let timeLeft = 15, timerInterval, goTimerInterval;
         let streakCount = 0;
         let lifeline5050Used = false;
@@ -715,9 +769,13 @@
 
             playerName = nameInput;
             const difficultySelect = document.getElementById('difficulty');
+            diffKey = difficultySelect.value;
             diffText = difficultySelect.options[difficultySelect.selectedIndex].text.split(' ')[1]; 
             
-            let selectedPool = [...questionsData[difficultySelect.value]];
+            const modeSelect = document.getElementById('game-mode');
+            gameMode = modeSelect.value;
+
+            let selectedPool = [...questionsData[diffKey]];
             selectedPool.sort(() => Math.random() - 0.5); 
             currentQuestions = selectedPool.slice(0, maxQuestions); 
             
@@ -741,6 +799,13 @@
                 document.getElementById('display-name').innerText = `Pemain: ${playerName}`;
                 document.getElementById('display-level').innerText = `Level: ${diffText}`;
                 
+                const timerContainer = document.getElementById('timer-container');
+                if (gameMode === 'relaxed') {
+                    timerContainer.style.display = 'none';
+                } else {
+                    timerContainer.style.display = 'block';
+                }
+
                 score = 0; hp = 100; currentQIndex = 0; streakCount = 0;
                 lifeline5050Used = false; lifelineSkipUsed = false;
                 document.getElementById('lifeline-5050').disabled = false;
@@ -768,6 +833,7 @@
         }
 
         function startTimer() {
+            if (gameMode === 'relaxed') return; 
             clearInterval(timerInterval); timeLeft = 15;
             document.getElementById('time-left').innerText = timeLeft;
             document.getElementById('time-left').style.color = "var(--text-main)";
@@ -826,16 +892,17 @@
         }
 
         function checkAnswer(isCorrect, clickedBtn) {
-            clearInterval(timerInterval); 
+            if (gameMode === 'time-attack') clearInterval(timerInterval); 
             const buttons = document.querySelectorAll('.option-btn'); buttons.forEach(btn => btn.disabled = true);
 
             if (isCorrect) {
                 streakCount++;
                 let bonusScore = 0;
                 let streakText = "";
+                
                 if (streakCount >= 3) {
-                    bonusScore = 5; 
-                    streakText = `🔥 STREAK x${streakCount}! (+5 Bonus Skor)`;
+                    bonusScore = 10; 
+                    streakText = `🔥 RAGE MODE! COMBO x${streakCount}! (+10 Bonus Skor)`;
                 } else {
                     streakText = `Benar!`;
                 }
@@ -845,7 +912,6 @@
                 score += (10 + bonusScore); 
                 updateScore(); updateHP();
                 
-                // Berikan efek kelap-kelip saat jawaban benar
                 clickedBtn.classList.add('correct-blinking');
                 triggerCorrectAction();
             } else {
@@ -884,7 +950,7 @@
             if (lifelineSkipUsed) return;
             lifelineSkipUsed = true;
             document.getElementById('lifeline-skip').disabled = true;
-            clearInterval(timerInterval);
+            if (gameMode === 'time-attack') clearInterval(timerInterval);
             document.getElementById('streak-notification').innerText = "Soal Dilewati!";
             setTimeout(() => {
                 currentQIndex++;
@@ -898,8 +964,11 @@
 
         function triggerCorrectAction() {
             playSfx('throw'); 
-            const charArea = document.getElementById('character-area'); const imgPejabat = document.getElementById('pejabat-img');
-            const selectedItemObj = throwItems[Math.floor(Math.random() * throwItems.length)];
+            const charArea = document.getElementById('character-area'); 
+            const imgPejabat = document.getElementById('pejabat-img');
+            
+            let poolToUse = thematicItems[diffKey] || thematicItems.easy;
+            const selectedItemObj = poolToUse[Math.floor(Math.random() * poolToUse.length)];
             
             const projectile = document.createElement('div');
             projectile.className = 'projectile'; projectile.innerText = selectedItemObj.emoji;
